@@ -1,11 +1,10 @@
 ---
 name_fr: "Jus pression"
-name_en: "Pressed Juice"
+name_en: "Pressed juice"
 description_fr: ""
 description_en: ""
 price: 500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/jus-pression.webp"
 category: "boissons"
 available: true
 order: 30

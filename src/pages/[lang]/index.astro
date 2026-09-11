@@ -2,10 +2,7 @@
 import { getCollection } from "astro:content";
 import MenuLayout from "../../layouts/MenuLayout.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
-import Hero from "../../components/Hero.astro";
-import CategoryNav from "../../components/CategoryNav.astro";
 import MenuSection, { type MenuEntry } from "../../components/MenuSection.astro";
-import PhotoBand from "../../components/PhotoBand.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { CATEGORIES } from "../../content.config";
 import { LANGS, ui, type Lang } from "../../i18n/ui";
@@ -25,7 +22,7 @@ const toEntry = (item: (typeof sorted)[number]): MenuEntry => ({
   name: lang === "fr" ? item.data.name_fr : item.data.name_en,
   description: lang === "fr" ? item.data.description_fr : item.data.description_en,
   price: item.data.price,
-  priceNote: lang === "fr" ? item.data.price_note_fr : item.data.price_note_en,
+  priceAlt: item.data.price_alt,
   image: item.data.image,
   available: item.data.available,
 });
@@ -48,16 +45,18 @@ const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
 ---
 
 <MenuLayout lang={lang} title={title} description={t.heroBody}>
-  <SiteHeader lang={lang} />
-  <main>
-    <Hero lang={lang} totalRefs={sorted.length} />
-    <CategoryNav lang={lang} categories={[...CATEGORIES]} />
+  <SiteHeader lang={lang} categories={[...CATEGORIES]} />
+  <main id="carte" class="mx-auto max-w-4xl px-5 lg:px-8">
     {
       CATEGORIES.map((category) => (
-        <MenuSection lang={lang} category={category} entries={byCategory[category]} />
+        <MenuSection
+          lang={lang}
+          category={category}
+          entries={byCategory[category]}
+          banner={category === "pizzas" ? "/images/menu/_banniere-pizzas.webp" : undefined}
+        />
       ))
     }
-    <PhotoBand lang={lang} />
+    <SiteFooter lang={lang} updatedAt={updatedAt} />
   </main>
-  <SiteFooter lang={lang} updatedAt={updatedAt} />
 </MenuLayout>

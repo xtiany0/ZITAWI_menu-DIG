@@ -1,11 +1,10 @@
 ---
 name_fr: "Kech kach"
-name_en: "Kech Kach"
+name_en: "Kech kach"
 description_fr: ""
 description_en: ""
 price: 1500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/kech-kach.webp"
 category: "sandwichs"
 available: true
 order: 30

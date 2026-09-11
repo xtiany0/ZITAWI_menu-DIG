@@ -1,12 +1,11 @@
 ---
 name_fr: "Hamburger double"
-name_en: "Double Hamburger"
+name_en: "Double hamburger"
 description_fr: ""
 description_en: ""
 price: 2500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/hamburger-double.webp"
 category: "sandwichs"
 available: true
-order: 130
+order: 120
 ---

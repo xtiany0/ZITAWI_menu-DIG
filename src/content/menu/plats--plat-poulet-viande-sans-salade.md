@@ -1,11 +1,10 @@
 ---
 name_fr: "Plat poulet / plat viande"
-name_en: "Chicken / Beef Plate"
-description_fr: "Sans salade"
-description_en: "Without salad"
+name_en: "Chicken / beef plate"
+description_fr: "sans salade"
+description_en: "without salad"
 price: 3500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/plat-poulet-viande-sans-salade.webp"
 category: "plats"
 available: true
 order: 20

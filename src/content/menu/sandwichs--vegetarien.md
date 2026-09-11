@@ -4,8 +4,7 @@ name_en: "Vegetarian"
 description_fr: ""
 description_en: ""
 price: 1250
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/vegetarien.webp"
 category: "sandwichs"
 available: true
 order: 80

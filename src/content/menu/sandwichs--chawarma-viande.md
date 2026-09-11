@@ -1,11 +1,10 @@
 ---
 name_fr: "Chawarma viande"
-name_en: "Beef Shawarma"
+name_en: "Beef shawarma"
 description_fr: ""
 description_en: ""
 price: 1500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/chawarma-viande.webp"
 category: "sandwichs"
 available: true
 order: 10

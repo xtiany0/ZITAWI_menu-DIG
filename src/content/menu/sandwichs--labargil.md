@@ -1,12 +1,12 @@
 ---
 name_fr: "Labargil"
 name_en: "Labargil"
-description_fr: "Viande avec pâte. Au kilo : 10 000 FCFA"
-description_en: "Meat with dough. Per kilo: 10,000 FCFA"
+description_fr: "viande avec pâte, la douzaine / le kilo"
+description_en: "meat with dough, per dozen / per kilo"
 price: 3000
-price_note_fr: "la douzaine"
-price_note_en: "per dozen"
+price_alt: 10000
+image: "/images/menu/labargil.webp"
 category: "sandwichs"
 available: true
-order: 160
+order: 150
 ---

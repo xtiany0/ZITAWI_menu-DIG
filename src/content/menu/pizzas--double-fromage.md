@@ -1,11 +1,9 @@
 ---
 name_fr: "Double fromage"
-name_en: "Double Cheese"
-description_fr: ""
-description_en: ""
+name_en: "Double cheese"
+description_fr: "supplément"
+description_en: "extra"
 price: 1500
-price_note_fr: "supplément"
-price_note_en: "extra"
 category: "pizzas"
 available: true
 order: 140

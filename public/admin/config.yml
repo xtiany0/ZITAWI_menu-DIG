@@ -15,7 +15,7 @@ collections:
     create: true
     slug: "{{fields.category}}--{{slug}}"
     identifier_field: name_fr
-    summary: "{{fields.name_fr}} - {{fields.price}} FCFA"
+    summary: "{{fields.name_fr}} - {{fields.price}}F"
     sortable_fields: [category, price, name_fr]
     view_groups:
       - label: Catégorie
@@ -59,16 +59,14 @@ collections:
         widget: text
         required: false
 
-      - label: "Précision de prix (français)"
-        name: price_note_fr
-        widget: string
+      - label: "Second prix"
+        name: price_alt
+        widget: number
+        value_type: int
         required: false
-        hint: "Exemple : la douzaine, en supplément. Laisser vide dans la plupart des cas."
-
-      - label: "Précision de prix (anglais)"
-        name: price_note_en
-        widget: string
-        required: false
+        min: 0
+        step: 50
+        hint: "Uniquement si le plat a deux tarifs, affichés 3.000 / 10.000F. Décrire les deux options dans les ingrédients, exemple : la douzaine / le kilo."
 
       - label: "Photo du plat"
         name: image

@@ -1,22 +1,85 @@
 ---
 import { ui, type Lang } from "../i18n/ui";
+import type { CATEGORIES } from "../content.config";
 
 interface Props {
   lang: Lang;
+  categories: (typeof CATEGORIES)[number][];
 }
 
-const { lang } = Astro.props;
+const { lang, categories } = Astro.props;
 const t = ui[lang];
 ---
 
-<header class="mx-auto flex max-w-5xl items-center justify-between px-5 py-5 lg:px-8">
-  <a href={`/${lang}/`} class="font-display text-xl tracking-[0.02em] lg:text-2xl">Zitawi</a>
+<header class="sticky top-0 z-30 bg-orange">
+  <div class="mx-auto flex max-w-4xl items-start justify-between gap-4 px-5 py-5 lg:px-8 lg:py-7">
+    <div>
+      <a
+        href={`/${lang}/`}
+        class="block text-[2rem] leading-none font-extrabold tracking-[-0.02em] text-on-orange lg:text-[2.6rem]"
+      >
+        ZITAWI
+      </a>
 
-  <a
-    href={t.otherLangHref}
-    hreflang={lang === "fr" ? "en" : "fr"}
-    class="inline-flex min-h-11 cursor-pointer items-center border-b border-transparent px-1 text-sm tracking-[0.12em] text-muted uppercase transition-colors duration-200 hover:border-gold hover:text-ink"
-  >
-    {t.otherLang}
-  </a>
+      <nav
+        aria-label={lang === "fr" ? "Catégories du menu" : "Menu categories"}
+        class="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 lg:mt-3"
+      >
+        {
+          categories.map((category, position) => (
+            <>
+              {position > 0 && (
+                <span class="text-sm text-on-orange/60" aria-hidden="true">
+                  .
+                </span>
+              )}
+              <a
+                href={`#${category}`}
+                data-category-link={category}
+                class="cursor-pointer text-sm text-on-orange underline-offset-4 hover:underline aria-[current=true]:underline lg:text-[0.95rem]"
+              >
+                {t.categories[category]}
+              </a>
+            </>
+          ))
+        }
+      </nav>
+    </div>
+
+    <a
+      href={t.otherLangHref}
+      hreflang={lang === "fr" ? "en" : "fr"}
+      class="inline-flex min-h-11 shrink-0 cursor-pointer items-center border border-on-orange/40 px-3 text-sm font-semibold text-on-orange transition-colors duration-200 hover:bg-on-orange hover:text-orange"
+    >
+      {t.otherLang}
+    </a>
+  </div>
 </header>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-category-link]");
+  const sections = document.querySelectorAll<HTMLElement>("[data-category-section]");
+
+  if (links.length && sections.length) {
+    const setCurrent = (id: string) => {
+      links.forEach((link) => {
+        link.setAttribute("aria-current", String(link.dataset.categoryLink === id));
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible?.target instanceof HTMLElement) {
+          setCurrent(visible.target.dataset.categorySection ?? "");
+        }
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    setCurrent(sections[0].dataset.categorySection ?? "");
+  }
+</script>

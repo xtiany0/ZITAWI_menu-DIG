@@ -1,11 +1,10 @@
 ---
 name_fr: "Plat falafel (6 pièces)"
-name_en: "Falafel Plate (6 pieces)"
-description_fr: "Persil, tomate, salade, cornichon"
-description_en: "Parsley, tomato, salad, gherkin"
+name_en: "Falafel plate (6 pieces)"
+description_fr: "persil, tomate, salade, cornichon"
+description_en: "parsley, tomato, salad, gherkin"
 price: 3000
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/plat-falafel.webp"
 category: "plats"
 available: true
 order: 50

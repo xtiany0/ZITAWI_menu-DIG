@@ -10,21 +10,15 @@ const { lang, updatedAt } = Astro.props;
 const t = ui[lang];
 ---
 
-<footer class="border-t border-rule">
-  <div class="mx-auto max-w-5xl px-5 py-14 text-center lg:px-8 lg:py-20">
-    <p class="reveal font-display text-2xl tracking-[0.02em] lg:text-3xl">Zitawi</p>
-    <p class="reveal mt-3 text-sm text-muted">{t.address} · {t.hours}</p>
+<footer class="mt-12 border-t border-rule pt-8 pb-12">
+  <a
+    href={`tel:${PHONE}`}
+    class="inline-flex min-h-12 w-full cursor-pointer items-center justify-center bg-orange px-6 text-sm font-bold text-white transition-colors duration-200 hover:bg-ink sm:w-auto"
+  >
+    {t.heroCall} · {PHONE_DISPLAY}
+  </a>
 
-    <a
-      href={`tel:${PHONE}`}
-      class="reveal mt-7 inline-flex min-h-12 cursor-pointer items-center bg-red px-7 text-sm tracking-[0.06em] text-on-red uppercase transition-colors duration-200 hover:brightness-110"
-    >
-      {t.heroCall} · {PHONE_DISPLAY}
-    </a>
-
-    <span class="mx-auto mt-10 block h-px w-16 bg-rule" aria-hidden="true"></span>
-
-    <p class="mt-6 text-[0.78rem] text-muted">{t.footerNote}</p>
-    <p class="mt-1.5 text-[0.78rem] text-muted">{t.updated} {updatedAt}</p>
-  </div>
+  <p class="mt-5 text-sm text-muted">{t.address} · {t.hours}</p>
+  <p class="mt-1 text-[0.8rem] text-muted">{t.footerNote}</p>
+  <p class="mt-1 text-[0.8rem] text-muted">{t.updated} {updatedAt}</p>
 </footer>

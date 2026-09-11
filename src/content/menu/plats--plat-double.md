@@ -1,11 +1,10 @@
 ---
 name_fr: "Plat double"
-name_en: "Double Plate"
-description_fr: "Poulet et viande"
-description_en: "Chicken and beef"
+name_en: "Double plate"
+description_fr: "poulet et viande"
+description_en: "chicken and beef"
 price: 4500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/plat-double.webp"
 category: "plats"
 available: true
 order: 30

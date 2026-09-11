@@ -1,11 +1,11 @@
 ---
 name_fr: "Plat poulet entier"
-name_en: "Whole Chicken Plate"
-description_fr: "Avec salade et frites : 8 000 FCFA"
-description_en: "With salad and fries: 8,000 FCFA"
+name_en: "Whole chicken plate"
+description_fr: "salade + frites"
+description_en: "salad + fries"
 price: 6000
-price_note_fr: ""
-price_note_en: ""
+price_alt: 8000
+image: "/images/menu/plat-poulet-entier.webp"
 category: "plats"
 available: true
 order: 10

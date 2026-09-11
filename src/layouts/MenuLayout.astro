@@ -1,7 +1,5 @@
 ---
-import "@fontsource/playfair-display-sc/400.css";
-import "@fontsource/playfair-display-sc/700.css";
-import "@fontsource-variable/karla";
+import "@fontsource-variable/inter";
 import "../styles/global.css";
 import { ui, type Lang } from "../i18n/ui";
 
@@ -26,43 +24,20 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
-    <meta name="theme-color" content="#170f0e" />
+    <meta name="theme-color" content="#e8482c" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body class="min-h-dvh bg-ground font-sans text-ink">
+  <body class="min-h-dvh bg-paper font-sans text-ink">
     <a
       href="#carte"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:bg-red focus:px-4 focus:py-2 focus:text-sm focus:text-on-red"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-white"
     >
       {t.skip}
     </a>
-
     <slot />
-
-    <script>
-      const revealed = document.querySelectorAll<HTMLElement>(".reveal");
-      const motionOk = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
-
-      if (motionOk && revealed.length) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                (entry.target as HTMLElement).dataset.shown = "true";
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { rootMargin: "0px 0px -6% 0px", threshold: 0.05 },
-        );
-        revealed.forEach((element) => observer.observe(element));
-      } else {
-        revealed.forEach((element) => (element.dataset.shown = "true"));
-      }
-    </script>
   </body>
 </html>

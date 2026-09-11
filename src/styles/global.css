@@ -1,58 +1,28 @@
 @import "tailwindcss";
 
-/* Printed-menu editorial on a dark ground: warm near-black, bone ink, gold
-   prices. No gradients, no glow, no glass, no light mode. */
+/* Colours sampled directly from zitawimenustructure1.pdf. */
 
 @theme {
-  --font-display: "Playfair Display SC", ui-serif, Georgia, serif;
-  --font-sans: "Karla Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ground: #170f0e;
-  --color-raised: #231817;
-  --color-ink: #f5ebe8;
-  --color-muted: #b59b95;
-  --color-rule: #3a2726;
-  --color-gold: #d4a24c;
-  --color-red: #dc2626;
-  --color-red-soft: #f05252;
-  --color-on-red: #ffffff;
+  --color-paper: #fbf7f0;
+  --color-ink: #1a1a1a;
+  --color-muted: #7d7b74;
+  --color-rule: #e6e0d7;
+  --color-orange: #e8482c;
+  --color-on-orange: #1a1a1a;
+  --color-on-bar: #ffffff;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
-  background-color: var(--color-ground);
-  color-scheme: only dark;
+  scroll-padding-top: 8.5rem;
+  background-color: var(--color-paper);
+  color-scheme: only light;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
-}
-
-/* Dot leaders, the printed-menu device: a dotted rule that grows to fill
-   whatever space is left between a dish name and its price. */
-.leader {
-  flex: 1 1 auto;
-  align-self: flex-end;
-  margin-bottom: 0.32em;
-  border-bottom: 1px dotted var(--color-rule);
-  min-width: 1.5rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .reveal {
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      opacity 360ms ease-out,
-      transform 360ms ease-out;
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-
-  .reveal[data-shown="true"] {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -62,11 +32,11 @@ body {
 }
 
 ::selection {
-  background: var(--color-red);
-  color: var(--color-on-red);
+  background: var(--color-orange);
+  color: #ffffff;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-red);
-  outline-offset: 3px;
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
 }

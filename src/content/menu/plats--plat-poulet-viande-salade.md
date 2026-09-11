@@ -1,11 +1,10 @@
 ---
 name_fr: "Plat poulet ou plat viande"
-name_en: "Chicken or Beef Plate"
-description_fr: "Avec salade"
-description_en: "With salad"
+name_en: "Chicken or beef plate"
+description_fr: "avec salade"
+description_en: "with salad"
 price: 3500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/plat-poulet-viande-salade.webp"
 category: "plats"
 available: true
 order: 110

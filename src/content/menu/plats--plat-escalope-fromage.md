@@ -1,11 +1,10 @@
 ---
 name_fr: "Plat escalope fromage"
-name_en: "Escalope Plate with Cheese"
-description_fr: "Salade verte ou choux, frites, fromage"
-description_en: "Green salad or coleslaw, fries, cheese"
+name_en: "Escalope plate with cheese"
+description_fr: "salade verte ou choux + frites + fromage"
+description_en: "green salad or coleslaw + fries + cheese"
 price: 4500
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/plat-escalope-fromage.webp"
 category: "plats"
 available: true
 order: 90

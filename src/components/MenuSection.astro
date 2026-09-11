@@ -7,7 +7,7 @@ export interface MenuEntry {
   name: string;
   description: string;
   price: number;
-  priceNote: string;
+  priceAlt?: number;
   image?: string;
   available: boolean;
 }
@@ -16,83 +16,74 @@ interface Props {
   lang: Lang;
   category: (typeof CATEGORIES)[number];
   entries: MenuEntry[];
+  banner?: string;
 }
 
-const { lang, category, entries } = Astro.props;
+const { lang, category, entries, banner } = Astro.props;
 const t = ui[lang];
 ---
 
-<section
-  id={category}
-  data-category-section={category}
-  class="mx-auto max-w-5xl scroll-mt-20 px-5 py-14 lg:px-8 lg:py-20"
->
-  <header class="reveal text-center">
-    <h2 class="font-display text-[clamp(1.75rem,5vw,2.5rem)] tracking-[0.02em]">
-      {t.categories[category]}
-    </h2>
-    <p class="mt-3 text-sm text-muted">{t.categoryBlurb[category]}</p>
-    <span class="mx-auto mt-5 block h-px w-16 bg-gold" aria-hidden="true"></span>
-  </header>
+<section id={category} data-category-section={category} class="scroll-mt-36 pt-9 lg:pt-12">
+  <h2 class="bg-ink px-4 py-3 text-xl font-bold text-on-bar lg:px-5 lg:text-2xl">
+    {t.categories[category]}
+  </h2>
+
+  {
+    banner && (
+      <img
+        src={banner}
+        alt={t.bandAlt}
+        width="615"
+        height="210"
+        loading="lazy"
+        decoding="async"
+        class="mt-1.5 h-40 w-full object-cover lg:h-56"
+      />
+    )
+  }
 
   {
     entries.length === 0 ? (
-      <p class="mt-10 text-center text-sm text-muted">{t.empty}</p>
+      <p class="py-10 text-center text-sm text-muted">{t.empty}</p>
     ) : (
-      <ul class="mt-10 grid gap-x-12 gap-y-7 lg:grid-cols-2">
-        {entries.map((entry, row) => (
-          <li
-            class="reveal flex gap-4"
-            style={`--reveal-delay:${Math.min(row, 6) * 40}ms`}
-          >
+      <ul class="mt-1">
+        {entries.map((entry) => (
+          <li class="flex items-center gap-4 border-b border-rule py-3">
             {entry.image && (
               <img
                 src={entry.image}
                 alt={entry.name}
+                width="180"
+                height="125"
                 loading="lazy"
                 decoding="async"
-                width="128"
-                height="128"
-                class="mt-1 h-16 w-16 shrink-0 object-cover"
+                class="h-14 w-[4.5rem] shrink-0 object-cover lg:h-16 lg:w-20"
               />
             )}
 
             <div class="min-w-0 flex-1">
-            <div class="flex items-baseline gap-2">
               <h3
                 class:list={[
-                  "font-display text-[1.05rem] tracking-[0.01em]",
-                  !entry.available && "text-muted line-through decoration-red-soft/60",
+                  "text-[0.95rem] font-bold text-ink lg:text-base",
+                  !entry.available && "text-muted line-through",
                 ]}
               >
                 {entry.name}
               </h3>
-              <span class="leader" aria-hidden="true" />
-              <p class="shrink-0 text-[1.05rem] tabular-nums text-gold">
-                {formatPrice(entry.price, lang)}
-                <span class="text-[0.7rem] tracking-[0.08em] text-muted"> {t.currency}</span>
-              </p>
+              {entry.description && (
+                <p class="mt-0.5 text-[0.8rem] leading-snug text-muted">{entry.description}</p>
+              )}
+              {!entry.available && (
+                <p class="mt-0.5 text-[0.75rem] font-semibold text-orange">{t.soldOut}</p>
+              )}
             </div>
 
-            {entry.description && (
-              <p class="mt-1.5 max-w-[54ch] text-[0.85rem] leading-relaxed text-muted">
-                {entry.description}
-              </p>
-            )}
-
-            {(entry.priceNote || !entry.available) && (
-              <p class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                {entry.priceNote && (
-                  <span class="text-[0.78rem] text-muted italic">{entry.priceNote}</span>
-                )}
-                {!entry.available && (
-                  <span class="text-[0.7rem] tracking-[0.14em] text-red-soft uppercase">
-                    {t.soldOut}
-                  </span>
-                )}
-              </p>
-            )}
-            </div>
+            <p class="shrink-0 text-[0.95rem] font-bold tabular-nums text-orange lg:text-base">
+              {[entry.price, entry.priceAlt]
+                .filter((value): value is number => typeof value === "number")
+                .map((value) => formatPrice(value, lang))
+                .join(" / ") + t.currency}
+            </p>
           </li>
         ))}
       </ul>

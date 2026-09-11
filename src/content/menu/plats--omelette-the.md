@@ -1,11 +1,10 @@
 ---
 name_fr: "Omelette + thé"
-name_en: "Omelette + Tea"
+name_en: "Omelette + tea"
 description_fr: ""
 description_en: ""
 price: 3000
-price_note_fr: ""
-price_note_en: ""
+image: "/images/menu/omelette-the.webp"
 category: "plats"
 available: true
 order: 170

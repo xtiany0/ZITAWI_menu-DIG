@@ -13,26 +13,25 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 | Content | Markdown files in `src/content/menu`, one file per dish |
 | Admin | Decap CMS at `/admin`, backed by Netlify Identity plus Git Gateway |
 | Hosting | Netlify |
-| Fonts | Playfair Display SC (display) and Karla (body), self-hosted via Fontsource |
+| Fonts | Inter, self-hosted via Fontsource |
 
 ## Design system
 
-A printed menu, set for screen, on a dark ground. Warm near-black, bone ink, gold prices, and dot
-leaders running from each dish name to its price.
+The site reproduces `zitawimenustructure1.pdf`, the menu structure supplied by the client.
+Colours were sampled from a render of that file rather than guessed.
 
-- Ground `#170F0E`, ink `#F5EBE8`, secondary text `#B59B95`, rules `#3A2726`.
-- Gold `#D4A24C` carries every price at 7.9:1. Red splits in two: `#DC2626` fills the action
-  buttons under white text, `#F05252` is the text tone for the sold-out marker, because the
-  solid red only reaches 3.1:1 against this ground.
-- Playfair Display SC is set in small caps for dish names, which is what makes the page read as a
-  menu rather than a product listing.
-- The theme is locked dark; `color-scheme: only dark`.
-- No gradients, no glow, no glass, no shadowed cards. Separation comes from rules and space.
-- Dot leaders are a flex child that grows into whatever gap is left (`.leader` in `global.css`),
-  so they work at any name length without measurement.
-- Scroll reveal is CSS transitions driven by one IntersectionObserver, not an animation library.
-  Everything renders visible when `prefers-reduced-motion: reduce` is set or the observer never runs.
-- Touch targets are 48px on every interactive element.
+- Vermillion masthead `#E8482C`, paper `#FBF7F0`, ink `#1A1A1A`, secondary text `#7D7B74`,
+  hairlines `#E6E0D7`.
+- Each category opens with a full-width black bar, exactly as the PDF does. Pizzas carries the
+  wide banner photo underneath.
+- Rows are photo, name, ingredients, price. Rows without a photo sit flush left, again per the PDF.
+- Prices print as the menu prints them: `6.000F`, and `6.000 / 8.000F` where a dish has two
+  tariffs. French keeps the dot separator from the printed menu; English uses a comma, since a dot
+  there would read as a decimal point.
+- The masthead is sticky and its `Pizzas . Plats . Sandwichs . Boissons` line doubles as the
+  category nav. The PDF repeats that line on every page; on a single scrolling page it earns its
+  keep as navigation.
+- No animation library and no scroll reveal. One IntersectionObserver drives the nav underline.
 
 Tokens live in `src/styles/global.css`.
 
@@ -55,15 +54,18 @@ Each dish is one Markdown file under `src/content/menu`, validated by the Zod sc
 | `name_fr`, `name_en` | string | Dish name per language |
 | `description_fr`, `description_en` | string | Ingredient list, optional |
 | `price` | number | Integer, in CFA francs |
-| `price_note_fr`, `price_note_en` | string | Optional qualifier such as "la douzaine" |
+| `price_alt` | number | Optional second tariff, rendered as `6.000 / 8.000F` |
 | `category` | enum | `pizzas`, `plats`, `sandwichs`, `boissons` |
 | `image` | string | Optional path under `/images/menu` |
 | `available` | boolean | Set to `false` to show a dish as sold out instead of deleting it |
-| `featured` | boolean | Surfaces the dish in the hero shortlist |
 | `order` | number | Lower value sorts higher inside its category |
 
-Prices were transcribed from the restaurant's printed menu. Where two printed versions disagreed,
-the more recent one was used.
+Names, prices and ingredient lists come from `zitawimenustructure1.pdf`, transcribed verbatim
+including its lowercase ingredient lines and its `+` separators. 51 dishes: 14 pizzas, 18 plates,
+15 sandwiches, 4 drinks.
+
+Where a dish has two tariffs, `price_alt` holds the second and the ingredient line names the two
+options, for example `nature / avec viande` against `2.000 / 3.000F`.
 
 ## Deployment
 
@@ -90,9 +92,15 @@ ready to print from a browser.
 
 ## Photography
 
-The pizza band above the footer is cropped from the printed menu and halftoned. Dish photos are intentionally not bundled. The `image` field is wired end to end, so the restaurant
-can upload real photos through `/admin` and they appear immediately. Shoot in daylight, from above,
-in landscape, and keep each file under about 500 KB.
+The dish thumbnails and the pizza banner are extracted from the embedded images in
+`zitawimenustructure1.pdf` with `pdfimages`, converted to WebP. 36 files, 192 KB in total. They
+are low resolution by origin, roughly 120x75, and are displayed at or below that size so they are
+never upscaled.
+
+Two items carry no photo, matching the PDF: Boisson énergétique and Yaourt.
+
+The `image` field stays wired end to end, so the restaurant can replace any of these through
+`/admin` with a real photo. Shoot in daylight, from above, in landscape, under about 500 KB.
 
 ## Before going live
 

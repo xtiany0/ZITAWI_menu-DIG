@@ -22,7 +22,7 @@ export const ui = {
       sandwichs: "Chawarma, burgers et falafel.",
       boissons: "Sucreries, jus pressés, yaourt.",
     },
-    currency: "FCFA",
+    currency: "F",
     soldOut: "Épuisé",
     popular: "Sélection",
     refs: "références",
@@ -58,7 +58,7 @@ export const ui = {
       sandwichs: "Shawarma, burgers and falafel.",
       boissons: "Soft drinks, pressed juice, yoghurt.",
     },
-    currency: "FCFA",
+    currency: "F",
     soldOut: "Sold out",
     popular: "Selection",
     refs: "references",
@@ -79,7 +79,9 @@ export const ui = {
 export const PHONE = "+2290100000000";
 export const PHONE_DISPLAY = "+229 01 00 00 00 00";
 
+// The printed menu writes 6.000F. French keeps that dot; English uses a comma,
+// where a dot would read as a decimal point.
 export function formatPrice(value: number, lang: Lang) {
-  return new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-GB").format(value);
+  return value.toLocaleString("en-US").replace(/,/g, lang === "fr" ? "." : ",");
 }
 
