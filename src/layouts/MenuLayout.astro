@@ -31,6 +31,11 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // A menu reopened from a QR code should start at the top. Without this the
+      // browser restores the previous scroll and drops the reader mid-menu.
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    </script>
   </head>
   <body class="min-h-dvh bg-ground font-sans text-ink">
     <a

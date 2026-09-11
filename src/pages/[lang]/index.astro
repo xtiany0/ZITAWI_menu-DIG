@@ -58,6 +58,14 @@ const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
         />
       ))
     }
+    <p
+      data-no-result
+      hidden
+      class="py-16 text-center text-sm text-muted"
+    >
+      {t.noResult}
+    </p>
+
     <SiteFooter lang={lang} updatedAt={updatedAt} />
   </main>
   <OrderBar lang={lang} />

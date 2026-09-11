@@ -2,7 +2,7 @@
 name_fr: "Provençale"
 name_en: "Provençale"
 description_fr: "thon, tomate fraîche, oignon, poivron, champignon"
-description_en: "tuna, fresh tomato, onion, pepper, mushroom"
+description_en: "tuna, fresh tomato, onion, bell pepper, mushroom"
 price: 5000
 category: "pizzas"
 available: true

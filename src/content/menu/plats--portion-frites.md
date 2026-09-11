@@ -1,6 +1,6 @@
 ---
 name_fr: "Portion de frites"
-name_en: "Portion of fries"
+name_en: "Fries"
 description_fr: ""
 description_en: ""
 price: 1500

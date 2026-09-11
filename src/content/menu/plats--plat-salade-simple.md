@@ -1,6 +1,6 @@
 ---
 name_fr: "Plat salade simple"
-name_en: "Simple salad plate"
+name_en: "Side salad"
 description_fr: ""
 description_en: ""
 price: 1500

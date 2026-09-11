@@ -117,6 +117,10 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
     }
   }
 
+  // Assigned below once the category links exist; the search handler calls it
+  // after filtering so the active pill matches what is still on screen.
+  let refreshCurrent = () => {};
+
   // Search toggle and filtering
   const toggle = document.querySelector<HTMLButtonElement>("[data-search-toggle]");
   const panel = document.getElementById("menu-search");
@@ -135,10 +139,17 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
     document.querySelectorAll<HTMLElement>("[data-dish]").forEach((card) => {
       card.hidden = query.length > 0 && !(card.dataset.dish ?? "").includes(query);
     });
+    let shown = 0;
     document.querySelectorAll<HTMLElement>("[data-category-section]").forEach((section) => {
       const visible = section.querySelectorAll<HTMLElement>("[data-dish]:not([hidden])").length;
       section.hidden = visible === 0;
+      shown += visible;
     });
+
+    const empty = document.querySelector<HTMLElement>("[data-no-result]");
+    if (empty) empty.hidden = shown > 0;
+
+    refreshCurrent();
   });
 
   // Category underline follows the scroll
@@ -189,6 +200,7 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
       { passive: true },
     );
 
+    refreshCurrent = updateCurrent;
     updateCurrent();
   }
 </script>
