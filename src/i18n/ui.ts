@@ -1,6 +1,8 @@
 export const LANGS = ["fr", "en"] as const;
 export type Lang = (typeof LANGS)[number];
 
+export const HOURS = { open: 10, close: 23 };
+
 export const ui = {
   fr: {
     htmlLang: "fr",
@@ -22,7 +24,19 @@ export const ui = {
       sandwichs: "Chawarma, burgers et falafel.",
       boissons: "Sucreries, jus pressés, yaourt.",
     },
-    currency: "F",
+    currency: "FCFA",
+    tagline: "Restaurant & Fast Food",
+    openNow: "Ouvert",
+    closedNow: "Fermé",
+    searchLabel: "Rechercher un plat",
+    searchPlaceholder: "Chercher une pizza, un plat...",
+    noResult: "Aucun plat ne correspond.",
+    add: "Ajouter",
+    remove: "Retirer",
+    orderCta: "Commande via WhatsApp",
+    total: "Total",
+    orderIntro: "Bonjour Zitawi, je souhaite commander :",
+    orderTotal: "Total",
     soldOut: "Épuisé",
     popular: "Sélection",
     refs: "références",
@@ -58,7 +72,19 @@ export const ui = {
       sandwichs: "Shawarma, burgers and falafel.",
       boissons: "Soft drinks, pressed juice, yoghurt.",
     },
-    currency: "F",
+    currency: "FCFA",
+    tagline: "Restaurant & Fast Food",
+    openNow: "Open",
+    closedNow: "Closed",
+    searchLabel: "Search the menu",
+    searchPlaceholder: "Search a pizza, a plate...",
+    noResult: "No dish matches.",
+    add: "Add",
+    remove: "Remove",
+    orderCta: "Order on WhatsApp",
+    total: "Total",
+    orderIntro: "Hello Zitawi, I would like to order:",
+    orderTotal: "Total",
     soldOut: "Sold out",
     popular: "Selection",
     refs: "references",
@@ -76,7 +102,10 @@ export const ui = {
   },
 } as const;
 
+// Placeholder. Replace with the restaurant's real line before going live;
+// WHATSAPP is what the order button sends to.
 export const PHONE = "+2290100000000";
+export const WHATSAPP = "2290100000000";
 export const PHONE_DISPLAY = "+229 01 00 00 00 00";
 
 // The printed menu writes 6.000F. French keeps that dot; English uses a comma,

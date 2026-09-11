@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import MenuLayout from "../../layouts/MenuLayout.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import MenuSection, { type MenuEntry } from "../../components/MenuSection.astro";
+import OrderBar from "../../components/OrderBar.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { CATEGORIES } from "../../content.config";
 import { LANGS, ui, type Lang } from "../../i18n/ui";
@@ -49,14 +50,10 @@ const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
   <main id="carte" class="mx-auto max-w-4xl px-5 lg:px-8">
     {
       CATEGORIES.map((category) => (
-        <MenuSection
-          lang={lang}
-          category={category}
-          entries={byCategory[category]}
-          banner={category === "pizzas" ? "/images/menu/_banniere-pizzas.webp" : undefined}
-        />
+        <MenuSection lang={lang} category={category} entries={byCategory[category]} />
       ))
     }
     <SiteFooter lang={lang} updatedAt={updatedAt} />
   </main>
+  <OrderBar lang={lang} />
 </MenuLayout>

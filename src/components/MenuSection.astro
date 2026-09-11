@@ -16,39 +16,34 @@ interface Props {
   lang: Lang;
   category: (typeof CATEGORIES)[number];
   entries: MenuEntry[];
-  banner?: string;
 }
 
-const { lang, category, entries, banner } = Astro.props;
+const { lang, category, entries } = Astro.props;
 const t = ui[lang];
+
+const priceLabel = (entry: MenuEntry) =>
+  [entry.price, entry.priceAlt]
+    .filter((value): value is number => typeof value === "number")
+    .map((value) => formatPrice(value, lang))
+    .join(" / ");
 ---
 
-<section id={category} data-category-section={category} class="scroll-mt-36 pt-9 lg:pt-12">
-  <h2 class="bg-ink px-4 py-3 text-xl font-bold text-on-bar lg:px-5 lg:text-2xl">
+<section id={category} data-category-section={category} class="scroll-mt-44 pt-8 lg:pt-12">
+  <h2 class="text-xl font-semibold tracking-tight text-ink lg:text-2xl">
     {t.categories[category]}
+    <span class="ml-2 text-sm font-normal text-muted">{entries.length}</span>
   </h2>
 
   {
-    banner && (
-      <img
-        src={banner}
-        alt={t.bandAlt}
-        width="615"
-        height="210"
-        loading="lazy"
-        decoding="async"
-        class="mt-1.5 h-40 w-full object-cover lg:h-56"
-      />
-    )
-  }
-
-  {
     entries.length === 0 ? (
-      <p class="py-10 text-center text-sm text-muted">{t.empty}</p>
+      <p class="mt-6 text-sm text-muted">{t.empty}</p>
     ) : (
-      <ul class="mt-1">
+      <ul class="mt-4 grid gap-3 lg:grid-cols-2 lg:gap-4">
         {entries.map((entry) => (
-          <li class="flex items-center gap-4 border-b border-rule py-3">
+          <li
+            data-dish={`${entry.name} ${entry.description}`.toLowerCase()}
+            class="flex items-stretch gap-3 rounded-card bg-card p-3 lg:gap-4 lg:p-4"
+          >
             {entry.image && (
               <img
                 src={entry.image}
@@ -57,33 +52,55 @@ const t = ui[lang];
                 height="125"
                 loading="lazy"
                 decoding="async"
-                class="h-14 w-[4.5rem] shrink-0 object-cover lg:h-16 lg:w-20"
+                class="h-24 w-24 shrink-0 rounded-xl object-cover lg:h-28 lg:w-28"
               />
             )}
 
-            <div class="min-w-0 flex-1">
+            <div class="flex min-w-0 flex-1 flex-col">
               <h3
                 class:list={[
-                  "text-[0.95rem] font-bold text-ink lg:text-base",
+                  "text-base leading-snug font-semibold text-ink lg:text-lg",
                   !entry.available && "text-muted line-through",
                 ]}
               >
                 {entry.name}
               </h3>
-              {entry.description && (
-                <p class="mt-0.5 text-[0.8rem] leading-snug text-muted">{entry.description}</p>
-              )}
-              {!entry.available && (
-                <p class="mt-0.5 text-[0.75rem] font-semibold text-orange">{t.soldOut}</p>
-              )}
-            </div>
 
-            <p class="shrink-0 text-[0.95rem] font-bold tabular-nums text-orange lg:text-base">
-              {[entry.price, entry.priceAlt]
-                .filter((value): value is number => typeof value === "number")
-                .map((value) => formatPrice(value, lang))
-                .join(" / ") + t.currency}
-            </p>
+              {entry.description && (
+                <p class="mt-1 line-clamp-2 text-[0.8rem] leading-snug text-muted lg:text-sm">
+                  {entry.description}
+                </p>
+              )}
+
+              <div class="mt-auto flex items-end justify-between gap-3 pt-2">
+                <p class="text-[0.95rem] font-bold text-ink lg:text-base">
+                  {priceLabel(entry)}
+                  <span class="ml-1 text-[0.7rem] font-medium text-muted">{t.currency}</span>
+                </p>
+
+                {entry.available ? (
+                  <button
+                    type="button"
+                    data-add={entry.id}
+                    data-name={entry.name}
+                    data-price={entry.price}
+                    aria-label={`${t.add} ${entry.name}`}
+                    class="flex h-11 shrink-0 cursor-pointer items-center gap-1 rounded-full border border-transparent p-1 transition-colors duration-200 data-[active=true]:border-orange data-[active=true]:bg-orange/10"
+                  >
+                    <span data-qty hidden class="min-w-5 pl-1 text-center text-sm font-bold text-orange" />
+                    <span class="grid h-9 w-9 place-items-center rounded-full bg-orange text-on-orange">
+                      <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+                      </svg>
+                    </span>
+                  </button>
+                ) : (
+                  <span class="rounded-full bg-card-hi px-3 py-1 text-[0.7rem] font-semibold text-muted">
+                    {t.soldOut}
+                  </span>
+                )}
+              </div>
+            </div>
           </li>
         ))}
       </ul>

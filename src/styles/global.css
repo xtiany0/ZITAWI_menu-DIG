@@ -1,42 +1,70 @@
 @import "tailwindcss";
 
-/* Colours sampled directly from zitawimenustructure1.pdf. */
-
 @theme {
+  --font-display: "Playfair Display Variable", ui-serif, Georgia, serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-paper: #fbf7f0;
-  --color-ink: #1a1a1a;
-  --color-muted: #7d7b74;
-  --color-rule: #e6e0d7;
-  --color-orange: #e8482c;
-  --color-on-orange: #1a1a1a;
-  --color-on-bar: #ffffff;
+  --color-ground: #0e0e10;
+  --color-card: #1a1b1e;
+  --color-card-hi: #232428;
+  --color-line: #2c2d32;
+  --color-ink: #ffffff;
+  --color-muted: #9a9aa2;
+
+  --color-brick: #c1543f;
+  --color-on-brick: #fdf3ec;
+  --color-gold: #d8ab54;
+  --color-orange: #e8752a;
+  --color-on-orange: #14100c;
+  --color-whatsapp: #25d366;
+  --color-order: #1e7a43;
+
+  --radius-card: 16px;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 8.5rem;
-  background-color: var(--color-paper);
-  color-scheme: only light;
+  scroll-padding-top: 11rem;
+  background-color: var(--color-ground);
+  color-scheme: only dark;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Leaves room for the order bar so the last card is never trapped under it. */
+body[data-cart-open="true"] {
+  padding-bottom: 5.5rem;
+}
+
+.pill-row {
+  scrollbar-width: none;
+}
+
+.pill-row::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 ::selection {
   background: var(--color-orange);
-  color: #ffffff;
+  color: var(--color-on-orange);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
 }

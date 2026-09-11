@@ -1,5 +1,5 @@
 ---
-import { ui, type Lang } from "../i18n/ui";
+import { ui, HOURS, type Lang } from "../i18n/ui";
 import type { CATEGORIES } from "../content.config";
 
 interface Props {
@@ -9,54 +9,139 @@ interface Props {
 
 const { lang, categories } = Astro.props;
 const t = ui[lang];
+
+const emoji: Record<(typeof CATEGORIES)[number], string> = {
+  pizzas: "🍕",
+  plats: "🍔",
+  sandwichs: "🥪",
+  boissons: "🥤",
+};
 ---
 
-<header class="sticky top-0 z-30 bg-orange">
-  <div class="mx-auto flex max-w-4xl items-start justify-between gap-4 px-5 py-5 lg:px-8 lg:py-7">
-    <div>
-      <a
-        href={`/${lang}/`}
-        class="block text-[2rem] leading-none font-extrabold tracking-[-0.02em] text-on-orange lg:text-[2.6rem]"
-      >
-        ZITAWI
+<header class="sticky top-0 z-40">
+  <div class="bg-brick">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-4">
+      <a href={`/${lang}/`} class="flex flex-col leading-none">
+        <span class="font-display text-2xl font-bold tracking-[0.06em] text-on-brick lg:text-3xl">
+          ZITAWI
+        </span>
+        <span class="mt-1 text-[0.55rem] tracking-[0.28em] text-on-brick/75 uppercase lg:text-[0.65rem]">
+          {t.tagline}
+        </span>
       </a>
 
-      <nav
-        aria-label={lang === "fr" ? "Catégories du menu" : "Menu categories"}
-        class="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 lg:mt-3"
+      <p
+        data-open-state
+        data-open-hour={HOURS.open}
+        data-close-hour={HOURS.close}
+        data-closed-label={t.closedNow}
+        class="hidden items-center gap-2 rounded-full bg-black/25 px-4 py-1.5 text-sm text-on-brick sm:flex"
       >
-        {
-          categories.map((category, position) => (
-            <>
-              {position > 0 && (
-                <span class="text-sm text-on-orange/60" aria-hidden="true">
-                  .
-                </span>
-              )}
-              <a
-                href={`#${category}`}
-                data-category-link={category}
-                class="cursor-pointer text-sm text-on-orange underline-offset-4 hover:underline aria-[current=true]:underline lg:text-[0.95rem]"
-              >
-                {t.categories[category]}
-              </a>
-            </>
-          ))
-        }
+        <span class="h-2 w-2 rounded-full bg-whatsapp" aria-hidden="true"></span>
+        <span><span data-open-label>{t.openNow}</span>{`, ${HOURS.open}h-${HOURS.close}h`}</span>
+      </p>
+
+      <div class="flex shrink-0 items-center gap-2">
+        <button
+          type="button"
+          data-search-toggle
+          aria-expanded="false"
+          aria-controls="menu-search"
+          aria-label={t.searchLabel}
+          class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-black/20 text-on-brick transition-colors duration-200 hover:bg-black/35"
+        >
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-3.5-3.5" stroke-linecap="round"></path>
+          </svg>
+        </button>
+
+        <a
+          href={t.otherLangHref}
+          hreflang={lang === "fr" ? "en" : "fr"}
+          class="grid h-11 min-w-11 cursor-pointer place-items-center rounded-full bg-black/20 px-3 text-sm font-semibold text-on-brick transition-colors duration-200 hover:bg-black/35"
+        >
+          {t.otherLang}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-line bg-ground">
+    <div class="mx-auto max-w-6xl px-4 lg:px-8">
+      <div id="menu-search" hidden class="pt-3">
+        <input
+          type="search"
+          data-search-input
+          aria-label={t.searchLabel}
+          placeholder={t.searchPlaceholder}
+          class="h-11 w-full rounded-full border border-line bg-card px-4 text-sm text-ink placeholder:text-muted"
+        />
+      </div>
+
+      <nav aria-label={lang === "fr" ? "Catégories" : "Categories"}>
+        <ul class="pill-row flex gap-2 overflow-x-auto py-3">
+          {
+            categories.map((category) => (
+              <li>
+                <a
+                  href={`#${category}`}
+                  data-category-link={category}
+                  class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-card px-4 text-sm whitespace-nowrap text-ink transition-colors duration-200 hover:bg-card-hi aria-[current=true]:bg-orange aria-[current=true]:text-on-orange aria-[current=true]:font-semibold"
+                >
+                  <span aria-hidden="true">{emoji[category]}</span>
+                  {t.categories[category]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
       </nav>
     </div>
-
-    <a
-      href={t.otherLangHref}
-      hreflang={lang === "fr" ? "en" : "fr"}
-      class="inline-flex min-h-11 shrink-0 cursor-pointer items-center border border-on-orange/40 px-3 text-sm font-semibold text-on-orange transition-colors duration-200 hover:bg-on-orange hover:text-orange"
-    >
-      {t.otherLang}
-    </a>
   </div>
 </header>
 
 <script>
+  // Opening state
+  const state = document.querySelector<HTMLElement>("[data-open-state]");
+  const label = document.querySelector<HTMLElement>("[data-open-label]");
+  if (state && label) {
+    const open = Number(state.dataset.openHour);
+    const close = Number(state.dataset.closeHour);
+    const hour = new Date().getHours();
+    if (hour < open || hour >= close) {
+      label.textContent = state.dataset.closedLabel ?? label.textContent;
+      const dot = state.querySelector("span");
+      dot?.classList.remove("bg-whatsapp");
+      dot?.classList.add("bg-muted");
+    }
+  }
+
+  // Search toggle and filtering
+  const toggle = document.querySelector<HTMLButtonElement>("[data-search-toggle]");
+  const panel = document.getElementById("menu-search");
+  const input = document.querySelector<HTMLInputElement>("[data-search-input]");
+
+  toggle?.addEventListener("click", () => {
+    if (!panel) return;
+    const nowOpen = panel.hidden;
+    panel.hidden = !nowOpen;
+    toggle.setAttribute("aria-expanded", String(nowOpen));
+    if (nowOpen) input?.focus();
+  });
+
+  input?.addEventListener("input", () => {
+    const query = input.value.trim().toLowerCase();
+    document.querySelectorAll<HTMLElement>("[data-dish]").forEach((card) => {
+      card.hidden = query.length > 0 && !(card.dataset.dish ?? "").includes(query);
+    });
+    document.querySelectorAll<HTMLElement>("[data-category-section]").forEach((section) => {
+      const visible = section.querySelectorAll<HTMLElement>("[data-dish]:not([hidden])").length;
+      section.hidden = visible === 0;
+    });
+  });
+
+  // Category underline follows the scroll
   const links = document.querySelectorAll<HTMLAnchorElement>("[data-category-link]");
   const sections = document.querySelectorAll<HTMLElement>("[data-category-section]");
 
@@ -76,7 +161,7 @@ const t = ui[lang];
           setCurrent(visible.target.dataset.categorySection ?? "");
         }
       },
-      { rootMargin: "-30% 0px -60% 0px", threshold: 0 },
+      { rootMargin: "-35% 0px -55% 0px", threshold: 0 },
     );
 
     sections.forEach((section) => observer.observe(section));
