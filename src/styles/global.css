@@ -25,7 +25,8 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 11rem;
+  /* Matches the sticky header, which measures 137px on a phone and 151px wide. */
+  scroll-padding-top: 10rem;
   background-color: var(--color-ground);
   color-scheme: only dark;
 }

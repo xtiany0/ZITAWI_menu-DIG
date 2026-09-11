@@ -152,19 +152,43 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
       });
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visible?.target instanceof HTMLElement) {
-          setCurrent(visible.target.dataset.categorySection ?? "");
-        }
+    // Position-based rather than an IntersectionObserver: the observer needs a
+    // detection band expressed in percentages, which collapsed to 85px on a
+    // phone and let sections slip through without ever registering.
+    const headerEl = document.querySelector("header");
+
+    const updateCurrent = () => {
+      const visible = [...sections].filter((section) => !section.hidden);
+      if (!visible.length) return;
+
+      // Slack past the header so a section counts as reached once its heading
+      // clears the pills, not only when its very top edge does.
+      const line = (headerEl?.getBoundingClientRect().height ?? 0) + 72;
+      let current = visible[0];
+      for (const section of visible) {
+        if (section.getBoundingClientRect().top <= line) current = section;
+      }
+
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 4;
+      if (atBottom) current = visible[visible.length - 1];
+
+      setCurrent(current.dataset.categorySection ?? "");
+    };
+
+    let queued = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          updateCurrent();
+          queued = false;
+        });
       },
-      { rootMargin: "-35% 0px -55% 0px", threshold: 0 },
+      { passive: true },
     );
 
-    sections.forEach((section) => observer.observe(section));
-    setCurrent(sections[0].dataset.categorySection ?? "");
+    updateCurrent();
   }
 </script>
