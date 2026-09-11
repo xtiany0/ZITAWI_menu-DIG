@@ -16,9 +16,10 @@ interface Props {
   lang: Lang;
   category: (typeof CATEGORIES)[number];
   entries: MenuEntry[];
+  banner?: string;
 }
 
-const { lang, category, entries } = Astro.props;
+const { lang, category, entries, banner } = Astro.props;
 const t = ui[lang];
 
 const priceLabel = (entry: MenuEntry) =>
@@ -33,6 +34,20 @@ const priceLabel = (entry: MenuEntry) =>
     {t.categories[category]}
     <span class="ml-2 text-sm font-normal text-muted">{entries.length}</span>
   </h2>
+
+  {
+    banner && (
+      <img
+        src={banner}
+        alt={t.bandAlt}
+        width="615"
+        height="210"
+        loading="lazy"
+        decoding="async"
+        class="mt-4 h-28 w-full rounded-card object-cover lg:h-36"
+      />
+    )
+  }
 
   {
     entries.length === 0 ? (

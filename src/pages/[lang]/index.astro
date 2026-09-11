@@ -50,7 +50,12 @@ const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
   <main id="carte" class="mx-auto max-w-4xl px-5 lg:px-8">
     {
       CATEGORIES.map((category) => (
-        <MenuSection lang={lang} category={category} entries={byCategory[category]} />
+        <MenuSection
+          lang={lang}
+          category={category}
+          entries={byCategory[category]}
+          banner={category === "pizzas" ? "/images/menu/_banniere-pizzas.webp" : undefined}
+        />
       ))
     }
     <SiteFooter lang={lang} updatedAt={updatedAt} />
