@@ -1,6 +1,6 @@
 # Zitawi, digital menu
 
-Bilingual (FR/EN) digital menu for the Zitawi restaurant in Lomé, built to be opened from a QR code
+Bilingual (FR/EN) digital menu for the Zitawi restaurant in Cotonou, Benin, built to be opened from a QR code
 placed on the tables. The restaurant updates dishes, prices and photos through a web admin at
 `/admin` without touching any code.
 

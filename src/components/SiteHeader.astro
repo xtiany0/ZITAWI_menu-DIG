@@ -1,5 +1,5 @@
 ---
-import { ui, type Lang } from "../i18n/ui";
+import { ui, PHONE_DISPLAY, type Lang } from "../i18n/ui";
 
 interface Props {
   lang: Lang;
@@ -43,7 +43,7 @@ const t = ui[lang];
     </div>
     <div class="bg-substrate px-4 py-2 lg:px-6">
       <dt class="text-ink-soft">{t.contact}</dt>
-      <dd>+228 90 00 00 00</dd>
+      <dd>{PHONE_DISPLAY}</dd>
     </div>
     <div class="bg-substrate px-4 py-2 lg:px-6">
       <dt class="text-ink-soft">REV</dt>

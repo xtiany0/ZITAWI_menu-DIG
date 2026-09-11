@@ -4,7 +4,7 @@ export type Lang = (typeof LANGS)[number];
 export const ui = {
   fr: {
     htmlLang: "fr",
-    origin: "LOMÉ / TOGO",
+    origin: "COTONOU / BÉNIN",
     heroWords: ["PIZZAS", "GRILLADES", "CHAWARMA"],
     heroBody: "Carte complète. Prix en francs CFA. Sur place ou à emporter.",
     heroCta: "CONSULTER LA CARTE",
@@ -31,14 +31,14 @@ export const ui = {
     otherLangHref: "/en/",
     footerNote: "PRIX EN FRANCS CFA, TAXES COMPRISES.",
     hours: "TOUS LES JOURS 10H-23H",
-    address: "LOMÉ, TOGO",
+    address: "COTONOU, BÉNIN",
     updated: "CARTE RÉVISÉE LE",
     skip: "ALLER À LA CARTE",
     bandAlt: "Deux pizzas garnies, tramées depuis la carte imprimée du restaurant",
   },
   en: {
     htmlLang: "en",
-    origin: "LOME / TOGO",
+    origin: "COTONOU / BENIN",
     heroWords: ["PIZZA", "GRILLS", "SHAWARMA"],
     heroBody: "Full menu. Prices in CFA francs. Dine in or take away.",
     heroCta: "OPEN THE MENU",
@@ -65,15 +65,15 @@ export const ui = {
     otherLangHref: "/fr/",
     footerNote: "PRICES IN CFA FRANCS, TAXES INCLUDED.",
     hours: "DAILY 10AM-11PM",
-    address: "LOME, TOGO",
+    address: "COTONOU, BENIN",
     updated: "MENU REVISED ON",
     skip: "SKIP TO THE MENU",
     bandAlt: "Two loaded pizzas, halftoned from the restaurant's printed menu",
   },
 } as const;
 
-export const PHONE = "+22890000000";
-export const PHONE_DISPLAY = "+228 90 00 00 00";
+export const PHONE = "+2290100000000";
+export const PHONE_DISPLAY = "+229 01 00 00 00 00";
 
 export function formatPrice(value: number, lang: Lang) {
   return new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-GB").format(value);
