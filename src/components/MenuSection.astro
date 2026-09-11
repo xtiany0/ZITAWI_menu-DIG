@@ -1,5 +1,5 @@
 ---
-import { ui, formatPrice, type Lang } from "../i18n/ui";
+import { ui, formatPrice, pad, type Lang } from "../i18n/ui";
 import type { CATEGORIES } from "../content.config";
 
 export interface MenuEntry {
@@ -15,106 +15,88 @@ export interface MenuEntry {
 interface Props {
   lang: Lang;
   category: (typeof CATEGORIES)[number];
-  variant: "cards" | "rows";
+  index: number;
   entries: MenuEntry[];
 }
 
-const { lang, category, variant, entries } = Astro.props;
+const { lang, category, index, entries } = Astro.props;
 const t = ui[lang];
 ---
 
-<section
-  id={category}
-  data-category-section={category}
-  class="mx-auto w-full max-w-6xl scroll-mt-32 px-5 py-12 lg:px-8 lg:py-20"
->
-  <div class="max-w-[46ch]">
-    <h2
-      class="font-display text-3xl leading-tight font-semibold tracking-tight text-ink lg:text-4xl"
+<section id={category} data-category-section={category} class="scroll-mt-24 border-b-2 border-ink">
+  <header class="grid grid-cols-[auto_1fr] items-end gap-4 border-b-2 border-ink px-4 pt-6 pb-3 lg:gap-8 lg:px-6 lg:pt-10 lg:pb-4">
+    <span
+      class="font-display leading-[0.8] text-accent"
+      style="font-size:clamp(3rem,9vw,7rem);letter-spacing:-0.05em"
+      aria-hidden="true">{pad(index).slice(1)}</span
     >
-      {t.categories[category]}
-    </h2>
-    <div class="mt-4 h-[3px] w-14 rounded-full bg-gold" aria-hidden="true"></div>
-    <p class="mt-4 text-sm leading-relaxed text-muted lg:text-base">
-      {t.categoryBlurb[category]}
-    </p>
-  </div>
+    <div class="pb-1">
+      <h2
+        class="font-display uppercase"
+        style="font-size:clamp(1.5rem,4.5vw,3rem);line-height:0.9;letter-spacing:-0.035em"
+      >
+        {t.categories[category]}
+      </h2>
+      <p class="mt-2 text-[0.65rem] tracking-[0.08em] text-ink-soft uppercase lg:text-xs">
+        {t.categoryBlurb[category]} /// {entries.length} {t.refs}
+      </p>
+    </div>
+  </header>
 
   {
     entries.length === 0 ? (
-      <p class="mt-8 rounded-card border border-dashed border-line px-5 py-8 text-center text-sm text-muted">
-        {lang === "fr"
-          ? "Aucun plat disponible dans cette catégorie pour le moment."
-          : "No dishes available in this category right now."}
+      <p class="px-4 py-10 text-center text-xs tracking-[0.1em] text-ink-soft uppercase lg:px-6">
+        [ {lang === "fr" ? "AUCUNE RÉFÉRENCE DISPONIBLE" : "NO REFERENCE AVAILABLE"} ]
       </p>
-    ) : variant === "cards" ? (
-      <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:mt-10 lg:gap-4">
-        {entries.map((entry) => (
-          <li
-            class:list={[
-              "rounded-card border border-line bg-raised p-5 shadow-soft transition-colors duration-200 hover:border-accent/40",
-              !entry.available && "opacity-55",
-            ]}
-          >
-            {entry.image && (
-              <img
-                src={entry.image}
-                alt={entry.name}
-                loading="lazy"
-                decoding="async"
-                width="640"
-                height="420"
-                class="mb-4 aspect-[3/2] w-full rounded-[10px] object-cover"
-              />
-            )}
-            <div class="flex items-baseline justify-between gap-4">
-              <h3 class="font-display text-lg font-semibold text-ink">{entry.name}</h3>
-              <p class="font-display font-semibold tabular-nums whitespace-nowrap text-accent">
-                {formatPrice(entry.price, lang)}
-                <span class="text-xs font-medium text-muted"> {t.currency}</span>
-              </p>
-            </div>
-            {entry.description && (
-              <p class="mt-2 text-sm leading-relaxed text-muted">{entry.description}</p>
-            )}
-            {entry.priceNote && (
-              <p class="mt-2 text-xs font-medium text-muted">{entry.priceNote}</p>
-            )}
-            {!entry.available && (
-              <p class="mt-3 inline-block rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">
-                {t.soldOut}
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
     ) : (
-      <ul class="mt-8 grid gap-x-12 sm:grid-cols-2 lg:mt-10">
-        {entries.map((entry) => (
+      <ul class="grid gap-px bg-ink/15">
+        {entries.map((entry, row) => (
           <li
             class:list={[
-              "flex items-baseline justify-between gap-5 border-b border-line py-3.5",
-              !entry.available && "opacity-55",
+              "grid grid-cols-[3rem_1fr] items-baseline gap-x-3 bg-substrate px-4 py-3 lg:grid-cols-[4rem_minmax(0,4fr)_minmax(0,5fr)_8rem] lg:gap-x-6 lg:px-6 lg:py-3.5",
+              !entry.available && "text-ink-soft",
             ]}
           >
-            <span class="text-ink">
+            <div class="col-start-1 row-span-full self-start">
+              <span class="block text-[0.65rem] tabular-nums text-ink-soft lg:text-xs">
+                {pad(row + 1)}
+              </span>
+              {entry.image && (
+                <img
+                  src={entry.image}
+                  alt={entry.name}
+                  loading="lazy"
+                  decoding="async"
+                  width="96"
+                  height="96"
+                  class="mt-2 h-10 w-10 object-cover grayscale contrast-125 lg:h-12 lg:w-12"
+                />
+              )}
+            </div>
+
+            <h3
+              class:list={[
+                "font-display text-sm uppercase lg:text-base",
+                !entry.available && "line-through decoration-accent decoration-2",
+              ]}
+            >
               {entry.name}
-              {entry.description && (
-                <span class="block text-sm text-muted">{entry.description}</span>
-              )}
-              {!entry.available && (
-                <span class="block text-xs font-medium text-muted">{t.soldOut}</span>
-              )}
-            </span>
-            <span class="font-display font-semibold tabular-nums whitespace-nowrap text-accent">
-              {formatPrice(entry.price, lang)}
-              <span class="text-xs font-medium text-muted"> {t.currency}</span>
+            </h3>
+
+            <p class="col-start-2 text-[0.65rem] leading-relaxed tracking-[0.04em] text-ink-soft uppercase lg:col-start-3 lg:text-[0.7rem]">
+              {entry.description}
+              {!entry.available && <span class="text-accent"> [ {t.soldOut} ]</span>}
+            </p>
+
+            <p class="col-start-2 mt-1 text-xs tabular-nums lg:col-start-4 lg:mt-0 lg:text-right lg:text-sm">
+              <span class="text-accent">{formatPrice(entry.price, lang)}</span>
+              <span class="text-[0.6rem] text-ink-soft"> {t.currency}</span>
               {entry.priceNote && (
-                <span class="block text-right text-xs font-normal text-muted">
+                <span class="block text-[0.6rem] tracking-[0.05em] text-ink-soft uppercase lg:text-right">
                   {entry.priceNote}
                 </span>
               )}
-            </span>
+            </p>
           </li>
         ))}
       </ul>

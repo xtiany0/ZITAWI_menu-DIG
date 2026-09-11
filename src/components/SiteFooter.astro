@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 import { ui, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
 
 interface Props {
@@ -11,25 +10,45 @@ const { lang, updatedAt } = Astro.props;
 const t = ui[lang];
 ---
 
-<footer class="border-t border-line bg-raised">
-  <div class="mx-auto w-full max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
-    <div class="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <p class="font-display text-2xl font-semibold tracking-tight text-ink">Zitawi</p>
-        <p class="mt-2 text-sm text-muted">{t.address}</p>
-        <p class="mt-1 text-sm text-muted">{t.hours}</p>
-      </div>
-      <a
-        href={`tel:${PHONE}`}
-        class="inline-flex items-center gap-2 self-start rounded-full bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90 active:translate-y-px sm:self-auto"
-      >
-        <Icon name="ph:phone" class="h-4 w-4" aria-hidden="true" />
-        {PHONE_DISPLAY}
-      </a>
-    </div>
+<footer>
+  <a
+    href={`tel:${PHONE}`}
+    class="block border-b-2 border-ink bg-accent px-4 py-6 text-center text-on-accent transition-colors duration-150 hover:bg-ink lg:px-6 lg:py-8"
+  >
+    <span class="text-[0.65rem] tracking-[0.12em] uppercase lg:text-xs">{t.contact} &gt;&gt;&gt;</span>
+    <span
+      class="mt-2 block font-display tabular-nums"
+      style="font-size:clamp(1.5rem,6vw,3.5rem);line-height:0.9;letter-spacing:-0.04em"
+    >
+      {PHONE_DISPLAY}
+    </span>
+  </a>
 
-    <p class="mt-10 border-t border-line pt-6 text-xs text-muted">
-      {t.footerNote} {t.updated} {updatedAt}
-    </p>
-  </div>
+  <dl
+    class="grid grid-cols-2 gap-px border-b-2 border-ink bg-ink text-[0.625rem] tracking-[0.1em] uppercase sm:grid-cols-4 lg:text-[0.7rem]"
+  >
+    <div class="bg-substrate px-4 py-3 lg:px-6">
+      <dt class="text-ink-soft">ADRESSE</dt>
+      <dd>{t.address}</dd>
+    </div>
+    <div class="bg-substrate px-4 py-3 lg:px-6">
+      <dt class="text-ink-soft">{t.service}</dt>
+      <dd>{t.hours}</dd>
+    </div>
+    <div class="bg-substrate px-4 py-3 lg:px-6">
+      <dt class="text-ink-soft">{t.updated}</dt>
+      <dd>{updatedAt}</dd>
+    </div>
+    <div class="bg-substrate px-4 py-3 lg:px-6">
+      <dt class="text-ink-soft">TARIFS</dt>
+      <dd>{t.footerNote}</dd>
+    </div>
+  </dl>
+
+  <p
+    class="overflow-hidden px-4 pt-4 pb-2 font-display leading-[0.8] uppercase lg:px-6"
+    style="font-size:clamp(3.5rem,17vw,13rem);letter-spacing:-0.05em"
+  >
+    Zitawi<span class="text-accent">®</span>
+  </p>
 </footer>

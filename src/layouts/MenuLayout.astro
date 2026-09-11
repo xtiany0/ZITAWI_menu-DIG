@@ -1,6 +1,6 @@
 ---
-import "@fontsource-variable/outfit";
-import "@fontsource-variable/inter-tight";
+import "@fontsource/archivo-black";
+import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 import { ui, type Lang } from "../i18n/ui";
 
@@ -25,21 +25,23 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
-    <meta name="theme-color" content="#faf6ec" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1c100f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f4f0" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body class="bg-surface text-ink font-sans antialiased">
+  <body class="bg-ink font-mono text-ink">
     <a
       href="#carte"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-accent focus:px-5 focus:py-2 focus:text-sm focus:text-on-accent"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-70 focus:bg-accent focus:px-4 focus:py-2 focus:text-xs focus:tracking-[0.1em] focus:text-on-accent"
     >
       {t.skip}
     </a>
-    <slot />
+    <div class="grain" aria-hidden="true"></div>
+    <div class="mx-auto max-w-[1400px] border-x border-ink bg-substrate">
+      <slot />
+    </div>
   </body>
 </html>

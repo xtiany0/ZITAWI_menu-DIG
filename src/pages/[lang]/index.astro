@@ -49,33 +49,28 @@ const signatures = CATEGORIES.flatMap((category) =>
   price: item.data.price,
 }));
 
-const variants: Record<(typeof CATEGORIES)[number], "cards" | "rows"> = {
-  pizzas: "cards",
-  plats: "cards",
-  sandwichs: "rows",
-  boissons: "rows",
-};
-
+const now = new Date();
 const updatedAt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
-  day: "numeric",
-  month: "long",
+  day: "2-digit",
+  month: "2-digit",
   year: "numeric",
-}).format(new Date());
+}).format(now);
+const revision = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}`;
 
 const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
 ---
 
 <MenuLayout lang={lang} title={title} description={t.heroBody}>
-  <SiteHeader lang={lang} />
+  <SiteHeader lang={lang} revision={revision} />
   <main>
-    <Hero lang={lang} signatures={signatures} />
+    <Hero lang={lang} signatures={signatures} totalRefs={sorted.length} />
     <CategoryNav lang={lang} categories={[...CATEGORIES]} />
     {
-      CATEGORIES.map((category) => (
+      CATEGORIES.map((category, position) => (
         <MenuSection
           lang={lang}
           category={category}
-          variant={variants[category]}
+          index={position + 1}
           entries={byCategory[category]}
         />
       ))

@@ -9,26 +9,27 @@ const { lang } = Astro.props;
 const t = ui[lang];
 ---
 
-<!-- Cropped from the restaurant's own printed menu. Low resolution by origin,
-     so it is displayed below its native 608px width and never upscaled. -->
-<section class="mx-auto w-full max-w-6xl px-5 pb-14 lg:px-8 lg:pb-20">
-  <figure class="relative mx-auto w-full max-w-[480px]">
-    <picture>
-      <source srcset="/images/bandeau-pizzas.webp" type="image/webp" />
-      <img
-        src="/images/bandeau-pizzas.jpg"
-        alt={t.bandAlt}
-        width="608"
-        height="148"
-        loading="lazy"
-        decoding="async"
-        class="w-full rounded-card shadow-soft"
-      />
-    </picture>
-    <div
-      class="pointer-events-none absolute inset-0 rounded-card bg-accent/10 mix-blend-multiply"
-      aria-hidden="true"
+<!-- Cropped from the restaurant's printed menu, reduced to a 152px greyscale
+     bitmap and scaled back with nearest-neighbour. The coarse halftone turns
+     the low source resolution into a print texture. -->
+<section class="border-b-2 border-ink">
+  <figure class="grid grid-cols-1 gap-px bg-ink lg:grid-cols-12">
+    <img
+      src="/images/bandeau-trame.png"
+      alt={t.bandAlt}
+      width="608"
+      height="148"
+      loading="lazy"
+      decoding="async"
+      class="bitmap h-full w-full bg-substrate object-cover lg:col-span-8"
+    />
+    <figcaption
+      class="flex flex-col justify-between gap-6 bg-substrate px-4 py-4 text-[0.65rem] tracking-[0.08em] uppercase lg:col-span-4 lg:px-6 lg:py-5 lg:text-[0.7rem]"
     >
-    </div>
+      <span class="text-ink-soft">[ TRAME 152PX / 16 NIV. ]</span>
+      <span class="font-display text-accent" style="font-size:clamp(1.25rem,3vw,2rem);line-height:0.9;letter-spacing:-0.03em">
+        {t.origin}
+      </span>
+    </figcaption>
   </figure>
 </section>

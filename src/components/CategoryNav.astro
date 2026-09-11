@@ -14,18 +14,18 @@ const t = ui[lang];
 <nav
   id="carte"
   aria-label={lang === "fr" ? "Catégories du menu" : "Menu categories"}
-  class="sticky top-0 z-30 border-y border-line bg-surface/90 backdrop-blur-md"
+  class="sticky top-0 z-30 border-y-2 border-ink bg-substrate"
 >
   <ul
-    class="mx-auto flex max-w-6xl snap-x gap-2 overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-8 [&::-webkit-scrollbar]:hidden"
+    class="flex gap-px overflow-x-auto bg-ink [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
   >
     {
       categories.map((category) => (
-        <li class="snap-start">
+        <li class="flex-1">
           <a
             href={`#${category}`}
             data-category-link={category}
-            class="inline-block rounded-full border border-line px-4 py-1.5 text-sm font-medium whitespace-nowrap text-muted transition-colors duration-200 hover:border-accent hover:text-accent aria-[current=true]:border-accent aria-[current=true]:bg-accent aria-[current=true]:text-on-accent"
+            class="block bg-substrate px-4 py-3 text-center text-[0.65rem] tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-150 hover:bg-ink hover:text-substrate aria-[current=true]:bg-accent aria-[current=true]:text-on-accent lg:px-6 lg:text-xs"
           >
             {t.categories[category]}
           </a>
@@ -42,9 +42,7 @@ const t = ui[lang];
   if (links.length && sections.length) {
     const setCurrent = (id: string) => {
       links.forEach((link) => {
-        const active = link.dataset.categoryLink === id;
-        link.setAttribute("aria-current", String(active));
-        if (active) link.scrollIntoView({ block: "nearest", inline: "nearest" });
+        link.setAttribute("aria-current", String(link.dataset.categoryLink === id));
       });
     };
 

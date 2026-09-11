@@ -13,21 +13,30 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 | Content | Markdown files in `src/content/menu`, one file per dish |
 | Admin | Decap CMS at `/admin`, backed by Netlify Identity plus Git Gateway |
 | Hosting | Netlify |
-| Icons | Phosphor, served through `astro-icon` |
-| Fonts | Outfit (display) and Inter Tight (body), self-hosted via Fontsource |
+| Fonts | Archivo Black (display) and JetBrains Mono (everything else), self-hosted via Fontsource |
 
-## Colours
+## Design system
 
-The palette is taken from the restaurant's own printed menu: burgundy header bars, yellow panels,
-white stripes. Softened for screen into ivory `#FAF6EC`, burgundy `#7A1E1C` and gold `#E3B33C`.
-The dark theme keeps the same three colours and swaps their roles: deep burgundy ground, gold
-accent, ivory text. Tokens live in `src/styles/global.css`.
+Swiss Industrial Print: a single light substrate, monolithic uppercase display type against
+small tracked monospace metadata, visible compartmentalisation, and no `border-radius` anywhere.
+
+- Substrate `#F4F4F0`, carbon ink `#0A0A0A`, secondary ink `#55534D`.
+- One accent only: burgundy `#7A1E1C`, taken from the header bars of the restaurant's printed menu.
+- The theme is locked light. There is no dark mode: the menu is read on a phone in daylight, and
+  the archetype forbids mixing substrates.
+- Hairlines come from `display: grid; gap: 1px` over an ink background rather than per-element
+  borders.
+- Macro type uses `clamp()`; micro type stays fixed between 10px and 14px.
+- A fixed SVG noise layer (`.grain`) sits above the page at 5% opacity, `pointer-events: none`,
+  never on a scrolling container.
+
+Tokens live in `src/styles/global.css`.
 
 ## Local development
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321
+npm run dev      # http://localhost:4399
 npm run build    # static output in dist/
 npm run preview
 ```
@@ -77,7 +86,7 @@ ready to print from a browser.
 
 ## Photography
 
-Dish photos are intentionally not bundled. The `image` field is wired end to end, so the restaurant
+The pizza band above the footer is cropped from the printed menu and halftoned. Dish photos are intentionally not bundled. The `image` field is wired end to end, so the restaurant
 can upload real photos through `/admin` and they appear immediately. Shoot in daylight, from above,
 in landscape, and keep each file under about 500 KB.
 
