@@ -1,0 +1,66 @@
+---
+import { ui, type Lang } from "../i18n/ui";
+import type { CATEGORIES } from "../content.config";
+
+interface Props {
+  lang: Lang;
+  categories: (typeof CATEGORIES)[number][];
+}
+
+const { lang, categories } = Astro.props;
+const t = ui[lang];
+---
+
+<nav
+  id="carte"
+  aria-label={lang === "fr" ? "Catégories du menu" : "Menu categories"}
+  class="sticky top-0 z-30 border-y border-line bg-surface/90 backdrop-blur-md"
+>
+  <ul
+    class="mx-auto flex max-w-6xl snap-x gap-2 overflow-x-auto px-5 py-3 [scrollbar-width:none] lg:px-8 [&::-webkit-scrollbar]:hidden"
+  >
+    {
+      categories.map((category) => (
+        <li class="snap-start">
+          <a
+            href={`#${category}`}
+            data-category-link={category}
+            class="inline-block rounded-full border border-line px-4 py-1.5 text-sm font-medium whitespace-nowrap text-muted transition-colors duration-200 hover:border-accent hover:text-accent aria-[current=true]:border-accent aria-[current=true]:bg-accent aria-[current=true]:text-on-accent"
+          >
+            {t.categories[category]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-category-link]");
+  const sections = document.querySelectorAll<HTMLElement>("[data-category-section]");
+
+  if (links.length && sections.length) {
+    const setCurrent = (id: string) => {
+      links.forEach((link) => {
+        const active = link.dataset.categoryLink === id;
+        link.setAttribute("aria-current", String(active));
+        if (active) link.scrollIntoView({ block: "nearest", inline: "nearest" });
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible?.target instanceof HTMLElement) {
+          setCurrent(visible.target.dataset.categorySection ?? "");
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    setCurrent(sections[0].dataset.categorySection ?? "");
+  }
+</script>

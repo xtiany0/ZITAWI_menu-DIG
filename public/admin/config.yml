@@ -1,0 +1,101 @@
+backend:
+  name: git-gateway
+  branch: main
+
+locale: fr
+publish_mode: simple
+media_folder: public/images/menu
+public_folder: /images/menu
+
+collections:
+  - name: menu
+    label: Carte
+    label_singular: Plat
+    folder: src/content/menu
+    create: true
+    slug: "{{fields.category}}--{{slug}}"
+    identifier_field: name_fr
+    summary: "{{fields.name_fr}} - {{fields.price}} FCFA"
+    sortable_fields: [category, price, name_fr]
+    view_groups:
+      - label: Catégorie
+        field: category
+    fields:
+      - label: "Nom (français)"
+        name: name_fr
+        widget: string
+        hint: "Le nom affiché sur la carte française."
+
+      - label: "Nom (anglais)"
+        name: name_en
+        widget: string
+        hint: "Le nom affiché sur la carte anglaise."
+
+      - label: "Catégorie"
+        name: category
+        widget: select
+        options:
+          - { label: "Pizzas", value: "pizzas" }
+          - { label: "Plats", value: "plats" }
+          - { label: "Sandwichs", value: "sandwichs" }
+          - { label: "Boissons", value: "boissons" }
+
+      - label: "Prix en FCFA"
+        name: price
+        widget: number
+        value_type: int
+        min: 0
+        step: 50
+        hint: "Chiffres seulement, sans le mot FCFA. Exemple : 4500"
+
+      - label: "Ingrédients (français)"
+        name: description_fr
+        widget: text
+        required: false
+        hint: "Liste courte, séparée par des virgules. Laisser vide si inutile."
+
+      - label: "Ingrédients (anglais)"
+        name: description_en
+        widget: text
+        required: false
+
+      - label: "Précision de prix (français)"
+        name: price_note_fr
+        widget: string
+        required: false
+        hint: "Exemple : la douzaine, en supplément. Laisser vide dans la plupart des cas."
+
+      - label: "Précision de prix (anglais)"
+        name: price_note_en
+        widget: string
+        required: false
+
+      - label: "Photo du plat"
+        name: image
+        widget: image
+        required: false
+        hint: "Photo prise de haut, en lumière du jour. Format paysage."
+
+      - label: "Disponible aujourd'hui"
+        name: available
+        widget: boolean
+        default: true
+        hint: "Décocher pour afficher le plat comme épuisé, sans le supprimer."
+
+      - label: "Mettre en avant sur la page d'accueil"
+        name: featured
+        widget: boolean
+        default: false
+
+      - label: "Ordre d'affichage"
+        name: order
+        widget: number
+        value_type: int
+        default: 100
+        hint: "Un petit nombre fait remonter le plat dans sa catégorie."
+
+      - label: "Notes internes"
+        name: body
+        widget: markdown
+        required: false
+        hint: "Non affiché sur le site."

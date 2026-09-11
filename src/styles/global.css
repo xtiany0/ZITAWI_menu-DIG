@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+/* Radius system for this project:
+   interactive elements = full pill, cards = --radius-card, images = --radius-card. */
+
+@theme {
+  --font-display: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Tight Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 14px;
+
+  --color-surface: #f7f7f5;
+  --color-raised: #fdfdfc;
+  --color-ink: #15201b;
+  --color-muted: #5a6660;
+  --color-line: #e2e4e0;
+  --color-accent: #1e4d3a;
+  --color-on-accent: #fdfdfc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #0f1311;
+    --color-raised: #161c19;
+    --color-ink: #e7ede9;
+    --color-muted: #93a09a;
+    --color-line: #232b27;
+    --color-accent: #6fb08d;
+    --color-on-accent: #0f1311;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 8.5rem;
+  background-color: var(--color-surface);
+  color-scheme: light dark;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.rise {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

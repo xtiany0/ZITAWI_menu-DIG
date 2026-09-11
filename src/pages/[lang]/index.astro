@@ -1,0 +1,84 @@
+---
+import { getCollection } from "astro:content";
+import MenuLayout from "../../layouts/MenuLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import Hero from "../../components/Hero.astro";
+import CategoryNav from "../../components/CategoryNav.astro";
+import MenuSection, { type MenuEntry } from "../../components/MenuSection.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import { CATEGORIES } from "../../content.config";
+import { LANGS, ui, type Lang } from "../../i18n/ui";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+
+const all = await getCollection("menu");
+const sorted = [...all].sort((a, b) => a.data.order - b.data.order);
+
+const toEntry = (item: (typeof sorted)[number]): MenuEntry => ({
+  id: item.id,
+  name: lang === "fr" ? item.data.name_fr : item.data.name_en,
+  description: lang === "fr" ? item.data.description_fr : item.data.description_en,
+  price: item.data.price,
+  priceNote: lang === "fr" ? item.data.price_note_fr : item.data.price_note_en,
+  image: item.data.image,
+  available: item.data.available,
+});
+
+const byCategory = Object.fromEntries(
+  CATEGORIES.map((category) => [
+    category,
+    sorted.filter((item) => item.data.category === category).map(toEntry),
+  ]),
+) as Record<(typeof CATEGORIES)[number], MenuEntry[]>;
+
+const signatures = CATEGORIES.flatMap((category) =>
+  sorted
+    .filter(
+      (item) =>
+        item.data.category === category && item.data.featured && item.data.available,
+    )
+    .slice(0, 1),
+).map((item) => ({
+  name: lang === "fr" ? item.data.name_fr : item.data.name_en,
+  price: item.data.price,
+}));
+
+const variants: Record<(typeof CATEGORIES)[number], "cards" | "rows"> = {
+  pizzas: "cards",
+  plats: "cards",
+  sandwichs: "rows",
+  boissons: "rows",
+};
+
+const updatedAt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+}).format(new Date());
+
+const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
+---
+
+<MenuLayout lang={lang} title={title} description={t.heroBody}>
+  <SiteHeader lang={lang} />
+  <main>
+    <Hero lang={lang} signatures={signatures} />
+    <CategoryNav lang={lang} categories={[...CATEGORIES]} />
+    {
+      CATEGORIES.map((category) => (
+        <MenuSection
+          lang={lang}
+          category={category}
+          variant={variants[category]}
+          entries={byCategory[category]}
+        />
+      ))
+    }
+  </main>
+  <SiteFooter lang={lang} updatedAt={updatedAt} />
+</MenuLayout>

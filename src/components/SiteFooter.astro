@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+import { ui, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+  updatedAt: string;
+}
+
+const { lang, updatedAt } = Astro.props;
+const t = ui[lang];
+---
+
+<footer class="border-t border-line bg-raised">
+  <div class="mx-auto w-full max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="font-display text-2xl font-semibold tracking-tight text-ink">Zitawi</p>
+        <p class="mt-2 text-sm text-muted">{t.address}</p>
+        <p class="mt-1 text-sm text-muted">{t.hours}</p>
+      </div>
+      <a
+        href={`tel:${PHONE}`}
+        class="inline-flex items-center gap-2 self-start rounded-full bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90 active:translate-y-px sm:self-auto"
+      >
+        <Icon name="ph:phone" class="h-4 w-4" aria-hidden="true" />
+        {PHONE_DISPLAY}
+      </a>
+    </div>
+
+    <p class="mt-10 border-t border-line pt-6 text-xs text-muted">
+      {t.footerNote} {t.updated} {updatedAt}
+    </p>
+  </div>
+</footer>

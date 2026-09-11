@@ -1,0 +1,65 @@
+---
+import { Icon } from "astro-icon/components";
+import { ui, formatPrice, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+  signatures: { name: string; price: number }[];
+}
+
+const { lang, signatures } = Astro.props;
+const t = ui[lang];
+---
+
+<section class="mx-auto w-full max-w-6xl px-5 pt-6 pb-14 lg:px-8 lg:pt-16 lg:pb-24">
+  <div class="grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-16">
+    <div class="rise lg:col-span-7">
+      <h1
+        class="font-display text-[2.1rem] leading-[1.08] font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl"
+      >
+        {t.heroTitle}
+      </h1>
+      <p class="mt-5 max-w-[46ch] text-base leading-relaxed text-muted lg:text-lg">
+        {t.heroBody}
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          href="#carte"
+          class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-transform duration-200 hover:opacity-90 active:translate-y-px lg:text-base"
+        >
+          {t.heroCta}
+          <Icon name="ph:arrow-down" class="h-4 w-4" aria-hidden="true" />
+        </a>
+        <a
+          href={`tel:${PHONE}`}
+          class="inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition-colors duration-200 hover:border-accent hover:text-accent active:translate-y-px lg:text-base"
+        >
+          <Icon name="ph:phone" class="h-4 w-4" aria-hidden="true" />
+          {t.heroCall}
+        </a>
+      </div>
+    </div>
+
+    <aside class="rise lg:col-span-5" style="animation-delay:120ms">
+      <div class="rounded-card border border-line bg-raised p-6 lg:p-7">
+        <p class="text-sm font-semibold text-ink">{t.popular}</p>
+        <ul class="mt-4 space-y-3">
+          {
+            signatures.map((dish) => (
+              <li class="flex items-baseline justify-between gap-4 text-sm lg:text-base">
+                <span class="text-muted">{dish.name}</span>
+                <span class="font-display font-semibold tabular-nums whitespace-nowrap text-accent">
+                  {formatPrice(dish.price, lang)}
+                  <span class="text-xs font-medium text-muted"> {t.currency}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-5 border-t border-line pt-4 text-xs text-muted">
+          {t.hours} · {PHONE_DISPLAY}
+        </p>
+      </div>
+    </aside>
+  </div>
+</section>
