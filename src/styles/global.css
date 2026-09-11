@@ -1,32 +1,40 @@
 @import "tailwindcss";
 
-/* Radius system for this project:
-   interactive elements = full pill, cards = --radius-card, images = --radius-card. */
+/* Palette taken from the restaurant's printed menu: burgundy header bars, yellow
+   panels, white stripes. Softened here into ivory, burgundy and gold so the same
+   three colours carry both themes. Radius system: interactive = full pill,
+   everything else = --radius-card. */
 
 @theme {
   --font-display: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter Tight Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 14px;
+  --radius-card: 16px;
 
-  --color-surface: #f7f7f5;
-  --color-raised: #fdfdfc;
-  --color-ink: #15201b;
-  --color-muted: #5a6660;
-  --color-line: #e2e4e0;
-  --color-accent: #1e4d3a;
-  --color-on-accent: #fdfdfc;
+  --color-surface: #faf6ec;
+  --color-raised: #fffdf7;
+  --color-ink: #2b1512;
+  --color-muted: #6b5548;
+  --color-line: #ebe2ce;
+  --color-accent: #7a1e1c;
+  --color-on-accent: #fffdf7;
+  --color-gold: #e3b33c;
+
+  --shadow-soft: 0 1px 2px rgb(43 21 18 / 0.04), 0 10px 28px -14px rgb(43 21 18 / 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-surface: #0f1311;
-    --color-raised: #161c19;
-    --color-ink: #e7ede9;
-    --color-muted: #93a09a;
-    --color-line: #232b27;
-    --color-accent: #6fb08d;
-    --color-on-accent: #0f1311;
+    --color-surface: #1c100f;
+    --color-raised: #271715;
+    --color-ink: #f4eada;
+    --color-muted: #b3a08f;
+    --color-line: #3a2621;
+    --color-accent: #e8a33c;
+    --color-on-accent: #1c100f;
+    --color-gold: #e8a33c;
+
+    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -14px rgb(0 0 0 / 0.6);
   }
 }
 

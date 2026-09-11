@@ -16,6 +16,13 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 | Icons | Phosphor, served through `astro-icon` |
 | Fonts | Outfit (display) and Inter Tight (body), self-hosted via Fontsource |
 
+## Colours
+
+The palette is taken from the restaurant's own printed menu: burgundy header bars, yellow panels,
+white stripes. Softened for screen into ivory `#FAF6EC`, burgundy `#7A1E1C` and gold `#E3B33C`.
+The dark theme keeps the same three colours and swaps their roles: deep burgundy ground, gold
+accent, ivory text. Tokens live in `src/styles/global.css`.
+
 ## Local development
 
 ```bash

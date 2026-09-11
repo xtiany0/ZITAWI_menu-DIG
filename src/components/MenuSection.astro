@@ -34,7 +34,8 @@ const t = ui[lang];
     >
       {t.categories[category]}
     </h2>
-    <p class="mt-3 text-sm leading-relaxed text-muted lg:text-base">
+    <div class="mt-4 h-[3px] w-14 rounded-full bg-gold" aria-hidden="true"></div>
+    <p class="mt-4 text-sm leading-relaxed text-muted lg:text-base">
       {t.categoryBlurb[category]}
     </p>
   </div>
@@ -51,7 +52,7 @@ const t = ui[lang];
         {entries.map((entry) => (
           <li
             class:list={[
-              "rounded-card border border-line bg-raised p-5 transition-colors duration-200 hover:border-accent/40",
+              "rounded-card border border-line bg-raised p-5 shadow-soft transition-colors duration-200 hover:border-accent/40",
               !entry.available && "opacity-55",
             ]}
           >
