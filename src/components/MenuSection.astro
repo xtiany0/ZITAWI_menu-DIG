@@ -62,7 +62,7 @@ const t = ui[lang];
               <h3
                 class:list={[
                   "font-display text-[1.05rem] tracking-[0.01em]",
-                  !entry.available && "text-muted line-through decoration-red/60",
+                  !entry.available && "text-muted line-through decoration-red-soft/60",
                 ]}
               >
                 {entry.name}
@@ -86,7 +86,7 @@ const t = ui[lang];
                   <span class="text-[0.78rem] text-muted italic">{entry.priceNote}</span>
                 )}
                 {!entry.available && (
-                  <span class="text-[0.7rem] tracking-[0.14em] text-red uppercase">
+                  <span class="text-[0.7rem] tracking-[0.14em] text-red-soft uppercase">
                     {t.soldOut}
                   </span>
                 )}

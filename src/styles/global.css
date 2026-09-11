@@ -1,27 +1,28 @@
 @import "tailwindcss";
 
-/* Printed-menu editorial: warm blush paper, oxblood ink, gold prices.
-   No gradients, no glow, no glass, no dark mode. */
+/* Printed-menu editorial on a dark ground: warm near-black, bone ink, gold
+   prices. No gradients, no glow, no glass, no light mode. */
 
 @theme {
   --font-display: "Playfair Display SC", ui-serif, Georgia, serif;
   --font-sans: "Karla Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-paper: #fef2f2;
-  --color-card: #ffffff;
-  --color-ink: #450a0a;
-  --color-muted: #7c5a56;
-  --color-rule: #f1d4d2;
+  --color-ground: #170f0e;
+  --color-raised: #231817;
+  --color-ink: #f5ebe8;
+  --color-muted: #b59b95;
+  --color-rule: #3a2726;
+  --color-gold: #d4a24c;
   --color-red: #dc2626;
-  --color-gold: #a16207;
+  --color-red-soft: #f05252;
   --color-on-red: #ffffff;
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
-  background-color: var(--color-paper);
-  color-scheme: only light;
+  background-color: var(--color-ground);
+  color-scheme: only dark;
 }
 
 body {

@@ -26,14 +26,14 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
-    <meta name="theme-color" content="#fef2f2" />
+    <meta name="theme-color" content="#170f0e" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body class="min-h-dvh bg-paper font-sans text-ink">
+  <body class="min-h-dvh bg-ground font-sans text-ink">
     <a
       href="#carte"
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:bg-red focus:px-4 focus:py-2 focus:text-sm focus:text-on-red"

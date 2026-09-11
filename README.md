@@ -17,16 +17,16 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 
 ## Design system
 
-A printed menu, set for screen. Warm blush paper, oxblood ink, gold prices, and dot leaders
-running from each dish name to its price.
+A printed menu, set for screen, on a dark ground. Warm near-black, bone ink, gold prices, and dot
+leaders running from each dish name to its price.
 
-- Paper `#FEF2F2`, ink `#450A0A`, secondary text `#7C5A56`, rules `#F1D4D2`.
-- Gold `#A16207` carries every price; red `#DC2626` is reserved for actions and the sold-out
-  marker. Both clear 4.5:1 on the paper.
+- Ground `#170F0E`, ink `#F5EBE8`, secondary text `#B59B95`, rules `#3A2726`.
+- Gold `#D4A24C` carries every price at 7.9:1. Red splits in two: `#DC2626` fills the action
+  buttons under white text, `#F05252` is the text tone for the sold-out marker, because the
+  solid red only reaches 3.1:1 against this ground.
 - Playfair Display SC is set in small caps for dish names, which is what makes the page read as a
   menu rather than a product listing.
-- The theme is locked light. The menu is opened from a QR code at a table, often outdoors, where
-  dark-on-light is the easier pairing to read under glare.
+- The theme is locked dark; `color-scheme: only dark`.
 - No gradients, no glow, no glass, no shadowed cards. Separation comes from rules and space.
 - Dot leaders are a flex child that grows into whatever gap is left (`.leader` in `global.css`),
   so they work at any name length without measurement.
