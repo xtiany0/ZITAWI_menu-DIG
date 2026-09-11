@@ -1,53 +1,31 @@
 ---
-import { ui, PHONE_DISPLAY, type Lang } from "../i18n/ui";
+import { ui, type Lang } from "../i18n/ui";
 
 interface Props {
   lang: Lang;
-  revision: string;
 }
 
-const { lang, revision } = Astro.props;
+const { lang } = Astro.props;
 const t = ui[lang];
 ---
 
-<header class="border-b-2 border-ink">
-  <div class="flex items-stretch justify-between">
-    <a href={`/${lang}/`} class="flex items-baseline gap-1 px-4 py-4 lg:px-6 lg:py-5">
-      <span
-        class="font-display text-[2rem] leading-[0.85] tracking-[-0.04em] uppercase lg:text-[2.75rem]"
-      >
-        Zitawi
-      </span>
-      <span class="text-[0.7rem] leading-none">®</span>
-    </a>
-
-    <a
-      href={t.otherLangHref}
-      hreflang={lang === "fr" ? "en" : "fr"}
-      class="flex items-center border-l-2 border-ink px-5 text-xs tracking-[0.1em] uppercase transition-colors duration-150 hover:bg-accent hover:text-on-accent lg:px-8 lg:text-sm"
+<header class="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 lg:px-8 lg:py-7">
+  <a href={`/${lang}/`} class="group flex items-center gap-2.5">
+    <span
+      class="grid h-9 w-9 place-items-center rounded-xl bg-accent text-base font-semibold text-on-accent shadow-[0_0_24px_-4px_var(--color-accent)]"
+      aria-hidden="true">Z</span
     >
-      [ {t.otherLang} ]
-    </a>
-  </div>
+    <span class="flex flex-col leading-none">
+      <span class="text-[0.95rem] font-semibold tracking-tight">Zitawi</span>
+      <span class="mt-1 font-mono text-[0.65rem] tracking-[0.08em] text-muted">{t.origin}</span>
+    </span>
+  </a>
 
-  <dl
-    class="grid grid-cols-2 gap-px border-t border-ink bg-ink text-[0.625rem] tracking-[0.1em] uppercase sm:grid-cols-4 lg:text-[0.7rem]"
+  <a
+    href={t.otherLangHref}
+    hreflang={lang === "fr" ? "en" : "fr"}
+    class="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-line bg-surface/70 px-4 font-mono text-xs tracking-[0.08em] text-muted backdrop-blur transition-colors duration-200 hover:border-accent/60 hover:text-ink"
   >
-    <div class="bg-substrate px-4 py-2 lg:px-6">
-      <dt class="text-ink-soft">ORIGINE</dt>
-      <dd>{t.origin}</dd>
-    </div>
-    <div class="bg-substrate px-4 py-2 lg:px-6">
-      <dt class="text-ink-soft">{t.service}</dt>
-      <dd>{t.hours}</dd>
-    </div>
-    <div class="bg-substrate px-4 py-2 lg:px-6">
-      <dt class="text-ink-soft">{t.contact}</dt>
-      <dd>{PHONE_DISPLAY}</dd>
-    </div>
-    <div class="bg-substrate px-4 py-2 lg:px-6">
-      <dt class="text-ink-soft">REV</dt>
-      <dd>{revision}</dd>
-    </div>
-  </dl>
+    {t.otherLang}
+  </a>
 </header>

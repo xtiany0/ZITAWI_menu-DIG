@@ -14,18 +14,18 @@ const t = ui[lang];
 <nav
   id="carte"
   aria-label={lang === "fr" ? "Catégories du menu" : "Menu categories"}
-  class="sticky top-0 z-30 border-y-2 border-ink bg-substrate"
+  class="sticky top-0 z-30 border-y border-line bg-bg/80 backdrop-blur-xl"
 >
   <ul
-    class="flex gap-px overflow-x-auto bg-ink [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 py-3 lg:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
   >
     {
       categories.map((category) => (
-        <li class="flex-1">
+        <li>
           <a
             href={`#${category}`}
             data-category-link={category}
-            class="block bg-substrate px-4 py-3 text-center text-[0.65rem] tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-150 hover:bg-ink hover:text-substrate aria-[current=true]:bg-accent aria-[current=true]:text-on-accent lg:px-6 lg:text-xs"
+            class="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-line px-4 text-sm whitespace-nowrap text-muted transition-colors duration-200 hover:border-accent/60 hover:text-ink aria-[current=true]:border-transparent aria-[current=true]:bg-accent aria-[current=true]:text-on-accent"
           >
             {t.categories[category]}
           </a>
@@ -55,7 +55,7 @@ const t = ui[lang];
           setCurrent(visible.target.dataset.categorySection ?? "");
         }
       },
-      { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 },
     );
 
     sections.forEach((section) => observer.observe(section));

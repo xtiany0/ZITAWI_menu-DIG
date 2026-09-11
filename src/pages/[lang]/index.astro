@@ -55,13 +55,12 @@ const updatedAt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
   month: "2-digit",
   year: "numeric",
 }).format(now);
-const revision = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}`;
 
 const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
 ---
 
 <MenuLayout lang={lang} title={title} description={t.heroBody}>
-  <SiteHeader lang={lang} revision={revision} />
+  <SiteHeader lang={lang} />
   <main>
     <Hero lang={lang} signatures={signatures} totalRefs={sorted.length} />
     <CategoryNav lang={lang} categories={[...CATEGORIES]} />

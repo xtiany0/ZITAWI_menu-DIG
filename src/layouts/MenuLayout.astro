@@ -1,5 +1,5 @@
 ---
-import "@fontsource/archivo-black";
+import "@fontsource-variable/inter";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 import { ui, type Lang } from "../i18n/ui";
@@ -25,23 +25,50 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
-    <meta name="theme-color" content="#f4f4f0" />
+    <meta name="theme-color" content="#08080c" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body class="bg-ink font-mono text-ink">
+  <body class="relative min-h-dvh bg-bg font-display text-ink antialiased">
     <a
       href="#carte"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-70 focus:bg-accent focus:px-4 focus:py-2 focus:text-xs focus:tracking-[0.1em] focus:text-on-accent"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-on-accent"
     >
       {t.skip}
     </a>
-    <div class="grain" aria-hidden="true"></div>
-    <div class="mx-auto max-w-[1400px] border-x border-ink bg-substrate">
+
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[70rem] overflow-hidden" aria-hidden="true">
+      <div class="absolute inset-0 aurora opacity-60"></div>
+      <div class="absolute inset-0 grid-field"></div>
+    </div>
+
+    <div class="relative">
       <slot />
     </div>
+
+    <script>
+      const revealed = document.querySelectorAll<HTMLElement>(".reveal");
+      const motionOk = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+      if (motionOk && revealed.length) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                (entry.target as HTMLElement).dataset.shown = "true";
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        revealed.forEach((element) => observer.observe(element));
+      } else {
+        revealed.forEach((element) => (element.dataset.shown = "true"));
+      }
+    </script>
   </body>
 </html>

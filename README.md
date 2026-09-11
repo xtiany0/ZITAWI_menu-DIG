@@ -13,24 +13,34 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 | Content | Markdown files in `src/content/menu`, one file per dish |
 | Admin | Decap CMS at `/admin`, backed by Netlify Identity plus Git Gateway |
 | Hosting | Netlify |
-| Fonts | Archivo Black (display) and JetBrains Mono (everything else), self-hosted via Fontsource |
+| Fonts | Inter (display) and JetBrains Mono (metadata), self-hosted via Fontsource |
 
 ## Design system
 
-Swiss Industrial Print: a single light substrate, monolithic uppercase display type against
-small tracked monospace metadata, visible compartmentalisation, and no `border-radius` anywhere.
+AI-native dark surface: near-black ground, a single violet accent, restrained glow, and glass
+panels over a faint engineering grid.
 
-- Substrate `#F4F4F0`, carbon ink `#0A0A0A`, secondary ink `#55534D`.
-- One accent only: burgundy `#7A1E1C`, taken from the header bars of the restaurant's printed menu.
-- The theme is locked light. There is no dark mode: the menu is read on a phone in daylight, and
-  the archetype forbids mixing substrates.
-- Hairlines come from `display: grid; gap: 1px` over an ink background rather than per-element
-  borders.
-- Macro type uses `clamp()`; micro type stays fixed between 10px and 14px.
-- A fixed SVG noise layer (`.grain`) sits above the page at 5% opacity, `pointer-events: none`,
-  never on a scrolling container.
+- Ground `#08080C`, surface `#101017`, text `#F4F4F7`, secondary text `#9C9CB0`.
+- Accent violet `#8B5CF6` for solid fills, `#A78BFA` for accent text (the solid tone does not
+  reach 4.5:1 against the ground). Pink `#EC4899` appears only in the headline gradient and the
+  sold-out badge.
+- The theme is locked dark; `color-scheme: dark` and a single `theme-color`.
+- The aurora glow is two radial gradients, not `filter: blur()`, which would force a repaint layer.
+- The grid field is masked to fade out below the fold so it never competes with the menu itself.
+- Scroll reveal is CSS transitions driven by one IntersectionObserver, not GSAP: the page is
+  otherwise zero-JS and a 70KB animation library for four fades is not a trade worth making.
+  Everything renders visible when `prefers-reduced-motion: reduce` is set or the observer never runs.
+- Touch targets are 44px minimum (`min-h-11`), primary actions 48px.
 
 Tokens live in `src/styles/global.css`.
+
+### A note on readability
+
+This palette was chosen against the grain of the use case. The menu is scanned from a QR code at
+a table, often outdoors in daylight, where light-on-dark is the harder pairing to read. The
+contrast ratios all clear WCAG AA, but ratio is not the same as legibility under glare. If the
+restaurant reports that customers struggle, the light industrial palette in commit `281af5e` is
+a working starting point.
 
 ## Local development
 
