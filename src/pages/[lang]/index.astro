@@ -5,6 +5,7 @@ import SiteHeader from "../../components/SiteHeader.astro";
 import Hero from "../../components/Hero.astro";
 import CategoryNav from "../../components/CategoryNav.astro";
 import MenuSection, { type MenuEntry } from "../../components/MenuSection.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { CATEGORIES } from "../../content.config";
 import { LANGS, ui, type Lang } from "../../i18n/ui";
@@ -79,6 +80,7 @@ const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
         />
       ))
     }
+    <PhotoBand lang={lang} />
   </main>
   <SiteFooter lang={lang} updatedAt={updatedAt} />
 </MenuLayout>

@@ -1,0 +1,34 @@
+---
+import { ui, type Lang } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<!-- Cropped from the restaurant's own printed menu. Low resolution by origin,
+     so it is displayed below its native 608px width and never upscaled. -->
+<section class="mx-auto w-full max-w-6xl px-5 pb-14 lg:px-8 lg:pb-20">
+  <figure class="relative mx-auto w-full max-w-[480px]">
+    <picture>
+      <source srcset="/images/bandeau-pizzas.webp" type="image/webp" />
+      <img
+        src="/images/bandeau-pizzas.jpg"
+        alt={t.bandAlt}
+        width="608"
+        height="148"
+        loading="lazy"
+        decoding="async"
+        class="w-full rounded-card shadow-soft"
+      />
+    </picture>
+    <div
+      class="pointer-events-none absolute inset-0 rounded-card bg-accent/10 mix-blend-multiply"
+      aria-hidden="true"
+    >
+    </div>
+  </figure>
+</section>

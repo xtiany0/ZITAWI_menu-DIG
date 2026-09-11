@@ -32,6 +32,7 @@ export const ui = {
     address: "Lomé, Togo",
     updated: "Carte mise à jour le",
     skip: "Aller à la carte",
+    bandAlt: "Deux pizzas garnies, photographiées sur la carte du restaurant",
   },
   en: {
     htmlLang: "en",
@@ -63,6 +64,7 @@ export const ui = {
     address: "Lomé, Togo",
     updated: "Menu updated on",
     skip: "Skip to the menu",
+    bandAlt: "Two loaded pizzas, photographed from the restaurant's menu",
   },
 } as const;
 
