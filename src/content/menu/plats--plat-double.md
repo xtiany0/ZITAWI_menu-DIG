@@ -1,6 +1,6 @@
 ---
 name_fr: "Plat double"
-name_en: "Double plate"
+name_en: "Mixed plate"
 description_fr: "poulet et viande"
 description_en: "chicken and beef"
 price: 4500

@@ -1,6 +1,6 @@
 ---
 name_fr: "Jus pression"
-name_en: "Pressed juice"
+name_en: "Fresh juice"
 description_fr: ""
 description_en: ""
 price: 500

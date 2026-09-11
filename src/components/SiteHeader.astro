@@ -38,7 +38,7 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
         class="hidden items-center gap-2 rounded-full bg-black/25 px-4 py-1.5 text-sm text-on-brick sm:flex"
       >
         <span class="h-2 w-2 rounded-full bg-whatsapp" aria-hidden="true"></span>
-        <span><span data-open-label>{t.openNow}</span>{`, ${HOURS.open}h-${HOURS.close}h`}</span>
+        <span><span data-open-label>{t.openNow}</span>{`, ${t.hoursShort}`}</span>
       </p>
 
       <div class="flex shrink-0 items-center gap-2">
