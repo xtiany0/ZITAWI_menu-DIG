@@ -1,5 +1,5 @@
 ---
-import { ui, formatPrice, pad, type Lang } from "../i18n/ui";
+import { ui, formatPrice, type Lang } from "../i18n/ui";
 import type { CATEGORIES } from "../content.config";
 
 export interface MenuEntry {
@@ -15,41 +15,35 @@ export interface MenuEntry {
 interface Props {
   lang: Lang;
   category: (typeof CATEGORIES)[number];
-  index: number;
   entries: MenuEntry[];
 }
 
-const { lang, category, index, entries } = Astro.props;
+const { lang, category, entries } = Astro.props;
 const t = ui[lang];
 ---
 
 <section
   id={category}
   data-category-section={category}
-  class="mx-auto max-w-6xl scroll-mt-24 px-5 py-14 lg:px-8 lg:py-20"
+  class="mx-auto max-w-5xl scroll-mt-20 px-5 py-14 lg:px-8 lg:py-20"
 >
-  <header class="reveal flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-    <div>
-      <p class="font-mono text-[0.7rem] tracking-[0.1em] text-accent-soft">{pad(index)}</p>
-      <h2 class="mt-2 text-3xl font-semibold tracking-[-0.03em] lg:text-4xl">
-        {t.categories[category]}
-      </h2>
-      <p class="mt-2 text-sm text-muted">{t.categoryBlurb[category]}</p>
-    </div>
-    <p class="font-mono text-[0.7rem] text-muted">{entries.length} {t.refs}</p>
+  <header class="reveal text-center">
+    <h2 class="font-display text-[clamp(1.75rem,5vw,2.5rem)] tracking-[0.02em]">
+      {t.categories[category]}
+    </h2>
+    <p class="mt-3 text-sm text-muted">{t.categoryBlurb[category]}</p>
+    <span class="mx-auto mt-5 block h-px w-16 bg-gold" aria-hidden="true"></span>
   </header>
 
   {
     entries.length === 0 ? (
-      <p class="mt-8 rounded-card border border-line bg-surface/50 px-5 py-10 text-center text-sm text-muted">
-        {t.empty}
-      </p>
+      <p class="mt-10 text-center text-sm text-muted">{t.empty}</p>
     ) : (
-      <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:gap-4">
+      <ul class="mt-10 grid gap-x-12 gap-y-7 lg:grid-cols-2">
         {entries.map((entry, row) => (
           <li
-            class="reveal group flex items-start gap-4 rounded-card border border-line bg-surface/60 p-4 backdrop-blur transition-colors duration-200 hover:border-accent/50 lg:p-5"
-            style={`--reveal-delay:${Math.min(row, 7) * 45}ms`}
+            class="reveal flex gap-4"
+            style={`--reveal-delay:${Math.min(row, 6) * 40}ms`}
           >
             {entry.image && (
               <img
@@ -57,42 +51,47 @@ const t = ui[lang];
                 alt={entry.name}
                 loading="lazy"
                 decoding="async"
-                width="112"
-                height="112"
-                class="h-14 w-14 shrink-0 rounded-lg object-cover lg:h-16 lg:w-16"
+                width="128"
+                height="128"
+                class="mt-1 h-16 w-16 shrink-0 object-cover"
               />
             )}
 
             <div class="min-w-0 flex-1">
-              <div class="flex items-baseline justify-between gap-3">
-                <h3
-                  class:list={[
-                    "text-[0.95rem] font-medium text-ink",
-                    !entry.available && "line-through decoration-accent-2",
-                  ]}
-                >
-                  {entry.name}
-                </h3>
-                <p class="shrink-0 font-mono text-sm tabular-nums text-accent-soft">
-                  {formatPrice(entry.price, lang)}
-                  <span class="text-[0.65rem] text-muted"> {t.currency}</span>
-                </p>
-              </div>
+            <div class="flex items-baseline gap-2">
+              <h3
+                class:list={[
+                  "font-display text-[1.05rem] tracking-[0.01em]",
+                  !entry.available && "text-muted line-through decoration-red/60",
+                ]}
+              >
+                {entry.name}
+              </h3>
+              <span class="leader" aria-hidden="true" />
+              <p class="shrink-0 text-[1.05rem] tabular-nums text-gold">
+                {formatPrice(entry.price, lang)}
+                <span class="text-[0.7rem] tracking-[0.08em] text-muted"> {t.currency}</span>
+              </p>
+            </div>
 
-              {entry.description && (
-                <p class="mt-1.5 text-[0.8rem] leading-relaxed text-muted">{entry.description}</p>
-              )}
+            {entry.description && (
+              <p class="mt-1.5 max-w-[54ch] text-[0.85rem] leading-relaxed text-muted">
+                {entry.description}
+              </p>
+            )}
 
-              <p class="mt-1.5 flex flex-wrap items-center gap-2">
+            {(entry.priceNote || !entry.available) && (
+              <p class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                 {entry.priceNote && (
-                  <span class="font-mono text-[0.7rem] text-muted">{entry.priceNote}</span>
+                  <span class="text-[0.78rem] text-muted italic">{entry.priceNote}</span>
                 )}
                 {!entry.available && (
-                  <span class="rounded-full border border-accent-2/40 px-2 py-0.5 font-mono text-[0.65rem] text-accent-2">
+                  <span class="text-[0.7rem] tracking-[0.14em] text-red uppercase">
                     {t.soldOut}
                   </span>
                 )}
               </p>
+            )}
             </div>
           </li>
         ))}

@@ -1,6 +1,7 @@
 ---
-import "@fontsource-variable/inter";
-import "@fontsource-variable/jetbrains-mono";
+import "@fontsource/playfair-display-sc/400.css";
+import "@fontsource/playfair-display-sc/700.css";
+import "@fontsource-variable/karla";
 import "../styles/global.css";
 import { ui, type Lang } from "../i18n/ui";
 
@@ -25,29 +26,22 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
-    <meta name="theme-color" content="#08080c" />
+    <meta name="theme-color" content="#fef2f2" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body class="relative min-h-dvh bg-bg font-display text-ink antialiased">
+  <body class="min-h-dvh bg-paper font-sans text-ink">
     <a
       href="#carte"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-on-accent"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:bg-red focus:px-4 focus:py-2 focus:text-sm focus:text-on-red"
     >
       {t.skip}
     </a>
 
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-[70rem] overflow-hidden" aria-hidden="true">
-      <div class="absolute inset-0 aurora opacity-60"></div>
-      <div class="absolute inset-0 grid-field"></div>
-    </div>
-
-    <div class="relative">
-      <slot />
-    </div>
+    <slot />
 
     <script>
       const revealed = document.querySelectorAll<HTMLElement>(".reveal");
@@ -63,7 +57,7 @@ const canonical = new URL(`/${lang}/`, Astro.site);
               }
             });
           },
-          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+          { rootMargin: "0px 0px -6% 0px", threshold: 0.05 },
         );
         revealed.forEach((element) => observer.observe(element));
       } else {

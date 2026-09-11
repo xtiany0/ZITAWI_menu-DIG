@@ -10,31 +10,21 @@ const { lang, updatedAt } = Astro.props;
 const t = ui[lang];
 ---
 
-<footer class="border-t border-line">
-  <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
-    <div class="reveal rounded-card border border-line bg-surface/60 p-6 backdrop-blur lg:p-10">
-      <div class="flex flex-wrap items-center justify-between gap-6">
-        <div>
-          <p class="font-mono text-[0.7rem] tracking-[0.1em] text-muted uppercase">{t.contact}</p>
-          <p class="mt-3 text-2xl font-semibold tracking-[-0.02em] tabular-nums lg:text-3xl">
-            {PHONE_DISPLAY}
-          </p>
-          <p class="mt-2 text-sm text-muted">{t.address} · {t.hours}</p>
-        </div>
-        <a
-          href={`tel:${PHONE}`}
-          class="inline-flex min-h-12 cursor-pointer items-center rounded-full bg-accent px-6 text-sm font-medium text-on-accent shadow-[0_0_32px_-6px_var(--color-accent)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
-        >
-          {t.heroCall}
-        </a>
-      </div>
-    </div>
+<footer class="border-t border-rule">
+  <div class="mx-auto max-w-5xl px-5 py-14 text-center lg:px-8 lg:py-20">
+    <p class="reveal font-display text-2xl tracking-[0.02em] lg:text-3xl">Zitawi</p>
+    <p class="reveal mt-3 text-sm text-muted">{t.address} · {t.hours}</p>
 
-    <div
-      class="mt-8 flex flex-wrap items-center justify-between gap-3 font-mono text-[0.7rem] text-muted"
+    <a
+      href={`tel:${PHONE}`}
+      class="reveal mt-7 inline-flex min-h-12 cursor-pointer items-center bg-red px-7 text-sm tracking-[0.06em] text-on-red uppercase transition-colors duration-200 hover:bg-ink"
     >
-      <p>{t.footerNote}</p>
-      <p>{t.updated} {updatedAt}</p>
-    </div>
+      {t.heroCall} · {PHONE_DISPLAY}
+    </a>
+
+    <span class="mx-auto mt-10 block h-px w-16 bg-rule" aria-hidden="true"></span>
+
+    <p class="mt-6 text-[0.78rem] text-muted">{t.footerNote}</p>
+    <p class="mt-1.5 text-[0.78rem] text-muted">{t.updated} {updatedAt}</p>
   </div>
 </footer>

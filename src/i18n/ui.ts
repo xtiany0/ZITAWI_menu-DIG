@@ -83,6 +83,3 @@ export function formatPrice(value: number, lang: Lang) {
   return new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-GB").format(value);
 }
 
-export function pad(index: number) {
-  return String(index).padStart(2, "0");
-}

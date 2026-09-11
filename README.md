@@ -13,34 +13,28 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 | Content | Markdown files in `src/content/menu`, one file per dish |
 | Admin | Decap CMS at `/admin`, backed by Netlify Identity plus Git Gateway |
 | Hosting | Netlify |
-| Fonts | Inter (display) and JetBrains Mono (metadata), self-hosted via Fontsource |
+| Fonts | Playfair Display SC (display) and Karla (body), self-hosted via Fontsource |
 
 ## Design system
 
-AI-native dark surface: near-black ground, a single violet accent, restrained glow, and glass
-panels over a faint engineering grid.
+A printed menu, set for screen. Warm blush paper, oxblood ink, gold prices, and dot leaders
+running from each dish name to its price.
 
-- Ground `#08080C`, surface `#101017`, text `#F4F4F7`, secondary text `#9C9CB0`.
-- Accent violet `#8B5CF6` for solid fills, `#A78BFA` for accent text (the solid tone does not
-  reach 4.5:1 against the ground). Pink `#EC4899` appears only in the headline gradient and the
-  sold-out badge.
-- The theme is locked dark; `color-scheme: dark` and a single `theme-color`.
-- The aurora glow is two radial gradients, not `filter: blur()`, which would force a repaint layer.
-- The grid field is masked to fade out below the fold so it never competes with the menu itself.
-- Scroll reveal is CSS transitions driven by one IntersectionObserver, not GSAP: the page is
-  otherwise zero-JS and a 70KB animation library for four fades is not a trade worth making.
+- Paper `#FEF2F2`, ink `#450A0A`, secondary text `#7C5A56`, rules `#F1D4D2`.
+- Gold `#A16207` carries every price; red `#DC2626` is reserved for actions and the sold-out
+  marker. Both clear 4.5:1 on the paper.
+- Playfair Display SC is set in small caps for dish names, which is what makes the page read as a
+  menu rather than a product listing.
+- The theme is locked light. The menu is opened from a QR code at a table, often outdoors, where
+  dark-on-light is the easier pairing to read under glare.
+- No gradients, no glow, no glass, no shadowed cards. Separation comes from rules and space.
+- Dot leaders are a flex child that grows into whatever gap is left (`.leader` in `global.css`),
+  so they work at any name length without measurement.
+- Scroll reveal is CSS transitions driven by one IntersectionObserver, not an animation library.
   Everything renders visible when `prefers-reduced-motion: reduce` is set or the observer never runs.
-- Touch targets are 44px minimum (`min-h-11`), primary actions 48px.
+- Touch targets are 48px on every interactive element.
 
 Tokens live in `src/styles/global.css`.
-
-### A note on readability
-
-This palette was chosen against the grain of the use case. The menu is scanned from a QR code at
-a table, often outdoors in daylight, where light-on-dark is the harder pairing to read. The
-contrast ratios all clear WCAG AA, but ratio is not the same as legibility under glare. If the
-restaurant reports that customers struggle, the light industrial palette in commit `281af5e` is
-a working starting point.
 
 ## Local development
 

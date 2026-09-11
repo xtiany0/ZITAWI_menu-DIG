@@ -37,18 +37,6 @@ const byCategory = Object.fromEntries(
   ]),
 ) as Record<(typeof CATEGORIES)[number], MenuEntry[]>;
 
-const signatures = CATEGORIES.flatMap((category) =>
-  sorted
-    .filter(
-      (item) =>
-        item.data.category === category && item.data.featured && item.data.available,
-    )
-    .slice(0, 1),
-).map((item) => ({
-  name: lang === "fr" ? item.data.name_fr : item.data.name_en,
-  price: item.data.price,
-}));
-
 const now = new Date();
 const updatedAt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
   day: "2-digit",
@@ -62,16 +50,11 @@ const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
 <MenuLayout lang={lang} title={title} description={t.heroBody}>
   <SiteHeader lang={lang} />
   <main>
-    <Hero lang={lang} signatures={signatures} totalRefs={sorted.length} />
+    <Hero lang={lang} totalRefs={sorted.length} />
     <CategoryNav lang={lang} categories={[...CATEGORIES]} />
     {
-      CATEGORIES.map((category, position) => (
-        <MenuSection
-          lang={lang}
-          category={category}
-          index={position + 1}
-          entries={byCategory[category]}
-        />
+      CATEGORIES.map((category) => (
+        <MenuSection lang={lang} category={category} entries={byCategory[category]} />
       ))
     }
     <PhotoBand lang={lang} />

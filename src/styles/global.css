@@ -1,74 +1,50 @@
 @import "tailwindcss";
 
-/* AI-native dark surface: near-black ground, violet accent, restrained glow.
-   Contrast targets: body text 7:1, secondary text 4.5:1 minimum. */
+/* Printed-menu editorial: warm blush paper, oxblood ink, gold prices.
+   No gradients, no glow, no glass, no dark mode. */
 
 @theme {
-  --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, "Courier New", monospace;
+  --font-display: "Playfair Display SC", ui-serif, Georgia, serif;
+  --font-sans: "Karla Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-bg: #08080c;
-  --color-surface: #101017;
-  --color-raised: #16161f;
-  --color-ink: #f4f4f7;
-  --color-muted: #9c9cb0;
-  --color-line: #25252f;
-  --color-accent: #8b5cf6;
-  --color-accent-soft: #a78bfa;
-  --color-accent-2: #ec4899;
-  --color-on-accent: #ffffff;
-
-  --radius-card: 14px;
+  --color-paper: #fef2f2;
+  --color-card: #ffffff;
+  --color-ink: #450a0a;
+  --color-muted: #7c5a56;
+  --color-rule: #f1d4d2;
+  --color-red: #dc2626;
+  --color-gold: #a16207;
+  --color-on-red: #ffffff;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 7rem;
-  background-color: var(--color-bg);
-  color-scheme: dark;
+  scroll-padding-top: 6rem;
+  background-color: var(--color-paper);
+  color-scheme: only light;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Faint engineering grid, masked so it fades out below the fold. */
-.grid-field {
-  background-image:
-    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: linear-gradient(to bottom, black, transparent 70%);
-  opacity: 0.5;
+/* Dot leaders, the printed-menu device: a dotted rule that grows to fill
+   whatever space is left between a dish name and its price. */
+.leader {
+  flex: 1 1 auto;
+  align-self: flex-end;
+  margin-bottom: 0.32em;
+  border-bottom: 1px dotted var(--color-rule);
+  min-width: 1.5rem;
 }
 
-/* Two offset colour pools behind the hero. Blur is baked into the gradient
-   stops rather than filter: blur(), which would force a costly repaint layer. */
-.aurora {
-  background:
-    radial-gradient(42rem 28rem at 18% 0%, color-mix(in oklab, var(--color-accent) 40%, transparent), transparent 70%),
-    radial-gradient(34rem 22rem at 82% 10%, color-mix(in oklab, var(--color-accent-2) 26%, transparent), transparent 70%);
-}
-
-.gradient-text {
-  background: linear-gradient(100deg, var(--color-accent-soft), var(--color-accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.duotone {
-  filter: grayscale(1) contrast(1.05) brightness(0.85);
-}
-
-/* Scroll reveal. Elements stay visible if the observer never runs. */
 @media (prefers-reduced-motion: no-preference) {
   .reveal {
     opacity: 0;
-    transform: translateY(14px) scale(0.985);
+    transform: translateY(10px);
     transition:
-      opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 360ms ease-out,
+      transform 360ms ease-out;
     transition-delay: var(--reveal-delay, 0ms);
   }
 
@@ -85,12 +61,11 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--color-red);
+  color: var(--color-on-red);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent-soft);
+  outline: 2px solid var(--color-red);
   outline-offset: 3px;
-  border-radius: 4px;
 }

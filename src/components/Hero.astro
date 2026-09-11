@@ -1,75 +1,60 @@
 ---
-import { ui, formatPrice, PHONE, type Lang } from "../i18n/ui";
+import { ui, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
 
 interface Props {
   lang: Lang;
-  signatures: { name: string; price: number }[];
   totalRefs: number;
 }
 
-const { lang, signatures, totalRefs } = Astro.props;
+const { lang, totalRefs } = Astro.props;
 const t = ui[lang];
-const [first, ...rest] = t.heroWords;
 ---
 
-<section class="mx-auto max-w-6xl px-5 pt-10 pb-16 lg:px-8 lg:pt-20 lg:pb-24">
-  <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
-    <div class="reveal lg:col-span-7">
-      <p
-        class="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-3 py-1.5 font-mono text-[0.7rem] tracking-[0.08em] text-muted backdrop-blur"
-      >
-        <span class="h-1.5 w-1.5 rounded-full bg-accent-soft" aria-hidden="true"></span>
-        {totalRefs}
-        {t.refs}
-      </p>
+<section class="mx-auto max-w-5xl px-5 pt-8 pb-14 text-center lg:px-8 lg:pt-16 lg:pb-20">
+  <p class="reveal text-[0.72rem] tracking-[0.28em] text-gold uppercase">{t.origin}</p>
 
-      <h1
-        class="mt-6 text-[clamp(2.75rem,8vw,5rem)] leading-[1.02] font-semibold tracking-[-0.035em]"
-      >
-        <span class="gradient-text">{first}</span>,<br />
-        {rest.join(", ")}.
-      </h1>
+  <h1
+    class="reveal mt-5 font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-[1.05] tracking-[0.01em]"
+    style="--reveal-delay:60ms"
+  >
+    {t.heroWords.join(", ")}
+  </h1>
 
-      <p class="mt-6 max-w-[46ch] text-base leading-relaxed text-muted lg:text-lg">
-        {t.heroBody}
-      </p>
-
-      <div class="mt-9 flex flex-wrap gap-3">
-        <a
-          href="#carte"
-          class="inline-flex min-h-12 cursor-pointer items-center rounded-full bg-accent px-6 text-sm font-medium text-on-accent shadow-[0_0_32px_-6px_var(--color-accent)] transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
-        >
-          {t.heroCta}
-        </a>
-        <a
-          href={`tel:${PHONE}`}
-          class="inline-flex min-h-12 cursor-pointer items-center rounded-full border border-line bg-surface/70 px-6 text-sm text-ink backdrop-blur transition-colors duration-200 hover:border-accent/60 active:scale-[0.98]"
-        >
-          {t.heroCall}
-        </a>
-      </div>
-    </div>
-
-    <div class="reveal lg:col-span-5" style="--reveal-delay:120ms">
-      <div class="rounded-card border border-line bg-surface/70 p-5 backdrop-blur lg:p-6">
-        <p class="font-mono text-[0.7rem] tracking-[0.1em] text-muted uppercase">{t.popular}</p>
-        <ul class="mt-4 divide-y divide-line">
-          {
-            signatures.map((dish) => (
-              <li class="flex items-baseline justify-between gap-4 py-3">
-                <span class="text-sm text-ink">{dish.name}</span>
-                <span class="font-mono text-sm tabular-nums text-accent-soft">
-                  {formatPrice(dish.price, lang)}
-                  <span class="text-[0.65rem] text-muted"> {t.currency}</span>
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-        <p class="mt-4 border-t border-line pt-4 font-mono text-[0.7rem] text-muted">
-          {t.hours}
-        </p>
-      </div>
-    </div>
+  <div class="reveal mx-auto mt-7 flex max-w-sm items-center gap-4" style="--reveal-delay:120ms">
+    <span class="h-px flex-1 bg-rule"></span>
+    <span class="text-[0.72rem] tracking-[0.2em] text-muted uppercase">
+      {totalRefs}
+      {t.refs}
+    </span>
+    <span class="h-px flex-1 bg-rule"></span>
   </div>
+
+  <p
+    class="reveal mx-auto mt-7 max-w-[44ch] text-[0.95rem] leading-relaxed text-muted lg:text-base"
+    style="--reveal-delay:160ms"
+  >
+    {t.heroBody}
+  </p>
+
+  <div
+    class="reveal mt-9 flex flex-wrap items-center justify-center gap-3"
+    style="--reveal-delay:200ms"
+  >
+    <a
+      href="#carte"
+      class="inline-flex min-h-12 cursor-pointer items-center bg-red px-7 text-sm tracking-[0.06em] text-on-red uppercase transition-colors duration-200 hover:bg-ink"
+    >
+      {t.heroCta}
+    </a>
+    <a
+      href={`tel:${PHONE}`}
+      class="inline-flex min-h-12 cursor-pointer items-center border border-rule px-7 text-sm tracking-[0.06em] uppercase transition-colors duration-200 hover:border-gold"
+    >
+      {t.heroCall}
+    </a>
+  </div>
+
+  <p class="reveal mt-7 text-[0.8rem] text-muted" style="--reveal-delay:240ms">
+    {t.hours} · {PHONE_DISPLAY}
+  </p>
 </section>
