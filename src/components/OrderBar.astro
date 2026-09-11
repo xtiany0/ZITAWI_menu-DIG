@@ -62,6 +62,46 @@ const t = ui[lang];
 <script is:inline define:vars={{ whatsapp: WHATSAPP, intro: t.orderIntro, totalWord: t.orderTotal, currency: t.currency, locale: lang }}>
   const cart = new Map();
 
+  const STORAGE_KEY = "zitawi-order-v1";
+  // A menu order left over from yesterday is noise, not a convenience.
+  const MAX_AGE_MS = 12 * 60 * 60 * 1000;
+
+  function save() {
+    try {
+      const items = {};
+      for (const [id, line] of cart) items[id] = line.qty;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), items }));
+    } catch {
+      // Private windows and blocked site data throw here. The order still works,
+      // it just will not outlive the page.
+    }
+  }
+
+  function restore() {
+    let stored;
+    try {
+      stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
+    } catch {
+      return;
+    }
+    if (!stored || typeof stored !== "object" || !stored.items) return;
+    if (!Number.isFinite(stored.savedAt) || Date.now() - stored.savedAt > MAX_AGE_MS) return;
+
+    for (const [id, qty] of Object.entries(stored.items)) {
+      const amount = Number(qty);
+      if (!Number.isInteger(amount) || amount < 1) continue;
+      // Name and price are read back off the page, never out of storage, so a
+      // dish the restaurant has repriced or removed cannot come back stale.
+      const button = document.querySelector(`[data-add="${CSS.escape(id)}"]`);
+      if (!button) continue;
+      cart.set(id, {
+        name: button.dataset.name,
+        price: Number(button.dataset.price),
+        qty: Math.min(amount, 99),
+      });
+    }
+  }
+
   const bar = document.querySelector("[data-order-bar]");
   const countEl = document.querySelector("[data-cart-count]");
   const totalEl = document.querySelector("[data-cart-total]");
@@ -102,13 +142,15 @@ const t = ui[lang];
       const text = `${intro}\n${lines.join("\n")}\n${totalWord} : ${money(total)} ${currency}`;
       sendEl.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`;
     }
+
+    save();
   }
 
   document.querySelectorAll("[data-add]").forEach((button) => {
     button.addEventListener("click", () => {
       const id = button.dataset.add;
       const line = cart.get(id);
-      if (line) line.qty += 1;
+      if (line) line.qty = Math.min(line.qty + 1, 99);
       else cart.set(id, { name: button.dataset.name, price: Number(button.dataset.price), qty: 1 });
       render();
     });
@@ -130,5 +172,6 @@ const t = ui[lang];
     render();
   });
 
+  restore();
   render();
 </script>
