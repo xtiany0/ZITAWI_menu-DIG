@@ -1,5 +1,5 @@
 ---
-name_fr: "Plat de Riz simple"
+name_fr: "Plat de riz simple"
 name_en: "Plain Rice Plate"
 description_fr: ""
 description_en: ""
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "plats"
 available: true
-featured: false
-order: 10
+order: 160
 ---

@@ -1,13 +1,12 @@
 ---
-name_fr: "Double Fromage"
-name_en: "Extra Cheese"
-description_fr: "Supplément fromage sur n'importe quelle pizza"
-description_en: "Extra cheese on any pizza"
+name_fr: "Double fromage"
+name_en: "Double Cheese"
+description_fr: ""
+description_en: ""
 price: 1500
-price_note_fr: "en supplément"
-price_note_en: "as an extra"
+price_note_fr: "supplément"
+price_note_en: "extra"
 category: "pizzas"
 available: true
-featured: false
 order: 140
 ---

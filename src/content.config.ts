@@ -16,7 +16,6 @@ const menu = defineCollection({
     category: z.enum(CATEGORIES),
     image: z.string().optional(),
     available: z.boolean().default(true),
-    featured: z.boolean().default(false),
     order: z.number().default(100),
   }),
 });

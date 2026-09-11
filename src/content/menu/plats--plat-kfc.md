@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "plats"
 available: true
-featured: false
-order: 110
+order: 40
 ---

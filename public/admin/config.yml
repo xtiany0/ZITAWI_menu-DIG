@@ -82,11 +82,6 @@ collections:
         default: true
         hint: "Décocher pour afficher le plat comme épuisé, sans le supprimer."
 
-      - label: "Mettre en avant sur la page d'accueil"
-        name: featured
-        widget: boolean
-        default: false
-
       - label: "Ordre d'affichage"
         name: order
         widget: number

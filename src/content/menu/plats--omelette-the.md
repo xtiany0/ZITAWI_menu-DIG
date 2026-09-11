@@ -1,5 +1,5 @@
 ---
-name_fr: "Omelette + Thé"
+name_fr: "Omelette + thé"
 name_en: "Omelette + Tea"
 description_fr: ""
 description_en: ""
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "plats"
 available: true
-featured: false
-order: 70
+order: 170
 ---

@@ -1,5 +1,5 @@
 ---
-name_fr: "Chawarma Brochette"
+name_fr: "Chawarma brochette"
 name_en: "Skewer Shawarma"
 description_fr: ""
 description_en: ""
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "sandwichs"
 available: true
-featured: false
-order: 80
+order: 150
 ---

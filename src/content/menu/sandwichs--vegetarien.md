@@ -1,6 +1,6 @@
 ---
-name_fr: "Sandwich Végétarien"
-name_en: "Vegetarian Sandwich"
+name_fr: "Végétarien"
+name_en: "Vegetarian"
 description_fr: ""
 description_en: ""
 price: 1250
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "sandwichs"
 available: true
-featured: false
-order: 10
+order: 80
 ---

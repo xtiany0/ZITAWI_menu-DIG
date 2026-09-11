@@ -1,5 +1,5 @@
 ---
-name_fr: "Plat Saucisse"
+name_fr: "Plat saucisse"
 name_en: "Sausage Plate"
 description_fr: ""
 description_en: ""
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "plats"
 available: true
-featured: false
-order: 100
+order: 140
 ---

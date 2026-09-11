@@ -1,5 +1,5 @@
 ---
-name_fr: "Sandwich double Viande"
+name_fr: "Sandwich double viande"
 name_en: "Double Beef Sandwich"
 description_fr: ""
 description_en: ""
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "sandwichs"
 available: true
-featured: false
-order: 130
+order: 100
 ---

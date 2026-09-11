@@ -1,13 +1,12 @@
 ---
-name_fr: "Sandwich Falafel"
-name_en: "Falafel Sandwich"
+name_fr: "Escalope"
+name_en: "Escalope"
 description_fr: ""
 description_en: ""
-price: 1500
+price: 2000
 price_note_fr: ""
 price_note_en: ""
 category: "sandwichs"
 available: true
-featured: false
-order: 40
+order: 60
 ---

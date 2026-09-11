@@ -1,5 +1,5 @@
 ---
-name_fr: "Plat Steak"
+name_fr: "Plat steak"
 name_en: "Steak Plate"
 description_fr: "Salade et frites"
 description_en: "Salad and fries"
@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "plats"
 available: true
-featured: false
-order: 120
+order: 60
 ---

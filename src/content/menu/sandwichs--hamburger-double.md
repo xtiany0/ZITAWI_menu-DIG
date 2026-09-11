@@ -8,6 +8,5 @@ price_note_fr: ""
 price_note_en: ""
 category: "sandwichs"
 available: true
-featured: false
-order: 140
+order: 130
 ---
