@@ -87,28 +87,49 @@ const priceLabel = (entry: MenuEntry) =>
                 </p>
               )}
 
-              <div class="mt-auto flex items-end justify-between gap-3 pt-2">
+              <div class="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-2">
                 <p class="text-[0.95rem] font-bold text-ink lg:text-base">
                   {priceLabel(entry)}
                   <span class="ml-1 text-[0.7rem] font-medium text-muted">{t.currency}</span>
                 </p>
 
                 {entry.available ? (
-                  <button
-                    type="button"
-                    data-add={entry.id}
-                    data-name={entry.name}
-                    data-price={entry.price}
-                    aria-label={`${t.add} ${entry.name}`}
-                    class="flex h-11 shrink-0 cursor-pointer items-center gap-1 rounded-full border border-transparent p-1 transition-colors duration-200 data-[active=true]:border-orange data-[active=true]:bg-orange/10"
+                  <div
+                    data-stepper={entry.id}
+                    class="flex shrink-0 items-center gap-1 rounded-full border border-transparent p-1 transition-colors duration-200 data-[active=true]:border-orange data-[active=true]:bg-orange/10"
                   >
-                    <span data-qty hidden class="min-w-5 pl-1 text-center text-sm font-bold text-orange" />
-                    <span class="grid h-9 w-9 place-items-center rounded-full bg-orange text-on-orange">
+                    <button
+                      type="button"
+                      data-remove={entry.id}
+                      hidden
+                      aria-label={`${t.remove} ${entry.name}`}
+                      class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-card-hi text-ink transition-colors duration-200 hover:bg-line active:scale-95"
+                    >
+                      <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M5 12h14" stroke-linecap="round" />
+                      </svg>
+                    </button>
+
+                    <span
+                      data-qty
+                      hidden
+                      aria-live="polite"
+                      class="min-w-6 text-center text-sm font-bold text-orange"
+                    />
+
+                    <button
+                      type="button"
+                      data-add={entry.id}
+                      data-name={entry.name}
+                      data-price={entry.price}
+                      aria-label={`${t.add} ${entry.name}`}
+                      class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-orange text-on-orange transition-transform duration-150 active:scale-95"
+                    >
                       <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                         <path d="M12 5v14M5 12h14" stroke-linecap="round" />
                       </svg>
-                    </span>
-                  </button>
+                    </button>
+                  </div>
                 ) : (
                   <span class="rounded-full bg-card-hi px-3 py-1 text-[0.7rem] font-semibold text-muted">
                     {t.soldOut}

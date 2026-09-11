@@ -46,11 +46,15 @@ const t = ui[lang];
       href={`https://wa.me/${WHATSAPP}`}
       target="_blank"
       rel="noopener noreferrer"
-      class="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-white/10 px-4 text-center text-sm font-semibold text-white transition-colors duration-200 hover:bg-white/20 lg:text-base"
+      class="flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-full bg-white/10 px-4 text-center leading-tight font-semibold text-white transition-colors duration-200 hover:bg-white/20 sm:flex-row sm:gap-2 sm:text-base"
     >
-      <span>{t.orderCta} (<span data-cart-count>0</span>)</span>
-      <span aria-hidden="true">·</span>
-      <span>{t.total} <span data-cart-total>0</span> {t.currency}</span>
+      <span class="text-[0.8rem] sm:text-inherit">
+        {t.orderCta} (<span data-cart-count>0</span>)
+      </span>
+      <span class="hidden sm:inline" aria-hidden="true">·</span>
+      <span class="text-[0.9rem] sm:text-inherit">
+        {t.total} <span data-cart-total>0</span> {t.currency}
+      </span>
     </a>
   </div>
 </div>
@@ -81,13 +85,16 @@ const t = ui[lang];
     if (countEl) countEl.textContent = String(count);
     if (totalEl) totalEl.textContent = money(total);
 
-    document.querySelectorAll("[data-add]").forEach((button) => {
-      const line = cart.get(button.dataset.add);
-      const badge = button.querySelector("[data-qty]");
-      if (!badge) return;
-      badge.hidden = !line;
-      badge.textContent = line ? String(line.qty) : "";
-      button.dataset.active = String(Boolean(line));
+    document.querySelectorAll("[data-stepper]").forEach((group) => {
+      const line = cart.get(group.dataset.stepper);
+      const badge = group.querySelector("[data-qty]");
+      const minus = group.querySelector("[data-remove]");
+      group.dataset.active = String(Boolean(line));
+      if (badge) {
+        badge.hidden = !line;
+        badge.textContent = line ? String(line.qty) : "";
+      }
+      if (minus) minus.hidden = !line;
     });
 
     if (sendEl) {
@@ -103,6 +110,17 @@ const t = ui[lang];
       const line = cart.get(id);
       if (line) line.qty += 1;
       else cart.set(id, { name: button.dataset.name, price: Number(button.dataset.price), qty: 1 });
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-remove]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.remove;
+      const line = cart.get(id);
+      if (!line) return;
+      if (line.qty > 1) line.qty -= 1;
+      else cart.delete(id);
       render();
     });
   });
