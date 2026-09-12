@@ -25,10 +25,11 @@
   --color-footer-text: #efe6cf;
   --color-sand: #d9c78a;
   --color-whatsapp: #6fd18f;
+  --color-page: #f1efea;
 }
 
 html {
-  background-color: var(--color-band);
+  background-color: var(--color-page);
   color-scheme: only light;
 }
 

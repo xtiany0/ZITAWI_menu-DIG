@@ -11,7 +11,7 @@ const { lang, categories } = Astro.props;
 const t = ui[lang];
 ---
 
-<header>
+<header class="overflow-hidden rounded-t-[16px]">
   <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
     <a href={`/${lang}/`} class="logo block font-logo text-[34px] leading-none font-black tracking-[.11em] lg:text-[44px]">
       ZITAWI
@@ -50,6 +50,7 @@ const t = ui[lang];
       >
         EN
       </a>
+    </div>
   </div>
 
   <div class="flex flex-col gap-[9px] bg-ink px-5 pt-[11px] pb-3">
