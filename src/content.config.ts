@@ -12,6 +12,9 @@ const menu = defineCollection({
     description_en: z.string().default(""),
     price: z.number(),
     price_alt: z.number().optional(),
+    // "A / B": the two labels facing price and price_alt, in that order.
+    options_fr: z.string().default(""),
+    options_en: z.string().default(""),
     category: z.enum(CATEGORIES),
     image: z.string().optional(),
     available: z.boolean().default(true),

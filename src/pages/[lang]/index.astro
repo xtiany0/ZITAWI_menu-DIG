@@ -24,6 +24,10 @@ const toEntry = (item: (typeof sorted)[number]): MenuEntry => ({
   description: lang === "fr" ? item.data.description_fr : item.data.description_en,
   price: item.data.price,
   priceAlt: item.data.price_alt,
+  options: (lang === "fr" ? item.data.options_fr : item.data.options_en)
+    .split("/")
+    .map((option) => option.trim())
+    .filter(Boolean),
   image: item.data.image,
   available: item.data.available,
 });

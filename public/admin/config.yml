@@ -66,7 +66,19 @@ collections:
         required: false
         min: 0
         step: 50
-        hint: "Uniquement si le plat a deux tarifs, affichés 3.000 / 10.000F. Décrire les deux options dans les ingrédients, exemple : la douzaine / le kilo."
+        hint: "Uniquement si le plat se vend à deux tarifs. Remplir aussi les deux choix ci-dessous, sinon le second prix est ignoré."
+
+      - label: "Les deux choix (français)"
+        name: options_fr
+        widget: string
+        required: false
+        hint: "Le choix du premier prix, puis celui du second, séparés par une barre oblique. Exemple : la douzaine / le kilo"
+
+      - label: "Les deux choix (anglais)"
+        name: options_en
+        widget: string
+        required: false
+        hint: "Exemple : per dozen / per kilo"
 
       - label: "Photo du plat"
         name: image

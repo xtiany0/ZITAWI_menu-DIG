@@ -8,6 +8,7 @@ export interface MenuEntry {
   description: string;
   price: number;
   priceAlt?: number;
+  options: string[];
   image?: string;
   available: boolean;
 }
@@ -22,11 +23,18 @@ interface Props {
 const { lang, category, entries, banner } = Astro.props;
 const t = ui[lang];
 
-const priceLabel = (entry: MenuEntry) =>
-  [entry.price, entry.priceAlt]
-    .filter((value): value is number => typeof value === "number")
-    .map((value) => formatPrice(value, lang))
-    .join(" / ");
+/** A dish with two tariffs becomes two buyable lines, one per option. */
+function variants(entry: MenuEntry) {
+  if (typeof entry.priceAlt !== "number" || entry.options.length !== 2) {
+    return [{ id: entry.id, label: "", name: entry.name, price: entry.price }];
+  }
+  return [entry.price, entry.priceAlt].map((price, index) => ({
+    id: `${entry.id}::${index}`,
+    label: entry.options[index],
+    name: `${entry.name} (${entry.options[index]})`,
+    price,
+  }));
+}
 ---
 
 <section id={category} data-category-section={category} class="pt-8 lg:pt-12">
@@ -56,7 +64,7 @@ const priceLabel = (entry: MenuEntry) =>
       <ul class="mt-4 grid gap-3 lg:grid-cols-2 lg:gap-4">
         {entries.map((entry) => (
           <li
-            data-dish={`${entry.name} ${entry.description}`.toLowerCase()}
+            data-dish={`${entry.name} ${entry.description} ${entry.options.join(" ")}`.toLowerCase()}
             class="flex items-stretch gap-3 rounded-card bg-card p-3 lg:gap-4 lg:p-4"
           >
             {entry.image && (
@@ -64,7 +72,7 @@ const priceLabel = (entry: MenuEntry) =>
                 src={entry.image}
                 alt={entry.name}
                 width="180"
-                height="125"
+                height="180"
                 loading="lazy"
                 decoding="async"
                 class="h-24 w-24 shrink-0 rounded-xl object-cover lg:h-28 lg:w-28"
@@ -87,55 +95,66 @@ const priceLabel = (entry: MenuEntry) =>
                 </p>
               )}
 
-              <div class="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-2">
-                <p class="text-[0.95rem] font-bold text-ink lg:text-base">
-                  {priceLabel(entry)}
-                  <span class="ml-1 text-[0.7rem] font-medium text-muted">{t.currency}</span>
+              {!entry.available ? (
+                <p class="mt-2 self-start rounded-full bg-card-hi px-3 py-1 text-[0.7rem] font-semibold text-muted">
+                  {t.soldOut}
                 </p>
+              ) : (
+                <div class="mt-auto space-y-1.5 pt-2">
+                  {variants(entry).map((variant) => (
+                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                      <p class="min-w-0">
+                        {variant.label && (
+                          <span class="block text-[0.75rem] leading-tight text-muted">
+                            {variant.label}
+                          </span>
+                        )}
+                        <span class="text-[0.95rem] font-bold text-ink lg:text-base">
+                          {formatPrice(variant.price, lang)}
+                        </span>
+                        <span class="ml-1 text-[0.7rem] font-medium text-muted">{t.currency}</span>
+                      </p>
 
-                {entry.available ? (
-                  <div
-                    data-stepper={entry.id}
-                    class="flex shrink-0 items-center gap-1 rounded-full border border-transparent p-1 transition-colors duration-200 data-[active=true]:border-orange data-[active=true]:bg-orange/10"
-                  >
-                    <button
-                      type="button"
-                      data-remove={entry.id}
-                      hidden
-                      aria-label={`${t.remove} ${entry.name}`}
-                      class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-card-hi text-ink transition-colors duration-200 hover:bg-line active:scale-95"
-                    >
-                      <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                        <path d="M5 12h14" stroke-linecap="round" />
-                      </svg>
-                    </button>
+                      <div
+                        data-stepper={variant.id}
+                        class="flex shrink-0 items-center gap-1 rounded-full border border-transparent p-1 transition-colors duration-200 data-[active=true]:border-orange data-[active=true]:bg-orange/10"
+                      >
+                        <button
+                          type="button"
+                          data-remove={variant.id}
+                          hidden
+                          aria-label={`${t.remove} ${variant.name}`}
+                          class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-card-hi text-ink transition-colors duration-200 hover:bg-line active:scale-95"
+                        >
+                          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <path d="M5 12h14" stroke-linecap="round" />
+                          </svg>
+                        </button>
 
-                    <span
-                      data-qty
-                      hidden
-                      aria-live="polite"
-                      class="min-w-6 text-center text-sm font-bold text-orange"
-                    />
+                        <span
+                          data-qty
+                          hidden
+                          aria-live="polite"
+                          class="min-w-6 text-center text-sm font-bold text-orange"
+                        />
 
-                    <button
-                      type="button"
-                      data-add={entry.id}
-                      data-name={entry.name}
-                      data-price={entry.price}
-                      aria-label={`${t.add} ${entry.name}`}
-                      class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-orange text-on-orange transition-transform duration-150 active:scale-95"
-                    >
-                      <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                        <path d="M12 5v14M5 12h14" stroke-linecap="round" />
-                      </svg>
-                    </button>
-                  </div>
-                ) : (
-                  <span class="rounded-full bg-card-hi px-3 py-1 text-[0.7rem] font-semibold text-muted">
-                    {t.soldOut}
-                  </span>
-                )}
-              </div>
+                        <button
+                          type="button"
+                          data-add={variant.id}
+                          data-name={variant.name}
+                          data-price={variant.price}
+                          aria-label={`${t.add} ${variant.name}`}
+                          class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-orange text-on-orange transition-transform duration-150 active:scale-95"
+                        >
+                          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </li>
         ))}
