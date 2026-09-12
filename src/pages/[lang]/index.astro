@@ -6,7 +6,7 @@ import MenuSection, { type MenuEntry } from "../../components/MenuSection.astro"
 import OrderBar from "../../components/OrderBar.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { CATEGORIES } from "../../content.config";
-import { LANGS, ui, type Lang } from "../../i18n/ui";
+import { LANGS, ui, WHATSAPP, type Lang } from "../../i18n/ui";
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -38,39 +38,304 @@ const byCategory = Object.fromEntries(
     sorted.filter((item) => item.data.category === category).map(toEntry),
   ]),
 ) as Record<(typeof CATEGORIES)[number], MenuEntry[]>;
-
-const now = new Date();
-const updatedAt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-}).format(now);
-
-const title = lang === "fr" ? "Zitawi, la carte" : "Zitawi, the menu";
 ---
 
-<MenuLayout lang={lang} title={title} description={t.heroBody}>
+<MenuLayout lang={lang} title={t.metaTitle} description={t.metaDescription}>
   <SiteHeader lang={lang} categories={[...CATEGORIES]} />
-  <main id="carte" class="mx-auto max-w-4xl px-5 lg:px-8">
+
+  <main id="carte">
     {
       CATEGORIES.map((category) => (
-        <MenuSection
-          lang={lang}
-          category={category}
-          entries={byCategory[category]}
-          banner={category === "pizzas" ? "/images/menu/_banniere-pizzas.webp" : undefined}
-        />
+        <MenuSection lang={lang} category={category} entries={byCategory[category]} />
       ))
     }
-    <p
-      data-no-result
-      hidden
-      class="py-16 text-center text-sm text-muted"
-    >
-      {t.noResult}
-    </p>
-
-    <SiteFooter lang={lang} updatedAt={updatedAt} />
+    <p data-no-result hidden class="px-[18px] py-12 text-center font-body text-[13.5px] text-ink-soft"></p>
+    <SiteFooter lang={lang} />
   </main>
+
   <OrderBar lang={lang} />
 </MenuLayout>
+
+<script
+  is:inline
+  define:vars={{
+    whatsapp: WHATSAPP,
+    locale: lang,
+    copy: {
+      noResult: t.noResult,
+      intro: t.orderIntro,
+      unset: t.orderUnset,
+      service: t.orderService,
+      name: t.orderName,
+      note: t.orderNote,
+      total: t.orderTotal,
+      modeIn: t.modeIn,
+      modeOut: t.modeOut,
+    },
+  }}
+>
+  const money = (value) => value.toLocaleString("en-US").replace(/,/g, locale === "fr" ? "." : ",");
+  const norm = (value) => value.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+
+  const STORE = "zitawi-order-2a";
+  const MAX_AGE_MS = 12 * 60 * 60 * 1000;
+
+  const state = { query: "", cat: "all", cart: {}, choice: {}, mode: "in", name: "", note: "" };
+
+  const rows = [...document.querySelectorAll("[data-row]")];
+  const sections = [...document.querySelectorAll("[data-section]")];
+  const tabs = [...document.querySelectorAll("[data-tab]")];
+  const noResult = document.querySelector("[data-no-result]");
+  const sheet = document.querySelector("[data-sheet]");
+  const lines = document.querySelector("[data-cart-lines]");
+  const emptyNote = document.querySelector("[data-cart-empty]");
+  const nameField = document.querySelector("[data-cart-name]");
+  const noteField = document.querySelector("[data-cart-note]");
+
+  /** Everything a row needs to price itself, given the variant currently chosen. */
+  function read(row) {
+    const prices = JSON.parse(row.dataset.prices);
+    const labels = JSON.parse(row.dataset.labels);
+    const dual = prices.length > 1;
+    const choiceKey = row.dataset.cat + "|" + row.dataset.name;
+    const index = Math.min(state.choice[choiceKey] ?? 0, prices.length - 1);
+    const price = prices[index];
+    const variant = dual ? labels[index] : "";
+    const key =
+      row.dataset.catLabel + "|" + row.dataset.name + (dual ? " (" + variant + ")" : "") + "|" + price;
+    return { prices, labels, dual, choiceKey, index, price, variant, key };
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(
+        STORE,
+        JSON.stringify({
+          savedAt: Date.now(),
+          cart: state.cart,
+          choice: state.choice,
+          mode: state.mode,
+          name: state.name,
+          note: state.note,
+        }),
+      );
+    } catch {
+      // Private windows throw. The order still works, it just will not outlive the page.
+    }
+  }
+
+  function restore() {
+    let stored;
+    try {
+      stored = JSON.parse(localStorage.getItem(STORE) ?? "null");
+    } catch {
+      return;
+    }
+    if (!stored || typeof stored !== "object") return;
+    if (!Number.isFinite(stored.savedAt) || Date.now() - stored.savedAt > MAX_AGE_MS) return;
+
+    // The price is part of the cart key, so a key no dish can produce any more
+    // belongs to a repriced or withdrawn dish and is dropped rather than kept.
+    const valid = new Set();
+    rows.forEach((row) => {
+      const prices = JSON.parse(row.dataset.prices);
+      const labels = JSON.parse(row.dataset.labels);
+      prices.forEach((price, index) => {
+        const variant = prices.length > 1 ? " (" + labels[index] + ")" : "";
+        valid.add(row.dataset.catLabel + "|" + row.dataset.name + variant + "|" + price);
+      });
+    });
+
+    Object.entries(stored.cart ?? {}).forEach(([key, qty]) => {
+      if (valid.has(key) && Number.isInteger(qty) && qty > 0) state.cart[key] = qty;
+    });
+    Object.assign(state.choice, stored.choice ?? {});
+    if (stored.mode === "in" || stored.mode === "out") state.mode = stored.mode;
+    state.name = typeof stored.name === "string" ? stored.name : "";
+    state.note = typeof stored.note === "string" ? stored.note : "";
+    if (nameField) nameField.value = state.name;
+    if (noteField) noteField.value = state.note;
+  }
+
+  function summary() {
+    let count = 0;
+    let total = 0;
+    const detail = Object.entries(state.cart).map(([key, qty]) => {
+      const parts = key.split("|");
+      const unit = Number(parts[2]);
+      count += qty;
+      total += unit * qty;
+      return { key, label: parts[1], qty, sum: unit * qty };
+    });
+    return { detail, count, total };
+  }
+
+  function message(totals) {
+    const body = [copy.intro]
+      .concat(
+        totals.detail.length
+          ? totals.detail.map((line) => line.qty + "× " + line.label + " : " + money(line.sum) + " FCFA")
+          : [copy.unset],
+      )
+      .concat([
+        "",
+        copy.service + " : " + (state.mode === "in" ? copy.modeIn : copy.modeOut),
+        state.name ? copy.name + " : " + state.name : null,
+        state.note ? copy.note + " : " + state.note : null,
+        copy.total + " : " + money(totals.total) + " FCFA",
+      ])
+      .filter((line) => line !== null)
+      .join("\n");
+    return "https://wa.me/" + whatsapp + "?text=" + encodeURIComponent(body);
+  }
+
+  function bump(key, delta) {
+    const next = (state.cart[key] ?? 0) + delta;
+    if (next > 0) state.cart[key] = next;
+    else delete state.cart[key];
+    render();
+  }
+
+  function render() {
+    const query = norm(state.query.trim());
+
+    sections.forEach((section) => {
+      const inTab = state.cat === "all" || state.cat === section.dataset.cat;
+      let shown = 0;
+
+      section.querySelectorAll("[data-row]").forEach((row) => {
+        const visible = inTab && (!query || row.dataset.search.includes(query));
+        row.style.display = visible ? "flex" : "none";
+        if (!visible) return;
+        // Bands alternate over what is actually on screen, not the full list.
+        row.style.background = shown % 2 ? "#ffe783" : "#ffd63a";
+        shown += 1;
+      });
+
+      section.style.display = shown === 0 ? "none" : "block";
+      const counter = section.querySelector("[data-count]");
+      if (counter) counter.textContent = String(shown);
+    });
+
+    const anyShown = sections.some((section) => section.style.display !== "none");
+    if (noResult) {
+      noResult.hidden = anyShown;
+      noResult.textContent = copy.noResult + " « " + state.query.trim() + " »";
+    }
+
+    tabs.forEach((tab) => tab.setAttribute("aria-pressed", String(tab.dataset.tab === state.cat)));
+
+    rows.forEach((row) => {
+      const info = read(row);
+      const out = row.querySelector("[data-price-out]");
+      if (out) out.textContent = money(info.price);
+
+      row.querySelectorAll("[data-opt]").forEach((pill) => {
+        pill.setAttribute("aria-pressed", String(Number(pill.dataset.opt) === info.index));
+      });
+
+      const qty = state.cart[info.key] ?? 0;
+      const badge = row.querySelector("[data-qty]");
+      if (badge) {
+        badge.textContent = String(qty);
+        badge.style.color = qty > 0 ? "#141210" : "#a89566";
+      }
+    });
+
+    const totals = summary();
+    document.querySelectorAll("[data-bar-total], [data-cart-total]").forEach((el) => {
+      el.textContent = money(totals.total);
+    });
+
+    if (lines && emptyNote) {
+      lines.textContent = "";
+      emptyNote.hidden = totals.count > 0;
+      lines.hidden = totals.count === 0;
+      totals.detail.forEach((line) => {
+        const li = document.createElement("li");
+        li.className = "flex items-center gap-3 border-b border-cream-line py-2.5 last:border-0";
+        li.innerHTML =
+          '<span data-line-name class="min-w-0 flex-1 font-narrow text-[14.5px] font-bold text-ink uppercase"></span>' +
+          '<span class="inline-flex shrink-0 items-center gap-1 rounded-full border-[1.5px] border-ink bg-white p-[2px]">' +
+          '<button type="button" data-line-dec class="tap grid h-6 w-6 place-items-center rounded-full font-body text-[14px] font-extrabold text-ink">−</button>' +
+          '<span class="min-w-[14px] text-center font-body text-[13px] font-extrabold text-ink">' +
+          line.qty +
+          "</span>" +
+          '<button type="button" data-line-inc class="tap grid h-6 w-6 place-items-center rounded-full bg-ink font-body text-[14px] font-extrabold text-band">+</button>' +
+          "</span>" +
+          '<span class="w-20 shrink-0 text-right font-body text-[14px] font-extrabold text-ink">' +
+          money(line.sum) +
+          " F</span>";
+        li.querySelector("[data-line-name]").textContent = line.label;
+        li.querySelector("[data-line-dec]").addEventListener("click", () => bump(line.key, -1));
+        li.querySelector("[data-line-inc]").addEventListener("click", () => bump(line.key, 1));
+        lines.appendChild(li);
+      });
+    }
+
+    document.querySelectorAll("[data-mode]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.mode === state.mode));
+    });
+
+    const send = document.querySelector("[data-send]");
+    if (send) send.href = message(totals);
+
+    save();
+  }
+
+  rows.forEach((row) => {
+    row.querySelector("[data-inc]")?.addEventListener("click", () => bump(read(row).key, 1));
+    row.querySelector("[data-dec]")?.addEventListener("click", () => bump(read(row).key, -1));
+    row.querySelectorAll("[data-opt]").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        state.choice[read(row).choiceKey] = Number(pill.dataset.opt);
+        render();
+      });
+    });
+  });
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      state.cat = tab.dataset.tab;
+      render();
+      window.scrollTo({ top: 0 });
+    });
+  });
+
+  document.querySelector("[data-search]")?.addEventListener("input", (event) => {
+    state.query = event.target.value;
+    render();
+  });
+
+  document.querySelector("[data-sheet-open]")?.addEventListener("click", () => {
+    if (sheet) sheet.hidden = !sheet.hidden;
+  });
+  document.querySelector("[data-sheet-close]")?.addEventListener("click", () => {
+    if (sheet) sheet.hidden = true;
+  });
+
+  document.querySelectorAll("[data-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.mode = button.dataset.mode;
+      render();
+    });
+  });
+
+  nameField?.addEventListener("input", (event) => {
+    state.name = event.target.value;
+    render();
+  });
+  noteField?.addEventListener("input", (event) => {
+    state.note = event.target.value;
+    render();
+  });
+
+  // Clearing empties the order only; service, name and note are kept.
+  document.querySelector("[data-cart-clear]")?.addEventListener("click", () => {
+    state.cart = {};
+    render();
+  });
+
+  restore();
+  render();
+</script>

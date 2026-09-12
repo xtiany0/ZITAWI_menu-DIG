@@ -1,5 +1,5 @@
 ---
-import { ui, HOURS, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
+import { ui, type Lang } from "../i18n/ui";
 import type { CATEGORIES } from "../content.config";
 
 interface Props {
@@ -9,214 +9,74 @@ interface Props {
 
 const { lang, categories } = Astro.props;
 const t = ui[lang];
-
-const emoji: Record<(typeof CATEGORIES)[number], string> = {
-  pizzas: "🍕",
-  plats: "🍔",
-  sandwichs: "🥪",
-  boissons: "🥤",
-};
 ---
 
-<header class="sticky top-0 z-40">
-  <div class="bg-brick">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-4">
-      <a href={`/${lang}/`} class="flex flex-col leading-none">
-        <span class="wordmark font-display text-[1.75rem] leading-none font-black tracking-[0.06em] text-sign lg:text-4xl">
-          ZITAWI
-        </span>
-        <span class="mt-1 text-[0.55rem] tracking-[0.28em] text-on-brick/75 uppercase lg:text-[0.65rem]">
-          {t.tagline}
-        </span>
-      </a>
+<header class="sticky top-0 z-30">
+  <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
+    <a href={`/${lang}/`} class="logo block font-logo text-[34px] leading-none font-black tracking-[.11em]">
+      ZITAWI
+    </a>
+    <p class="mt-1 font-narrow text-[12px] font-semibold tracking-[.2em] text-blush uppercase">
+      {t.tagline}
+    </p>
 
-      <p
-        data-open-state
-        data-open-hour={HOURS.open}
-        data-close-hour={HOURS.close}
-        data-closed-label={t.closedNow}
-        class="hidden items-center gap-2 rounded-full bg-black/25 px-4 py-1.5 text-sm text-on-brick sm:flex"
+    <div
+      class="absolute top-[14px] right-4 flex rounded-full border-2 border-ink bg-cream p-[2px] shadow-[2px_2px_0_#141210]"
+    >
+      <span class="rounded-full bg-ink px-[11px] py-[5px] font-narrow text-[13px] font-bold text-band">
+        {lang === "fr" ? "FR" : "EN"}
+      </span>
+      <a
+        href={t.otherLangHref}
+        hreflang={lang === "fr" ? "en" : "fr"}
+        class="rounded-full px-[11px] py-[5px] font-narrow text-[13px] font-bold text-ink transition-colors hover:bg-band"
       >
-        <span data-open-dot class="h-2 w-2 rounded-full bg-whatsapp" aria-hidden="true"></span>
-        <span><span data-open-label>{t.openNow}</span>{`, ${t.hoursShort}`}</span>
-      </p>
-
-      <div class="flex shrink-0 items-center gap-2">
-        <button
-          type="button"
-          data-search-toggle
-          aria-expanded="false"
-          aria-controls="menu-search"
-          aria-label={t.searchLabel}
-          class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-black/20 text-on-brick transition-colors duration-200 hover:bg-black/35"
-        >
-          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="m20 20-3.5-3.5" stroke-linecap="round"></path>
-          </svg>
-        </button>
-
-        <a
-          href={t.otherLangHref}
-          hreflang={lang === "fr" ? "en" : "fr"}
-          class="grid h-11 min-w-11 cursor-pointer place-items-center rounded-full bg-black/20 px-3 text-sm font-semibold text-on-brick transition-colors duration-200 hover:bg-black/35"
-        >
-          {t.otherLang}
-        </a>
-      </div>
+        {t.otherLang}
+      </a>
     </div>
   </div>
 
-  <div class="border-b border-line bg-ground">
-    <div class="mx-auto max-w-6xl px-4 lg:px-8">
-      <div id="menu-search" hidden class="pt-3">
-        <input
-          type="search"
-          data-search-input
-          aria-label={t.searchLabel}
-          placeholder={t.searchPlaceholder}
-          class="h-11 w-full rounded-full border border-line bg-card px-4 text-sm text-ink placeholder:text-muted"
-        />
-      </div>
+  <div class="flex flex-col gap-[9px] bg-ink px-5 pt-[11px] pb-3">
+    <label class="flex items-center gap-2 rounded-md bg-band px-3 py-[9px]">
+      <span class="text-[15px] text-[#6b5510]" aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        data-search
+        aria-label={t.searchPlaceholder}
+        placeholder={t.searchPlaceholder}
+        class="w-full bg-transparent font-body text-[14px] font-semibold text-ink placeholder:text-[#6b5510]/70 focus:outline-none"
+      />
+    </label>
 
-      <div
-        aria-label={lang === "fr" ? "Catégories" : "Categories"}
-        role="group"
-        class="pill-row flex gap-2 overflow-x-auto py-3"
-      >
+    <p class="text-center font-narrow text-[13px] font-semibold">
+      <span class="text-band">{t.hours}</span>
+      <span
+        class="mx-2 inline-block h-1 w-1 rounded-full bg-terracotta align-middle"
+        aria-hidden="true"></span>
+      <span class="text-sand">{t.service}</span>
+    </p>
+  </div>
+
+  <div class="rail flex gap-[7px] overflow-x-auto border-b-[3px] border-ink bg-band px-5 py-[9px]">
+    <button
+      type="button"
+      data-tab="all"
+      aria-pressed="true"
+      class="shrink-0 rounded-full border-2 border-ink bg-white/55 px-3 py-1.5 font-tab text-[12.5px] font-extrabold text-ink aria-pressed:bg-ink aria-pressed:text-band"
+    >
+      {t.allCategories}
+    </button>
+    {
+      categories.map((category) => (
         <button
           type="button"
-          data-filter="all"
-          aria-pressed="true"
-          class="inline-flex min-h-11 shrink-0 cursor-pointer items-center rounded-full bg-card px-4 text-sm whitespace-nowrap text-ink transition-colors duration-200 hover:bg-card-hi aria-pressed:bg-orange aria-pressed:font-semibold aria-pressed:text-on-orange"
+          data-tab={category}
+          aria-pressed="false"
+          class="shrink-0 rounded-full border-2 border-ink bg-white/55 px-3 py-1.5 font-tab text-[12.5px] font-extrabold text-ink aria-pressed:bg-ink aria-pressed:text-band"
         >
-          {t.allCategories}
+          {t.categories[category]}
         </button>
-        {
-          categories.map((category) => (
-            <button
-              type="button"
-              data-filter={category}
-              aria-pressed="false"
-              class="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-card px-4 text-sm whitespace-nowrap text-ink transition-colors duration-200 hover:bg-card-hi aria-pressed:bg-orange aria-pressed:font-semibold aria-pressed:text-on-orange"
-            >
-              <span aria-hidden="true">{emoji[category]}</span>
-              {t.categories[category]}
-            </button>
-          ))
-        }
-      </div>
-    </div>
+      ))
+    }
   </div>
 </header>
-
-<!-- Phone contact. The opening pill above has no room on a phone, so the state
-     and hours are repeated here where small screens actually see them. -->
-<div class="mx-auto max-w-4xl px-5 pt-5 lg:px-8">
-  <a
-    href={`tel:${PHONE}`}
-    class="flex min-h-14 w-full items-center justify-center gap-3 rounded-full bg-brick px-5 text-on-brick transition-[filter,transform] duration-200 hover:brightness-110 active:scale-[0.99]"
-  >
-    <svg viewBox="0 0 24 24" class="h-5 w-5 shrink-0" fill="currentColor" aria-hidden="true">
-      <path
-        d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2Z"
-      />
-    </svg>
-    <span class="flex flex-col leading-tight">
-      <span class="text-[0.7rem] font-semibold tracking-[0.08em] uppercase opacity-90">
-        {t.contactCta}
-      </span>
-      <span class="text-[0.95rem] font-bold tabular-nums lg:text-base">{PHONE_DISPLAY}</span>
-    </span>
-  </a>
-
-  <p class="mt-2 flex items-center justify-center gap-2 text-[0.78rem] text-muted sm:hidden">
-    <span data-open-dot class="h-1.5 w-1.5 rounded-full bg-whatsapp" aria-hidden="true"></span>
-    <span><span data-open-label>{t.openNow}</span>{`, ${t.hoursShort}`}</span>
-  </p>
-</div>
-
-<script>
-  // Opening state, applied to every copy of the indicator.
-  const state = document.querySelector<HTMLElement>("[data-open-state]");
-  if (state) {
-    const open = Number(state.dataset.openHour);
-    const close = Number(state.dataset.closeHour);
-    const hour = new Date().getHours();
-    if (hour < open || hour >= close) {
-      document.querySelectorAll<HTMLElement>("[data-open-label]").forEach((label) => {
-        label.textContent = state.dataset.closedLabel ?? label.textContent;
-      });
-      document.querySelectorAll<HTMLElement>("[data-open-dot]").forEach((dot) => {
-        dot.classList.remove("bg-whatsapp");
-        dot.classList.add("bg-muted");
-      });
-    }
-  }
-
-  const sections = document.querySelectorAll<HTMLElement>("[data-category-section]");
-  const filters = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
-  const noResult = document.querySelector<HTMLElement>("[data-no-result]");
-  const searchInput = document.querySelector<HTMLInputElement>("[data-search-input]");
-
-  let activeFilter = "all";
-  let query = "";
-
-  // One place decides what is on screen, so the category buttons and the search
-  // box cannot fight each other over the same cards.
-  function apply() {
-    let shown = 0;
-
-    sections.forEach((section) => {
-      const inFilter = activeFilter === "all" || activeFilter === section.dataset.categorySection;
-      let visible = 0;
-
-      section.querySelectorAll<HTMLElement>("[data-dish]").forEach((card) => {
-        const matches = query === "" || (card.dataset.dish ?? "").includes(query);
-        const show = inFilter && matches;
-        card.hidden = !show;
-        if (show) visible += 1;
-      });
-
-      section.hidden = !inFilter || visible === 0;
-      shown += visible;
-    });
-
-    if (noResult) noResult.hidden = shown > 0;
-
-    filters.forEach((button) => {
-      button.setAttribute("aria-pressed", String(button.dataset.filter === activeFilter));
-    });
-  }
-
-  filters.forEach((button) => {
-    button.addEventListener("click", () => {
-      activeFilter = button.dataset.filter ?? "all";
-      apply();
-
-      // Back to the top on every filter change: the chosen category starts
-      // right below the contact button, and the reader is never dropped into
-      // the middle of a list they did not scroll to themselves.
-      window.scrollTo({ top: 0 });
-    });
-  });
-
-  // Search toggle
-  const toggle = document.querySelector<HTMLButtonElement>("[data-search-toggle]");
-  const panel = document.getElementById("menu-search");
-
-  toggle?.addEventListener("click", () => {
-    if (!panel) return;
-    const nowOpen = panel.hidden;
-    panel.hidden = !nowOpen;
-    toggle.setAttribute("aria-expanded", String(nowOpen));
-    if (nowOpen) searchInput?.focus();
-  });
-
-  searchInput?.addEventListener("input", () => {
-    query = searchInput.value.trim().toLowerCase();
-    apply();
-  });
-
-  apply();
-</script>

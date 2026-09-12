@@ -6,3 +6,6 @@ qr/
 .env.*
 .DS_Store
 npm-debug.log*
+
+# Design reference bundle, not source. Its images are deliberately unused.
+Zitawi menu redesign/

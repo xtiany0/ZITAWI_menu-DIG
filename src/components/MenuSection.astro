@@ -17,148 +17,138 @@ interface Props {
   lang: Lang;
   category: (typeof CATEGORIES)[number];
   entries: MenuEntry[];
-  banner?: string;
 }
 
-const { lang, category, entries, banner } = Astro.props;
+const { lang, category, entries } = Astro.props;
 const t = ui[lang];
+const categoryLabel = t.categories[category];
 
-/** A dish with two tariffs becomes two buyable lines, one per option. */
-function variants(entry: MenuEntry) {
-  if (typeof entry.priceAlt !== "number" || entry.options.length !== 2) {
-    return [{ id: entry.id, label: "", name: entry.name, price: entry.price }];
-  }
-  return [entry.price, entry.priceAlt].map((price, index) => ({
-    id: `${entry.id}::${index}`,
-    label: entry.options[index],
-    name: `${entry.name} (${entry.options[index]})`,
-    price,
-  }));
+/** Strip accents so "pecheur" finds "pêcheur". */
+const norm = (value: string) =>
+  value
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+
+function pricesOf(entry: MenuEntry) {
+  return typeof entry.priceAlt === "number" ? [entry.price, entry.priceAlt] : [entry.price];
+}
+
+/** "nature · 2.000 F" when the dish names its options, otherwise "6.000 F". */
+function optionLabels(entry: MenuEntry) {
+  const prices = pricesOf(entry);
+  if (prices.length < 2) return [];
+  const named = entry.options.length === prices.length;
+  return prices.map(
+    (price, index) =>
+      `${named ? `${entry.options[index]} · ` : ""}${formatPrice(price, lang)} F`,
+  );
 }
 ---
 
-<section id={category} data-category-section={category} class="pt-8 lg:pt-12">
-  <h2 class="text-xl font-semibold tracking-tight text-ink lg:text-2xl">
-    {t.categories[category]}
-    <span class="ml-2 text-sm font-normal text-muted">{entries.length}</span>
-  </h2>
+<section data-section data-cat={category} class="hidden">
+  <div class="flex items-baseline justify-between gap-4 bg-maroon px-[18px] py-[10px]">
+    <h2 class="font-body text-[17px] font-extrabold tracking-[.34em] text-white uppercase">
+      {categoryLabel}
+    </h2>
+    <span data-count class="font-mono text-[11px] text-blush-dim"></span>
+  </div>
 
   {
-    banner && (
-      <img
-        src={banner}
-        alt={t.bandAlt}
-        width="615"
-        height="210"
-        loading="lazy"
-        decoding="async"
-        class="mt-4 h-28 w-full rounded-card object-cover lg:h-36"
-      />
-    )
-  }
+    entries.map((entry) => {
+      const prices = pricesOf(entry);
+      const labels = optionLabels(entry);
+      const showSlot = !entry.image && category !== "pizzas";
 
-  {
-    entries.length === 0 ? (
-      <p class="mt-6 text-sm text-muted">{t.empty}</p>
-    ) : (
-      <ul class="mt-4 grid gap-3 lg:grid-cols-2 lg:gap-4">
-        {entries.map((entry) => (
-          <li
-            data-dish={`${entry.name} ${entry.description} ${entry.options.join(" ")}`.toLowerCase()}
-            class="flex items-stretch gap-3 rounded-card bg-card p-3 lg:gap-4 lg:p-4"
-          >
-            {entry.image && (
-              <img
-                src={entry.image}
-                alt={entry.name}
-                width="180"
-                height="180"
-                loading="lazy"
-                decoding="async"
-                class="h-24 w-24 shrink-0 rounded-xl object-cover lg:h-28 lg:w-28"
-              />
+      return (
+        <article
+          data-row
+          data-cat={category}
+          data-cat-label={categoryLabel}
+          data-name={entry.name}
+          data-prices={JSON.stringify(prices)}
+          data-labels={JSON.stringify(labels)}
+          data-search={norm(`${entry.name} ${entry.description} ${entry.options.join(" ")}`)}
+          class="hidden min-h-[84px] items-center gap-[14px] px-[18px] py-[11px]"
+        >
+          {entry.image ? (
+            <img
+              src={entry.image}
+              alt={entry.name}
+              width="144"
+              height="144"
+              loading="lazy"
+              decoding="async"
+              class="medallion h-[72px] w-[72px] shrink-0 rounded-full bg-white object-cover shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
+            />
+          ) : showSlot ? (
+            <span
+              class="grid h-[72px] w-[72px] shrink-0 place-items-center rounded-full bg-cream font-mono text-[8px] text-[#b3a276] shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
+              aria-hidden="true"
+            >
+              {t.photoSlot}
+            </span>
+          ) : null}
+
+          <div class="min-w-0 flex-1">
+            <h3 class="font-narrow text-[18px] leading-tight font-bold text-ink uppercase">
+              {entry.name}
+            </h3>
+
+            {entry.description && labels.length === 0 && (
+              <p class="mt-0.5 font-body text-[12px] leading-snug text-ink-soft">
+                ({entry.description})
+              </p>
             )}
 
-            <div class="flex min-w-0 flex-1 flex-col">
-              <h3
-                class:list={[
-                  "text-base leading-snug font-semibold text-ink lg:text-lg",
-                  !entry.available && "text-muted line-through",
-                ]}
+            {labels.length > 0 && (
+              <div class="mt-1.5 flex flex-wrap gap-1.5">
+                {labels.map((label, index) => (
+                  <button
+                    type="button"
+                    data-opt={index}
+                    aria-pressed={index === 0 ? "true" : "false"}
+                    class="rounded-full border-[1.5px] border-ink bg-white/50 px-2.5 py-1 font-narrow text-[12px] font-bold text-[#5f5741] aria-pressed:bg-ink aria-pressed:text-band"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div class="shrink-0 text-right">
+            <p class="font-body text-[18px] font-extrabold text-ink">
+              <span data-price-out>{formatPrice(entry.price, lang)}</span>
+              <span class="text-[13px] font-black"> F</span>
+            </p>
+
+            <div
+              class="mt-1.5 inline-flex items-center gap-1 rounded-full border-[1.5px] border-ink bg-cream p-[2px]"
+            >
+              <button
+                type="button"
+                data-dec
+                aria-label={`${t.remove} ${entry.name}`}
+                class="tap grid h-[26px] w-[26px] place-items-center rounded-full font-body text-[15px] font-extrabold text-ink transition-colors hover:bg-band"
               >
-                {entry.name}
-              </h3>
-
-              {entry.description && (
-                <p class="mt-1 line-clamp-2 text-[0.8rem] leading-snug text-muted lg:text-sm">
-                  {entry.description}
-                </p>
-              )}
-
-              {!entry.available ? (
-                <p class="mt-2 self-start rounded-full bg-card-hi px-3 py-1 text-[0.7rem] font-semibold text-muted">
-                  {t.soldOut}
-                </p>
-              ) : (
-                <div class="mt-auto space-y-1.5 pt-2">
-                  {variants(entry).map((variant) => (
-                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                      <p class="min-w-0">
-                        {variant.label && (
-                          <span class="block text-[0.75rem] leading-tight text-muted">
-                            {variant.label}
-                          </span>
-                        )}
-                        <span class="text-[0.95rem] font-bold text-ink lg:text-base">
-                          {formatPrice(variant.price, lang)}
-                        </span>
-                        <span class="ml-1 text-[0.7rem] font-medium text-muted">{t.currency}</span>
-                      </p>
-
-                      <div
-                        data-stepper={variant.id}
-                        class="flex shrink-0 items-center gap-1 rounded-full border border-transparent p-1 transition-colors duration-200 data-[active=true]:border-orange data-[active=true]:bg-orange/10"
-                      >
-                        <button
-                          type="button"
-                          data-remove={variant.id}
-                          hidden
-                          aria-label={`${t.remove} ${variant.name}`}
-                          class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-card-hi text-ink transition-colors duration-200 hover:bg-line active:scale-95"
-                        >
-                          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                            <path d="M5 12h14" stroke-linecap="round" />
-                          </svg>
-                        </button>
-
-                        <span
-                          data-qty
-                          hidden
-                          aria-live="polite"
-                          class="min-w-6 text-center text-sm font-bold text-orange"
-                        />
-
-                        <button
-                          type="button"
-                          data-add={variant.id}
-                          data-name={variant.name}
-                          data-price={variant.price}
-                          aria-label={`${t.add} ${variant.name}`}
-                          class="grid h-11 w-11 cursor-pointer place-items-center rounded-full bg-orange text-on-orange transition-transform duration-150 active:scale-95"
-                        >
-                          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                            <path d="M12 5v14M5 12h14" stroke-linecap="round" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                −
+              </button>
+              <span data-qty class="min-w-[14px] text-center font-body text-[14px] font-extrabold text-mute">
+                0
+              </span>
+              <button
+                type="button"
+                data-inc
+                aria-label={`${t.add} ${entry.name}`}
+                class="tap grid h-[26px] w-[26px] place-items-center rounded-full bg-ink font-body text-[15px] font-extrabold text-band transition-colors hover:bg-terracotta hover:text-white"
+              >
+                +
+              </button>
             </div>
-          </li>
-        ))}
-      </ul>
-    )
+          </div>
+        </article>
+      );
+    })
   }
 </section>

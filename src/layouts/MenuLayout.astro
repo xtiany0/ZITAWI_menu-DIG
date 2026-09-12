@@ -1,6 +1,10 @@
 ---
-import "@fontsource-variable/inter";
-import "@fontsource-variable/playfair-display";
+import "@fontsource-variable/bodoni-moda";
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/archivo-narrow";
+import "@fontsource-variable/cairo";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 import "../styles/global.css";
 import { ui, type Lang } from "../i18n/ui";
 
@@ -25,25 +29,27 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
     <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
-    <meta name="theme-color" content="#c1543f" />
+    <meta name="theme-color" content="#b8452f" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script is:inline>
-      // A menu reopened from a QR code should start at the top. Without this the
-      // browser restores the previous scroll and drops the reader mid-menu.
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     </script>
   </head>
-  <body class="min-h-dvh bg-ground font-sans text-ink">
+  <body class="bg-band">
     <a
       href="#carte"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:bg-orange focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:font-body focus:text-sm focus:text-band"
     >
       {t.skip}
     </a>
-    <slot />
+
+    <!-- The design is drawn at 430px. Fluid up to 480px, centred, same proportions. -->
+    <div class="mx-auto flex min-h-dvh max-w-[480px] flex-col bg-band">
+      <slot />
+    </div>
   </body>
 </html>

@@ -17,20 +17,24 @@ placed on the tables. The restaurant updates dishes, prices and photos through a
 
 ## Design system
 
-Dark card menu with an ordering flow, following two references the client supplied: the terracotta
-ZITAWI masthead from their shopfront and phone mockup, and a dark card list with category pills.
+Direction **2a "Jaune enseigne"** from `Zitawi menu redesign/design_handoff_zitawi_carte`,
+implemented to the handoff. Single scrolling screen, drawn at 430px, fluid up to 480px centred.
 
-- Ground `#0E0E10`, cards `#1A1B1E`, text white, secondary `#9A9AA2`.
-- Terracotta masthead `#C1543F` carrying the wordmark in black, outlined in white as the shopfront
-  banner has it. Orange `#E8752A` marks the active filter and the add buttons; WhatsApp green
-  `#25D366` and order green `#1E7A43` belong to the order flow alone.
-- Locked dark; `color-scheme: only dark`.
-- The category pills filter rather than scroll: one category at a time, plus an All button. Search
-  and the filter run through one function so they cannot contradict each other.
-- The order lives in `localStorage` for twelve hours. Only ids and quantities are stored; names and
-  prices are read back off the page, so a repriced or withdrawn dish cannot return stale.
-- Touch targets are 44px everywhere.
-- No animation library.
+- Sign yellow `#FFD63A` / `#FFE783` alternating bands, ink `#141210`, terracotta `#B8452F`,
+  maroon category bars `#5D1E17`, cream `#FFFDF3`.
+- Bodoni Moda for the wordmark only, Archivo Narrow for dish names and labels, Archivo for body and
+  prices, IBM Plex Mono for counters, Cairo for the tabs.
+- The wordmark is black ringed in white via `-webkit-text-stroke` with `paint-order: stroke fill`,
+  as the shopfront banner has it.
+- Bands alternate over the rows actually on screen, so the stripe pattern stays regular after a
+  search or a tab change.
+- Search strips diacritics, so "pecheur" finds "Pizza du pêcheur".
+- Dishes with two tariffs show two choice pills; the selected one drives the displayed price, the
+  cart key and the total. The order keeps one line per variant chosen.
+- The order, the service mode, the name and the note persist in `localStorage` for twelve hours.
+  A cart key carries its price, so a repriced or withdrawn dish is dropped on restore.
+- Counters are drawn at 26px per the handoff, with the tap area pushed to 44px via a pseudo
+  element so a thumb is not asked to hit 26px.
 
 Tokens live in `src/styles/global.css`.
 
@@ -95,17 +99,18 @@ ready to print from a browser.
 
 ## Photography
 
-31 dish photos, extracted from the embedded images in `zitawi-menu-structure.pdf` with `pdfimages`
-and converted to WebP. 524 KB in total. They are cut-out shots on a plain ground, 82 to 202px
-square, which matches the square card thumbnails.
+31 dish photos, extracted from `zitawi-menu-structure.pdf` with `pdfimages`. The client asked for
+these rather than the cut-outs bundled with the handoff.
 
-Pairing follows page order, because the PDF places each image beside its own name. Six dishes carry
-no photo because the PDF shows none: Plat double, Plat KFC, Plat de riz simple, Portion de frites,
-Sandwich double and Boisson énergétique. The fourteen pizzas have no photography of their own
-either, so that section opens with a banner instead.
+They arrived on a solid yellow ground, which would have dissolved into the yellow bands, so the
+background is removed by flood-filling inward from the border with a tolerance of 62 and the result
+is flattened onto cream. The fill starts at the edges rather than keying every yellow pixel, so
+chips, rice and cheese inside a dish are never eaten. A tolerance of 96 was tried and rejected: it
+hollowed out burger buns. Anything the fill cannot reach is cut by the round medallion.
 
-The `image` field stays wired end to end, so the restaurant can replace any of these through
-`/admin`. Shoot in daylight, from above, square, under about 500 KB.
+Six dishes carry no photo because the PDF shows none: Plat double, Plat KFC, Plat de riz simple,
+Portion de frites, Sandwich double and Boisson énergétique. Those show the empty "PHOTO" slot. The
+pizzas never get a medallion, which is the handoff's own choice.
 
 ## Before going live
 

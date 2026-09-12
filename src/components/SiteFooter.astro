@@ -3,24 +3,20 @@ import { ui, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
 
 interface Props {
   lang: Lang;
-  updatedAt: string;
 }
 
-const { lang, updatedAt } = Astro.props;
+const { lang } = Astro.props;
 const t = ui[lang];
 ---
 
-<footer class="mt-14 border-t border-line pt-8 pb-16">
-  <p class="font-display text-xl tracking-[0.06em] text-gold">ZITAWI</p>
-  <p class="mt-2 text-sm text-muted">{t.address} · {t.hours}</p>
-
-  <a
-    href={`tel:${PHONE}`}
-    class="mt-4 inline-flex min-h-12 cursor-pointer items-center rounded-full bg-card px-5 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-card-hi"
-  >
-    {PHONE_DISPLAY}
-  </a>
-
-  <p class="mt-6 text-[0.8rem] text-muted">{t.footerNote}</p>
-  <p class="mt-1 text-[0.8rem] text-muted">{t.updated} {updatedAt}</p>
+<footer class="bg-ink px-[18px] pt-[18px] pb-5 font-body text-[12.5px] leading-[1.7] text-footer-text">
+  <p class="font-logo text-[17px] font-black text-band">ZITAWI</p>
+  <p>{t.footerPlace}</p>
+  <p>{t.hours}</p>
+  <p>
+    <a href={`tel:${PHONE}`} class="font-bold text-band underline-offset-2 hover:underline">
+      {PHONE_DISPLAY}
+    </a>
+  </p>
+  <p>{t.footerPrices}</p>
 </footer>
