@@ -44,6 +44,28 @@ body {
   paint-order: stroke fill;
 }
 
+/* Masthead and search fold away on the way down, leaving the category tabs
+   pinned. Animating grid rows keeps it smooth without measuring heights. */
+.collapsible {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 220ms ease;
+}
+
+.collapsible > * {
+  overflow: hidden;
+}
+
+[data-compact="true"] .collapsible {
+  grid-template-rows: 0fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible {
+    transition: none;
+  }
+}
+
 .rail {
   scrollbar-width: none;
 }

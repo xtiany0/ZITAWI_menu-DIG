@@ -11,7 +11,9 @@ const { lang, categories } = Astro.props;
 const t = ui[lang];
 ---
 
-<header class="sticky top-0 z-30">
+<header data-header class="sticky top-0 z-30">
+  <div class="collapsible">
+    <div>
   <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
     <a href={`/${lang}/`} class="logo block font-logo text-[34px] leading-none font-black tracking-[.11em]">
       ZITAWI
@@ -21,17 +23,34 @@ const t = ui[lang];
     </p>
 
     <div
+      data-lang-switch
       class="absolute top-[14px] right-4 flex rounded-full border-2 border-ink bg-cream p-[2px] shadow-[2px_2px_0_#141210]"
     >
-      <span class="rounded-full bg-ink px-[11px] py-[5px] font-narrow text-[13px] font-bold text-band">
-        {lang === "fr" ? "FR" : "EN"}
-      </span>
+      <span
+        data-lang-knob
+        aria-hidden="true"
+        class:list={[
+          "absolute top-[2px] left-[2px] h-[calc(100%-4px)] w-[calc(50%-2px)] rounded-full bg-ink transition-transform duration-200 ease-out",
+          lang === "en" && "translate-x-full",
+        ]}
+      />
       <a
-        href={t.otherLangHref}
-        hreflang={lang === "fr" ? "en" : "fr"}
-        class="rounded-full px-[11px] py-[5px] font-narrow text-[13px] font-bold text-ink transition-colors hover:bg-band"
+        href="/fr/"
+        hreflang="fr"
+        data-lang-seg="fr"
+        aria-current={lang === "fr" ? "true" : "false"}
+        class="relative z-10 w-[42px] py-[5px] text-center font-narrow text-[13px] font-bold text-ink transition-colors duration-200 aria-[current=true]:text-band"
       >
-        {t.otherLang}
+        FR
+      </a>
+      <a
+        href="/en/"
+        hreflang="en"
+        data-lang-seg="en"
+        aria-current={lang === "en" ? "true" : "false"}
+        class="relative z-10 w-[42px] py-[5px] text-center font-narrow text-[13px] font-bold text-ink transition-colors duration-200 aria-[current=true]:text-band"
+      >
+        EN
       </a>
     </div>
   </div>
@@ -57,6 +76,9 @@ const t = ui[lang];
     </p>
   </div>
 
+    </div>
+  </div>
+
   <div class="rail flex gap-[7px] overflow-x-auto border-b-[3px] border-ink bg-band px-5 py-[9px]">
     <button
       type="button"
@@ -80,3 +102,57 @@ const t = ui[lang];
     }
   </div>
 </header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Fold the masthead away going down, bring it back going up.
+  if (header) {
+    let queued = false;
+
+    // A plain threshold with hysteresis. Direction detection was tried first and
+    // proved unreliable: scroll events coalesce, so the previous position is
+    // already current by the time the handler compares against it.
+    const update = () => {
+      const y = window.scrollY;
+      if (y > 120) header.dataset.compact = "true";
+      else if (y < 60) header.dataset.compact = "false";
+    };
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          update();
+          queued = false;
+        });
+      },
+      { passive: true },
+    );
+    update();
+  }
+
+  // Let the knob finish its slide before the page changes under it.
+  const knob = document.querySelector<HTMLElement>("[data-lang-knob]");
+  document.querySelectorAll<HTMLAnchorElement>("[data-lang-seg]").forEach((segment) => {
+    segment.addEventListener("click", (event) => {
+      if (segment.getAttribute("aria-current") === "true") {
+        event.preventDefault();
+        return;
+      }
+      if (reduced.matches || !knob) return;
+
+      event.preventDefault();
+      knob.classList.toggle("translate-x-full");
+      document.querySelectorAll<HTMLElement>("[data-lang-seg]").forEach((other) => {
+        other.setAttribute("aria-current", String(other === segment));
+      });
+      window.setTimeout(() => {
+        window.location.href = segment.href;
+      }, 210);
+    });
+  });
+</script>
