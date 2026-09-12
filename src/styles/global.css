@@ -40,6 +40,19 @@ body[data-cart-open="true"] {
   padding-bottom: 5.5rem;
 }
 
+/* White outline on the wordmark, as on the shopfront sign. paint-order puts the
+   stroke behind the fill so the stroke does not eat into the letterforms. */
+.wordmark {
+  -webkit-text-stroke: 2px #ffffff;
+  paint-order: stroke fill;
+}
+
+@media (min-width: 1024px) {
+  .wordmark {
+    -webkit-text-stroke-width: 3px;
+  }
+}
+
 .pill-row {
   scrollbar-width: none;
 }
