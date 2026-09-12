@@ -47,8 +47,9 @@ const canonical = new URL(`/${lang}/`, Astro.site);
       {t.skip}
     </a>
 
-    <!-- The design is drawn at 430px. Fluid up to 480px, centred, same proportions. -->
-    <div class="mx-auto flex min-h-dvh max-w-[480px] flex-col bg-band">
+    <!-- Drawn at 430px. Fluid, centred, widening in steps so a desktop does not
+         get a narrow strip while the rows keep a readable measure. -->
+    <div class="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col bg-band md:max-w-[680px] lg:max-w-[820px]">
       <slot />
     </div>
   </body>

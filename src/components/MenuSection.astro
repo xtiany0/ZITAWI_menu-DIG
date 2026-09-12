@@ -47,7 +47,7 @@ function optionLabels(entry: MenuEntry) {
 ---
 
 <section data-section data-cat={category} class="hidden">
-  <div class="flex items-baseline justify-between gap-4 bg-maroon px-[18px] py-[10px]">
+  <div class="flex items-baseline justify-between gap-4 bg-maroon px-[18px] py-[10px] lg:px-6 lg:py-3">
     <h2 class="font-body text-[17px] font-extrabold tracking-[.34em] text-white uppercase">
       {categoryLabel}
     </h2>
@@ -69,7 +69,7 @@ function optionLabels(entry: MenuEntry) {
           data-prices={JSON.stringify(prices)}
           data-labels={JSON.stringify(labels)}
           data-search={norm(`${entry.name} ${entry.description} ${entry.options.join(" ")}`)}
-          class="hidden min-h-[84px] items-center gap-[14px] px-[18px] py-[11px]"
+          class="hidden min-h-[84px] items-center gap-[14px] px-[18px] py-[11px] lg:min-h-[96px] lg:gap-5 lg:px-6"
         >
           {entry.image ? (
             <img
@@ -79,11 +79,11 @@ function optionLabels(entry: MenuEntry) {
               height="144"
               loading="lazy"
               decoding="async"
-              class="medallion h-[72px] w-[72px] shrink-0 rounded-full bg-white object-cover shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
+              class="medallion h-[72px] w-[72px] shrink-0 rounded-full lg:h-20 lg:w-20 bg-white object-cover shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
             />
           ) : showSlot ? (
             <span
-              class="grid h-[72px] w-[72px] shrink-0 place-items-center rounded-full bg-cream font-mono text-[8px] text-[#b3a276] shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
+              class="grid h-[72px] w-[72px] shrink-0 place-items-center rounded-full lg:h-20 lg:w-20 bg-cream font-mono text-[8px] text-[#b3a276] shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
               aria-hidden="true"
             >
               {t.photoSlot}
@@ -91,7 +91,7 @@ function optionLabels(entry: MenuEntry) {
           ) : null}
 
           <div class="min-w-0 flex-1">
-            <h3 class="font-narrow text-[18px] leading-tight font-bold text-ink uppercase">
+            <h3 class="font-narrow text-[18px] leading-tight font-bold text-ink uppercase lg:text-[20px]">
               {entry.name}
             </h3>
 
@@ -118,7 +118,7 @@ function optionLabels(entry: MenuEntry) {
           </div>
 
           <div class="shrink-0 text-right">
-            <p class="font-body text-[18px] font-extrabold text-ink">
+            <p class="font-body text-[18px] font-extrabold text-ink lg:text-[20px]">
               <span data-price-out>{formatPrice(entry.price, lang)}</span>
               <span class="text-[13px] font-black"> F</span>
             </p>
