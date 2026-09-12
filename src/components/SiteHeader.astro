@@ -1,5 +1,5 @@
 ---
-import { ui, HOURS, type Lang } from "../i18n/ui";
+import { ui, HOURS, PHONE, PHONE_DISPLAY, type Lang } from "../i18n/ui";
 import type { CATEGORIES } from "../content.config";
 
 interface Props {
@@ -37,7 +37,7 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
         data-closed-label={t.closedNow}
         class="hidden items-center gap-2 rounded-full bg-black/25 px-4 py-1.5 text-sm text-on-brick sm:flex"
       >
-        <span class="h-2 w-2 rounded-full bg-whatsapp" aria-hidden="true"></span>
+        <span data-open-dot class="h-2 w-2 rounded-full bg-whatsapp" aria-hidden="true"></span>
         <span><span data-open-label>{t.openNow}</span>{`, ${t.hoursShort}`}</span>
       </p>
 
@@ -79,128 +79,144 @@ const emoji: Record<(typeof CATEGORIES)[number], string> = {
         />
       </div>
 
-      <nav aria-label={lang === "fr" ? "Catégories" : "Categories"}>
-        <ul class="pill-row flex gap-2 overflow-x-auto py-3">
-          {
-            categories.map((category) => (
-              <li>
-                <a
-                  href={`#${category}`}
-                  data-category-link={category}
-                  class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-card px-4 text-sm whitespace-nowrap text-ink transition-colors duration-200 hover:bg-card-hi aria-[current=true]:bg-orange aria-[current=true]:text-on-orange aria-[current=true]:font-semibold"
-                >
-                  <span aria-hidden="true">{emoji[category]}</span>
-                  {t.categories[category]}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
+      <div
+        aria-label={lang === "fr" ? "Catégories" : "Categories"}
+        role="group"
+        class="pill-row flex gap-2 overflow-x-auto py-3"
+      >
+        <button
+          type="button"
+          data-filter="all"
+          aria-pressed="true"
+          class="inline-flex min-h-11 shrink-0 cursor-pointer items-center rounded-full bg-card px-4 text-sm whitespace-nowrap text-ink transition-colors duration-200 hover:bg-card-hi aria-pressed:bg-orange aria-pressed:font-semibold aria-pressed:text-on-orange"
+        >
+          {t.allCategories}
+        </button>
+        {
+          categories.map((category) => (
+            <button
+              type="button"
+              data-filter={category}
+              aria-pressed="false"
+              class="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-card px-4 text-sm whitespace-nowrap text-ink transition-colors duration-200 hover:bg-card-hi aria-pressed:bg-orange aria-pressed:font-semibold aria-pressed:text-on-orange"
+            >
+              <span aria-hidden="true">{emoji[category]}</span>
+              {t.categories[category]}
+            </button>
+          ))
+        }
+      </div>
     </div>
   </div>
 </header>
 
+<!-- Phone contact. The opening pill above has no room on a phone, so the state
+     and hours are repeated here where small screens actually see them. -->
+<div class="mx-auto max-w-4xl px-5 pt-5 lg:px-8">
+  <a
+    href={`tel:${PHONE}`}
+    class="flex min-h-14 w-full items-center justify-center gap-3 rounded-full bg-brick px-5 text-on-brick transition-[filter,transform] duration-200 hover:brightness-110 active:scale-[0.99]"
+  >
+    <svg viewBox="0 0 24 24" class="h-5 w-5 shrink-0" fill="currentColor" aria-hidden="true">
+      <path
+        d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2Z"
+      />
+    </svg>
+    <span class="flex flex-col leading-tight">
+      <span class="text-[0.7rem] font-semibold tracking-[0.08em] uppercase opacity-90">
+        {t.contactCta}
+      </span>
+      <span class="text-[0.95rem] font-bold tabular-nums lg:text-base">{PHONE_DISPLAY}</span>
+    </span>
+  </a>
+
+  <p class="mt-2 flex items-center justify-center gap-2 text-[0.78rem] text-muted sm:hidden">
+    <span data-open-dot class="h-1.5 w-1.5 rounded-full bg-whatsapp" aria-hidden="true"></span>
+    <span><span data-open-label>{t.openNow}</span>{`, ${t.hoursShort}`}</span>
+  </p>
+</div>
+
 <script>
-  // Opening state
+  // Opening state, applied to every copy of the indicator.
   const state = document.querySelector<HTMLElement>("[data-open-state]");
-  const label = document.querySelector<HTMLElement>("[data-open-label]");
-  if (state && label) {
+  if (state) {
     const open = Number(state.dataset.openHour);
     const close = Number(state.dataset.closeHour);
     const hour = new Date().getHours();
     if (hour < open || hour >= close) {
-      label.textContent = state.dataset.closedLabel ?? label.textContent;
-      const dot = state.querySelector("span");
-      dot?.classList.remove("bg-whatsapp");
-      dot?.classList.add("bg-muted");
+      document.querySelectorAll<HTMLElement>("[data-open-label]").forEach((label) => {
+        label.textContent = state.dataset.closedLabel ?? label.textContent;
+      });
+      document.querySelectorAll<HTMLElement>("[data-open-dot]").forEach((dot) => {
+        dot.classList.remove("bg-whatsapp");
+        dot.classList.add("bg-muted");
+      });
     }
   }
 
-  // Assigned below once the category links exist; the search handler calls it
-  // after filtering so the active pill matches what is still on screen.
-  let refreshCurrent = () => {};
+  const sections = document.querySelectorAll<HTMLElement>("[data-category-section]");
+  const filters = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const noResult = document.querySelector<HTMLElement>("[data-no-result]");
+  const searchInput = document.querySelector<HTMLInputElement>("[data-search-input]");
 
-  // Search toggle and filtering
+  let activeFilter = "all";
+  let query = "";
+
+  // One place decides what is on screen, so the category buttons and the search
+  // box cannot fight each other over the same cards.
+  function apply() {
+    let shown = 0;
+
+    sections.forEach((section) => {
+      const inFilter = activeFilter === "all" || activeFilter === section.dataset.categorySection;
+      let visible = 0;
+
+      section.querySelectorAll<HTMLElement>("[data-dish]").forEach((card) => {
+        const matches = query === "" || (card.dataset.dish ?? "").includes(query);
+        const show = inFilter && matches;
+        card.hidden = !show;
+        if (show) visible += 1;
+      });
+
+      section.hidden = !inFilter || visible === 0;
+      shown += visible;
+    });
+
+    if (noResult) noResult.hidden = shown > 0;
+
+    filters.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.filter === activeFilter));
+    });
+  }
+
+  filters.forEach((button) => {
+    button.addEventListener("click", () => {
+      activeFilter = button.dataset.filter ?? "all";
+      apply();
+
+      // Back to the top on every filter change: the chosen category starts
+      // right below the contact button, and the reader is never dropped into
+      // the middle of a list they did not scroll to themselves.
+      window.scrollTo({ top: 0 });
+    });
+  });
+
+  // Search toggle
   const toggle = document.querySelector<HTMLButtonElement>("[data-search-toggle]");
   const panel = document.getElementById("menu-search");
-  const input = document.querySelector<HTMLInputElement>("[data-search-input]");
 
   toggle?.addEventListener("click", () => {
     if (!panel) return;
     const nowOpen = panel.hidden;
     panel.hidden = !nowOpen;
     toggle.setAttribute("aria-expanded", String(nowOpen));
-    if (nowOpen) input?.focus();
+    if (nowOpen) searchInput?.focus();
   });
 
-  input?.addEventListener("input", () => {
-    const query = input.value.trim().toLowerCase();
-    document.querySelectorAll<HTMLElement>("[data-dish]").forEach((card) => {
-      card.hidden = query.length > 0 && !(card.dataset.dish ?? "").includes(query);
-    });
-    let shown = 0;
-    document.querySelectorAll<HTMLElement>("[data-category-section]").forEach((section) => {
-      const visible = section.querySelectorAll<HTMLElement>("[data-dish]:not([hidden])").length;
-      section.hidden = visible === 0;
-      shown += visible;
-    });
-
-    const empty = document.querySelector<HTMLElement>("[data-no-result]");
-    if (empty) empty.hidden = shown > 0;
-
-    refreshCurrent();
+  searchInput?.addEventListener("input", () => {
+    query = searchInput.value.trim().toLowerCase();
+    apply();
   });
 
-  // Category underline follows the scroll
-  const links = document.querySelectorAll<HTMLAnchorElement>("[data-category-link]");
-  const sections = document.querySelectorAll<HTMLElement>("[data-category-section]");
-
-  if (links.length && sections.length) {
-    const setCurrent = (id: string) => {
-      links.forEach((link) => {
-        link.setAttribute("aria-current", String(link.dataset.categoryLink === id));
-      });
-    };
-
-    // Position-based rather than an IntersectionObserver: the observer needs a
-    // detection band expressed in percentages, which collapsed to 85px on a
-    // phone and let sections slip through without ever registering.
-    const headerEl = document.querySelector("header");
-
-    const updateCurrent = () => {
-      const visible = [...sections].filter((section) => !section.hidden);
-      if (!visible.length) return;
-
-      // Slack past the header so a section counts as reached once its heading
-      // clears the pills, not only when its very top edge does.
-      const line = (headerEl?.getBoundingClientRect().height ?? 0) + 72;
-      let current = visible[0];
-      for (const section of visible) {
-        if (section.getBoundingClientRect().top <= line) current = section;
-      }
-
-      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 4;
-      if (atBottom) current = visible[visible.length - 1];
-
-      setCurrent(current.dataset.categorySection ?? "");
-    };
-
-    let queued = false;
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (queued) return;
-        queued = true;
-        requestAnimationFrame(() => {
-          updateCurrent();
-          queued = false;
-        });
-      },
-      { passive: true },
-    );
-
-    refreshCurrent = updateCurrent;
-    updateCurrent();
-  }
+  apply();
 </script>
