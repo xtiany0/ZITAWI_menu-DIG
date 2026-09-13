@@ -90,6 +90,20 @@ are deliberate:
 
 ## Deployment
 
+Two targets, and the difference between them is the URL prefix. GitHub Pages
+serves a project site from `/<repo>/`, Netlify from the root, so
+`astro.config.mjs` reads `PUBLIC_BASE` and `PUBLIC_SITE` from the environment and
+falls back to `/` and `https://zitawi.com` when they are unset. Every absolute
+URL the site writes goes through `withBase()` in `src/lib/path.ts`; a new
+hardcoded `/fr/` or `/images/...` builds fine and 404s under a sub-path, so keep
+them out. `public/.nojekyll` is what stops GitHub Pages from discarding
+`_astro/`.
+
+`.github/workflows/deploy.yml` builds on every push to `main` and derives the
+base from the repository name, so renaming the repository moves the site with no
+edit. Decap CMS does not work on GitHub Pages: `git-gateway` is a Netlify
+service, so `/admin` is dead there and dishes are edited as Markdown files.
+
 `netlify.toml` owns the build, the Node version (22), the security headers, and the `/` redirect to
 `/en/` when the browser asks for English and `/fr/` otherwise. The CMS needs Netlify Identity
 (invite-only) with Git Gateway enabled; the CMS commits straight to `main`, so a CMS edit triggers a

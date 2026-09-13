@@ -7,6 +7,7 @@ import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "../styles/global.css";
 import { ui, type Lang } from "../i18n/ui";
+import { withBase } from "../lib/path";
 
 interface Props {
   lang: Lang;
@@ -16,7 +17,7 @@ interface Props {
 
 const { lang, title, description } = Astro.props;
 const t = ui[lang];
-const canonical = new URL(`/${lang}/`, Astro.site);
+const canonical = new URL(withBase(`/${lang}/`), Astro.site);
 ---
 
 <!doctype html>
@@ -27,14 +28,14 @@ const canonical = new URL(`/${lang}/`, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="fr" href={new URL("/fr/", Astro.site)} />
-    <link rel="alternate" hreflang="en" href={new URL("/en/", Astro.site)} />
+    <link rel="alternate" hreflang="fr" href={new URL(withBase("/fr/"), Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(withBase("/en/"), Astro.site)} />
     <meta name="theme-color" content="#b8452f" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.menu" />
     <meta property="og:url" content={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
     <script is:inline>
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     </script>

@@ -1,6 +1,7 @@
 ---
 import { ui, type Lang } from "../i18n/ui";
 import type { CATEGORIES } from "../content.config";
+import { withBase } from "../lib/path";
 
 interface Props {
   lang: Lang;
@@ -13,7 +14,7 @@ const t = ui[lang];
 
 <header>
   <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
-    <a href={`/${lang}/`} class="logo block px-10 font-logo text-[34px] leading-none font-black tracking-[.11em] lg:text-[44px]">
+    <a href={withBase(`/${lang}/`)} class="logo block px-10 font-logo text-[34px] leading-none font-black tracking-[.11em] lg:text-[44px]">
       ZITAWI
     </a>
     <p class="mt-1 font-narrow text-[12px] font-semibold tracking-[.2em] text-blush uppercase lg:text-[13px]">
@@ -33,7 +34,7 @@ const t = ui[lang];
         ]}
       />
       <a
-        href="/fr/"
+        href={withBase("/fr/")}
         hreflang="fr"
         data-lang-seg="fr"
         aria-current={lang === "fr" ? "true" : "false"}
@@ -42,7 +43,7 @@ const t = ui[lang];
         FR
       </a>
       <a
-        href="/en/"
+        href={withBase("/en/")}
         hreflang="en"
         data-lang-seg="en"
         aria-current={lang === "en" ? "true" : "false"}

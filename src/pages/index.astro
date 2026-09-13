@@ -1,5 +1,10 @@
 ---
+import { withBase } from "../lib/path";
+
 export const prerender = true;
+
+const fr = withBase("/fr/");
+const en = withBase("/en/");
 ---
 
 <!doctype html>
@@ -9,14 +14,13 @@ export const prerender = true;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Zitawi</title>
     <meta name="robots" content="noindex" />
-    <meta http-equiv="refresh" content="0; url=/fr/" />
-    <link rel="canonical" href="https://zitawi.com/fr/" />
+    <meta http-equiv="refresh" content={`0; url=${fr}`} />
+    <link rel="canonical" href={new URL(fr, Astro.site)} />
   </head>
   <body>
-    <p><a href="/fr/">Voir la carte</a> · <a href="/en/">See the menu</a></p>
-    <script is:inline>
-      var target = (navigator.language || "fr").toLowerCase().startsWith("en") ? "/en/" : "/fr/";
-      window.location.replace(target);
+    <p><a href={fr}>Voir la carte</a> · <a href={en}>See the menu</a></p>
+    <script is:inline define:vars={{ fr, en }}>
+      window.location.replace((navigator.language || "fr").toLowerCase().startsWith("en") ? en : fr);
     </script>
   </body>
 </html>

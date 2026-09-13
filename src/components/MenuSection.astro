@@ -1,5 +1,6 @@
 ---
 import { ui, formatPrice, type Lang } from "../i18n/ui";
+import { withBase } from "../lib/path";
 import type { CATEGORIES } from "../content.config";
 
 export interface MenuEntry {
@@ -73,7 +74,7 @@ function optionLabels(entry: MenuEntry) {
         >
           {entry.image ? (
             <img
-              src={entry.image}
+              src={withBase(entry.image)}
               alt={entry.name}
               width="144"
               height="144"
