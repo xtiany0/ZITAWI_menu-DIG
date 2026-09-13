@@ -7,7 +7,6 @@ export const ui = {
     tagline: "Restaurant libanais & fast food",
     searchPlaceholder: "Chercher un plat, un ingrédient…",
     hours: "Ouvert tous les jours de 9h00 à 00h00",
-    service: "Sur place ou à emporter",
     allCategories: "Tout",
     categories: {
       pizzas: "Pizzas",
@@ -54,7 +53,6 @@ export const ui = {
     tagline: "Lebanese restaurant & fast food",
     searchPlaceholder: "Search a dish, an ingredient…",
     hours: "Open every day from 9am to midnight",
-    service: "Dine in or take away",
     allCategories: "All",
     categories: {
       pizzas: "Pizza",

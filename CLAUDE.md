@@ -31,10 +31,10 @@ persistence layer is one `is:inline` script at the bottom of that page, plus a s
 requires a rebuild, not a client update.
 
 **Search and tabs are display toggles, not re-renders.** `render()` in the page script walks
-`[data-row]` elements and sets `row.style.display`, then re-stripes the visible rows. Consequently
-the zebra band colors `#ffd63a` / `#ffe783` are hardcoded in that script and must be kept in step
-with `--color-band` / `--color-band-alt` in `src/styles/global.css`. The per-category counter is
-recomputed from what is on screen, and a section with zero visible rows hides itself.
+`[data-row]` elements and sets `row.style.display`. The per-category counter is recomputed from what
+is on screen, and a section with zero visible rows hides itself. The rail doubles as a position
+indicator: `spy()` marks the section currently under it, but only while the category is "Tout" and
+the search is empty, because the pressed pill and the marker would otherwise contradict each other.
 
 **The cart key is a load-bearing string contract.** Keys are
 `` `${catLabel}|${name}${variant ? ` (${variant})` : ""}|${price}` ``, built in `read()` and rebuilt
@@ -68,25 +68,33 @@ imported in `MenuLayout.astro`.
 
 ## Design constraints to preserve
 
-The implementation follows direction 2a "Jaune enseigne" from the handoff in
-`Zitawi menu redesign/` (gitignored — reference bundle, not source). Points that look like bugs but
-are deliberate:
+The implementation follows direction 3a "Crème & accents jaunes" from the handoff in
+`Zitawi menu redesign/` (gitignored — reference bundle, not source). 3a is the 2a specification with
+one rule applied over it: **yellow is an accent, never a ground.** It survives on the `+` button, the
+category title highlight, the active language segment, the rail's position marker and the footer
+wordmark, and nowhere else. Points that look like bugs but are deliberate:
 
-- The layout is drawn at 430px and fluid to a 480px centred maximum. It is a phone page.
+- The layout is drawn at 430px and fluid to a 480px centred maximum. It is a phone page, and it stays
+  a phone page on a desktop.
 - The wordmark is black ringed in white via `-webkit-text-stroke` with `paint-order: stroke fill`,
-  matching the shopfront banner.
+  matching the shopfront banner. Under 375px it no longer clears the language switch, so the masthead
+  gains top padding and the wordmark drops below it rather than shrinking.
 - Counters are 26px per the handoff; the `.tap` pseudo-element pushes the hit area to 44px. Do not
   "fix" the visual size.
+- The `.mark` highlight needs `leading-none` on its heading. The handoff stops the gradient at 42% of
+  the line box, which lands under the glyphs entirely at the default line height.
 - Pizzas never get a photo medallion. Six other dishes have no photo in the source PDF and show the
   empty "PHOTO" slot instead.
 - Search strips diacritics on both sides, so "pecheur" finds "Pizza du pêcheur".
-- The masthead folds away on scroll using a plain threshold with hysteresis (compact above 120px,
-  expanded below 60px). Scroll-direction detection was tried and is unreliable because scroll events
-  coalesce.
+- Only the category rail is sticky. The masthead scrolls away. A folding masthead was built and
+  removed: shortening the document as it folded fed back into the scroll position and flickered.
 - Dish names, prices and ingredient lines are transcribed verbatim from `zitawi-menu-structure.pdf`,
   including lowercase ingredient lines and `+` separators.
-- Dish photos were background-removed by flood-filling inward from the border at tolerance 62 and
-  flattened onto cream. Tolerance 96 was tried and rejected: it hollowed out burger buns.
+- Dish photos come from that same PDF, not from the bundle's `images/` — those still carry uncut
+  slabs of the yellow sheet. `scripts/clean-photos.mjs` lifts the sheet's yellow out and flattens
+  them onto white; it keys on green being close to red, which is what separates the sheet
+  `(240,224,32)` from fries `(240,176,0)` and cheese `(240,112,0)`. A plain hue window was tried and
+  rejected: it ate bread and rice.
 
 ## Deployment
 

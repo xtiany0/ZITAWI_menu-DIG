@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-/* Direction 2a, "Jaune enseigne". Values taken from the design handoff. */
+/* Direction 3a, "Crème & accents jaunes": the 2a spec with the yellow demoted
+   from ground to accent. Values taken from the design handoff. */
 
 @theme {
   --font-logo: "Bodoni Moda Variable", ui-serif, Georgia, serif;
@@ -9,26 +10,35 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-tab: "Cairo Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-band: #ffd63a;
-  --color-band-alt: #ffe783;
+  /* Ground */
+  --color-paper: #fbf6e9;
+  --color-row-line: #ece2ca;
+  --color-hair: #e6dcc2;
+  --color-edge: #ddd2b8;
+  --color-tab-edge: #ddd2bb;
+
+  /* Ink */
   --color-ink: #141210;
-  --color-ink-soft: #4f4736;
+  --color-muted: #6b6353;
   --color-label: #8a7c52;
-  --color-terracotta: #b8452f;
-  --color-maroon: #5d1e17;
-  --color-blush: #ffe1d6;
-  --color-blush-dim: #e0b5ab;
-  --color-cream: #fffdf3;
-  --color-cream-line: #e8dfbf;
   --color-warm-grey: #6e6555;
   --color-mute: #a89566;
-  --color-footer-text: #efe6cf;
-  --color-sand: #d9c78a;
+  --color-count: #756a54;
+
+  /* Accents */
+  --color-band: #ffd63a;
+  --color-terracotta: #b8452f;
+  --color-blush: #ffe1d6;
+  --color-cream: #fffdf3;
+  --color-cream-line: #e8dfbf;
+  --color-slot: #f4ecd8;
+  --color-slot-ink: #a2946c;
+  --color-footer-text: #cfc5ab;
   --color-whatsapp: #6fd18f;
 }
 
 html {
-  background-color: var(--color-band);
+  background-color: var(--color-paper);
   color-scheme: only light;
 }
 
@@ -42,6 +52,14 @@ body {
   color: #000;
   -webkit-text-stroke: 1px #fff;
   paint-order: stroke fill;
+}
+
+/* Category titles are struck through the lower half with signage yellow, the
+   way a marker crosses a printed card. The stop sits at 42% of the line box, so
+   it lands under the x-height rather than through it. */
+.mark {
+  background: linear-gradient(to top, var(--color-band) 42%, transparent 42%);
+  padding: 2px 6px 1px;
 }
 
 .rail {

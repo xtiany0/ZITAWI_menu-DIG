@@ -40,7 +40,7 @@ const canonical = new URL(withBase(`/${lang}/`), Astro.site);
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     </script>
   </head>
-  <body class="bg-band">
+  <body class="bg-paper">
     <a
       href="#carte"
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:font-body focus:text-sm focus:text-band"
@@ -48,9 +48,9 @@ const canonical = new URL(withBase(`/${lang}/`), Astro.site);
       {t.skip}
     </a>
 
-    <!-- Drawn at 430px. Fluid, centred, widening in steps so a desktop does not
-         get a narrow strip while the rows keep a readable measure. -->
-    <div class="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col bg-band md:max-w-[680px] lg:max-w-[820px]">
+    <!-- Drawn at 430px. Fluid to 100%, capped at the 480px the handoff asks for
+         and centred, so a desktop shows the same card rather than a wider one. -->
+    <div class="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col bg-paper">
       <slot />
     </div>
   </body>

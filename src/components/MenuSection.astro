@@ -48,11 +48,12 @@ function optionLabels(entry: MenuEntry) {
 ---
 
 <section data-section data-cat={category} class="hidden">
-  <div class="flex items-baseline justify-between gap-4 bg-maroon px-[18px] py-[10px] lg:px-6 lg:py-3">
-    <h2 class="font-body text-[17px] font-extrabold tracking-[.34em] text-white uppercase">
+  <div class="flex items-center gap-3 bg-paper px-[18px] pt-6 pb-3">
+    <h2 class="mark font-body text-[20px] leading-none font-extrabold tracking-[.16em] text-ink uppercase">
       {categoryLabel}
     </h2>
-    <span data-count class="font-mono text-[11px] text-blush-dim"></span>
+    <span class="h-[2px] flex-1 bg-ink" aria-hidden="true"></span>
+    <span data-count class="font-mono text-[11px] text-count"></span>
   </div>
 
   {
@@ -70,21 +71,21 @@ function optionLabels(entry: MenuEntry) {
           data-prices={JSON.stringify(prices)}
           data-labels={JSON.stringify(labels)}
           data-search={norm(`${entry.name} ${entry.description} ${entry.options.join(" ")}`)}
-          class="hidden min-h-[84px] items-center gap-[14px] px-[18px] py-[11px] lg:min-h-[96px] lg:gap-5 lg:px-6"
+          class="hidden min-h-[84px] items-center gap-[14px] border-b border-row-line bg-paper px-[18px] py-[11px]"
         >
           {entry.image ? (
             <img
               src={withBase(entry.image)}
               alt={entry.name}
-              width="144"
-              height="144"
+              width="136"
+              height="136"
               loading="lazy"
               decoding="async"
-              class="medallion h-[72px] w-[72px] shrink-0 rounded-full lg:h-20 lg:w-20 bg-white object-cover shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
+              class="medallion h-[68px] w-[68px] shrink-0 rounded-full bg-white object-cover shadow-[0_0_0_1px_#e6dcc2]"
             />
           ) : showSlot ? (
             <span
-              class="grid h-[72px] w-[72px] shrink-0 place-items-center rounded-full lg:h-20 lg:w-20 bg-cream font-mono text-[8px] text-[#b3a276] shadow-[0_0_0_3px_#fffdf3,0_3px_8px_-2px_rgba(20,18,16,.35)]"
+              class="grid h-[68px] w-[68px] shrink-0 place-items-center rounded-full bg-slot font-mono text-[8px] text-slot-ink shadow-[0_0_0_1px_#e6dcc2]"
               aria-hidden="true"
             >
               {t.photoSlot}
@@ -92,12 +93,12 @@ function optionLabels(entry: MenuEntry) {
           ) : null}
 
           <div class="min-w-0 flex-1">
-            <h3 class="font-narrow text-[18px] leading-tight font-bold text-ink uppercase lg:text-[20px]">
+            <h3 class="font-narrow text-[18px] leading-tight font-bold text-ink uppercase">
               {entry.name}
             </h3>
 
             {entry.description && labels.length === 0 && (
-              <p class="mt-0.5 font-body text-[12px] leading-snug text-ink-soft">
+              <p class="mt-0.5 font-body text-[12px] leading-snug text-muted">
                 ({entry.description})
               </p>
             )}
@@ -109,7 +110,7 @@ function optionLabels(entry: MenuEntry) {
                     type="button"
                     data-opt={index}
                     aria-pressed={index === 0 ? "true" : "false"}
-                    class="rounded-full border-[1.5px] border-ink bg-white/50 px-2.5 py-1 font-narrow text-[12px] font-bold text-[#5f5741] aria-pressed:bg-ink aria-pressed:text-band"
+                    class="rounded-full border border-edge bg-white/50 px-2.5 py-1 font-narrow text-[12px] font-bold text-[#5f5741] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-band"
                   >
                     {label}
                   </button>
@@ -119,19 +120,19 @@ function optionLabels(entry: MenuEntry) {
           </div>
 
           <div class="shrink-0 text-right">
-            <p class="font-body text-[18px] font-extrabold text-ink lg:text-[20px]">
+            <p class="font-body text-[18px] font-extrabold text-ink">
               <span data-price-out>{formatPrice(entry.price, lang)}</span>
-              <span class="text-[13px] font-black"> F</span>
+              <span class="text-[12px] font-extrabold"> F</span>
             </p>
 
             <div
-              class="mt-1.5 inline-flex items-center gap-1 rounded-full border-[1.5px] border-ink bg-cream p-[2px]"
+              class="mt-1.5 inline-flex items-center gap-1 rounded-full border border-edge bg-white p-[2px]"
             >
               <button
                 type="button"
                 data-dec
                 aria-label={`${t.remove} ${entry.name}`}
-                class="tap grid h-[26px] w-[26px] place-items-center rounded-full font-body text-[15px] font-extrabold text-ink transition-colors hover:bg-band"
+                class="tap grid h-[26px] w-[26px] place-items-center rounded-full font-body text-[15px] font-extrabold text-muted transition-colors hover:bg-slot"
               >
                 −
               </button>
@@ -142,7 +143,7 @@ function optionLabels(entry: MenuEntry) {
                 type="button"
                 data-inc
                 aria-label={`${t.add} ${entry.name}`}
-                class="tap grid h-[26px] w-[26px] place-items-center rounded-full bg-ink font-body text-[15px] font-extrabold text-band transition-colors hover:bg-terracotta hover:text-white"
+                class="tap grid h-[26px] w-[26px] place-items-center rounded-full bg-band font-body text-[15px] font-extrabold text-ink transition-colors hover:bg-ink hover:text-band"
               >
                 +
               </button>

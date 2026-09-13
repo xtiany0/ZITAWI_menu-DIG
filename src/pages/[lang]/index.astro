@@ -49,7 +49,7 @@ const byCategory = Object.fromEntries(
         <MenuSection lang={lang} category={category} entries={byCategory[category]} />
       ))
     }
-    <p data-no-result hidden class="px-[18px] py-12 text-center font-body text-[13.5px] text-ink-soft"></p>
+    <p data-no-result hidden class="px-[18px] py-12 text-center font-body text-[13.5px] text-muted"></p>
     <SiteFooter lang={lang} />
   </main>
 
@@ -251,10 +251,7 @@ const byCategory = Object.fromEntries(
       section.querySelectorAll("[data-row]").forEach((row) => {
         const visible = inTab && (!query || row.dataset.search.includes(query));
         row.style.display = visible ? "flex" : "none";
-        if (!visible) return;
-        // Bands alternate over what is actually on screen, not the full list.
-        row.style.background = shown % 2 ? "#ffe783" : "#ffd63a";
-        shown += 1;
+        if (visible) shown += 1;
       });
 
       section.style.display = shown === 0 ? "none" : "block";
@@ -301,12 +298,12 @@ const byCategory = Object.fromEntries(
         li.className = "flex items-center gap-3 border-b border-cream-line py-2.5 last:border-0";
         li.innerHTML =
           '<span data-line-name class="min-w-0 flex-1 font-narrow text-[14.5px] font-bold text-ink uppercase"></span>' +
-          '<span class="inline-flex shrink-0 items-center gap-1 rounded-full border-[1.5px] border-ink bg-white p-[2px]">' +
-          '<button type="button" data-line-dec class="tap grid h-6 w-6 place-items-center rounded-full font-body text-[14px] font-extrabold text-ink">−</button>' +
+          '<span class="inline-flex shrink-0 items-center gap-1 rounded-full border border-edge bg-white p-[2px]">' +
+          '<button type="button" data-line-dec class="tap grid h-6 w-6 place-items-center rounded-full font-body text-[14px] font-extrabold text-muted">−</button>' +
           '<span class="min-w-[14px] text-center font-body text-[13px] font-extrabold text-ink">' +
           line.qty +
           "</span>" +
-          '<button type="button" data-line-inc class="tap grid h-6 w-6 place-items-center rounded-full bg-ink font-body text-[14px] font-extrabold text-band">+</button>' +
+          '<button type="button" data-line-inc class="tap grid h-6 w-6 place-items-center rounded-full bg-band font-body text-[14px] font-extrabold text-ink">+</button>' +
           "</span>" +
           '<span class="w-20 shrink-0 text-right font-body text-[14px] font-extrabold text-ink">' +
           money(line.sum) +
