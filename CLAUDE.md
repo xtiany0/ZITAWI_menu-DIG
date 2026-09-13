@@ -105,9 +105,10 @@ wordmark, and nowhere else. Points that look like bugs but are deliberate:
 - Search strips diacritics on both sides, so "pecheur" finds "Pizza du pêcheur".
 - Only the category rail is sticky. The masthead scrolls away. A folding masthead was built and
   removed: shortening the document as it folded fed back into the scroll position and flickered.
-- The sticky bar is `[data-rail]` and the row that scrolls sideways inside it is `[data-tabs]`; the
-  theme button sits outside that row so it stays put while the categories pass it. `spy()` reads the
-  bar for its edge and scrolls the row.
+- The theme button lives in the banner, top left, mirroring the language switch, and takes that
+  switch's casing tokens rather than `field`. The category row is a plain scrolling `<nav>` again,
+  carrying both `[data-rail]` (the sticky edge `spy()` measures) and `[data-tabs]` (what it scrolls
+  sideways); an earlier pass put the button inside that bar and had to split the two.
 - The position marker is outlined, not filled. Filled in the accent, it is the active tab in the
   dark theme, where `--color-on` is the signage yellow.
 - The language switch is a vertical toggle, against the handoff, which draws a horizontal pill. It

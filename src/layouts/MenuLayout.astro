@@ -17,7 +17,7 @@ interface Props {
 
 const { lang, title, description } = Astro.props;
 const t = ui[lang];
-const themeCopy = JSON.stringify({ toDark: t.themeToDark, toLight: t.themeToLight });
+const themeCopy = JSON.stringify({ dark: t.themeDark, light: t.themeLight });
 const canonical = new URL(withBase(`/${lang}/`), Astro.site);
 ---
 
