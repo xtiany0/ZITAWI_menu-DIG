@@ -125,6 +125,23 @@ body {
   background: none;
 }
 
+/* The rail's position marker. It has to read louder than an inactive pill and
+   never like the active one, and the active pill swaps ground between themes:
+   black on cream, signage yellow on black. So the marker takes the opposite
+   treatment of whichever the active pill is wearing -- filled on the light
+   theme, outlined on the dark one, where a filled marker would be the active
+   tab exactly. Left unlayered so it wins over the utilities. */
+[data-here="true"] {
+  border-color: var(--color-band);
+  background-color: var(--color-band);
+  color: var(--color-black);
+}
+
+[data-theme="dark"] [data-here="true"] {
+  background-color: transparent;
+  color: var(--color-band);
+}
+
 .rail {
   scrollbar-width: none;
 }

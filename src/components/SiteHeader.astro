@@ -91,7 +91,7 @@ const tab =
     <button type="button" data-tab="all" aria-pressed="true" class={tab}>{t.allCategories}</button>
     {
       categories.map((category) => (
-        <button type="button" data-tab={category} aria-pressed="false" data-here="false" class={`${tab} data-[here=true]:border-band data-[here=true]:text-on`}>
+        <button type="button" data-tab={category} aria-pressed="false" data-here="false" class={`${tab}`}>
           {t.categories[category]}
         </button>
       ))
