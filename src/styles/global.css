@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
 /* Direction 3a, "Crème & accents jaunes": the 2a spec with the yellow demoted
-   from ground to accent. Values taken from the design handoff. */
+   from ground to accent, plus the light/dark toggle the handoff adds to it.
+   Every value a theme can change is a variable; the light values live here and
+   [data-theme="dark"] below overrides only those. Anything the handoff marks as
+   unchanged by the theme — the terracotta banner, the logo, the + button, the
+   cart's black header, the photos — is a constant and must stay one. */
 
 @theme {
   --font-logo: "Bodoni Moda Variable", ui-serif, Georgia, serif;
@@ -10,36 +14,89 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-tab: "Cairo Variable", ui-sans-serif, system-ui, sans-serif;
 
-  /* Ground */
-  --color-paper: #fbf6e9;
-  --color-row-line: #ece2ca;
-  --color-hair: #e6dcc2;
-  --color-edge: #ddd2b8;
-  --color-tab-edge: #ddd2bb;
-
-  /* Ink */
-  --color-ink: #141210;
-  --color-muted: #6b6353;
-  --color-label: #8a7c52;
-  --color-warm-grey: #6e6555;
-  --color-mute: #a89566;
-  --color-count: #756a54;
-
-  /* Accents */
+  /* Constants: the theme never touches these. */
+  --color-black: #141210;
   --color-band: #ffd63a;
   --color-terracotta: #b8452f;
   --color-blush: #ffe1d6;
-  --color-cream: #fffdf3;
-  --color-cream-line: #e8dfbf;
-  --color-slot: #f4ecd8;
-  --color-slot-ink: #a2946c;
-  --color-footer-text: #cfc5ab;
   --color-whatsapp: #6fd18f;
+  --color-slot-ink: #a2946c;
+
+  /* Themed. Light values. */
+  --color-paper: #fbf6e9;
+  --color-row-line: #ece2ca;
+  --color-hair: #e6dcc2;
+  --color-field: #ffffff;
+  --color-edge: #ddd2b8;
+  --color-ink: #141210;
+  --color-muted: #6b6353;
+  --color-mute: #756a54;
+  --color-slot: #f4ecd8;
+  --color-ring: #e6dcc2;
+  --color-rule: #141210;
+  --color-btn: #fffdf3;
+  --color-icon: #9c8e79;
+
+  /* The "selected" pair: active tab, active variant pill, active service
+     button, the WhatsApp button, the language knob, category titles, the cart
+     total and any quantity above zero all flip together. */
+  --color-on: #141210;
+  --color-on-ink: #ffd63a;
+
+  --color-tab-edge: #ddd2bb;
+  --color-tab-off: #6b6353;
+
+  --color-switch-bg: #fffdf3;
+  --color-switch-edge: #141210;
+  --color-seg-off: #141210;
+  --color-seg-hover: #ffd63a;
+
+  --color-footer-bg: #141210;
+  --color-footer-text: #cfc5ab;
+}
+
+/* Not a colour utility, so it stays out of the theme namespace: the action bar
+   needs the raw channels to fade its own ground out to nothing. */
+:root {
+  --fade: 251, 246, 233;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --color-paper: #14110f;
+  --color-row-line: #251f1a;
+  --color-hair: #2b241e;
+  --color-field: #1f1a17;
+  --color-edge: #3a322a;
+  --color-ink: #f7f1e6;
+  --color-muted: #ab9f8f;
+  --color-mute: #9c9184;
+  --color-slot: #201a16;
+  --color-ring: #3a322a;
+  --color-rule: #3a322a;
+  --color-btn: #1f1a17;
+  --color-icon: #a2988a;
+
+  --color-on: #ffd63a;
+  --color-on-ink: #14110f;
+
+  --color-tab-edge: #3a322a;
+  --color-tab-off: #b5aa99;
+
+  --color-switch-bg: #14110f;
+  --color-switch-edge: #14110f;
+  --color-seg-off: #e3d9c6;
+  --color-seg-hover: #2b241e;
+
+  --color-footer-bg: #0e0c0b;
+  --color-footer-text: #b5aa99;
+
+  --fade: 20, 17, 15;
+  color-scheme: dark;
 }
 
 html {
   background-color: var(--color-paper);
-  color-scheme: only light;
 }
 
 body {
@@ -56,10 +113,16 @@ body {
 
 /* Category titles are struck through the lower half with signage yellow, the
    way a marker crosses a printed card. The stop sits at 42% of the line box, so
-   it lands under the x-height rather than through it. */
+   it lands under the x-height rather than through it. In the dark the title is
+   yellow itself and carries no highlight, but it keeps the padding so the two
+   themes align on the same grid. */
 .mark {
   background: linear-gradient(to top, var(--color-band) 42%, transparent 42%);
   padding: 2px 6px 1px;
+}
+
+[data-theme="dark"] .mark {
+  background: none;
 }
 
 .rail {
@@ -72,6 +135,16 @@ body {
 
 .medallion {
   filter: brightness(1.12) contrast(1.05) saturate(0.9) hue-rotate(-6deg);
+}
+
+/* Themed through an attribute rather than an inline style, so render() never
+   has to know which theme is on. */
+[data-qty] {
+  color: var(--color-mute);
+}
+
+[data-qty][data-on="true"] {
+  color: var(--color-on);
 }
 
 /* The handoff draws 26px counters. Kept at that size, with the tap area pushed
@@ -90,11 +163,11 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--color-on);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: var(--color-ink);
-  color: var(--color-band);
+  background: var(--color-on);
+  color: var(--color-on-ink);
 }

@@ -9,16 +9,16 @@ const { lang } = Astro.props;
 const t = ui[lang];
 
 const fieldClass =
-  "w-full rounded-lg border border-edge bg-paper px-[11px] py-[10px] font-body text-[14px] text-ink placeholder:text-warm-grey/70 focus:outline-none";
+  "w-full rounded-lg border border-edge bg-paper px-[11px] py-[10px] font-body text-[14px] text-ink placeholder:text-mute/70 focus:outline-none";
 ---
 
 <div class="sticky bottom-0 z-30">
   <div
     data-sheet
     hidden
-    class="mx-[14px] mb-2 max-h-[560px] overflow-y-auto rounded-xl border border-edge bg-white shadow-[0_18px_40px_-18px_rgba(26,22,20,.45)]"
+    class="mx-[14px] mb-2 max-h-[560px] overflow-y-auto rounded-xl border border-edge bg-field shadow-[0_18px_40px_-18px_rgba(26,22,20,.45)]"
   >
-    <div class="sticky top-0 flex items-center justify-between gap-3 bg-ink px-4 py-3">
+    <div class="sticky top-0 flex items-center justify-between gap-3 bg-black px-4 py-3">
       <h2 class="font-narrow text-[15px] font-bold tracking-[.2em] text-band">{t.cartTitle}</h2>
       <button
         type="button"
@@ -31,20 +31,20 @@ const fieldClass =
     </div>
 
     <div class="px-4 py-3">
-      <p data-cart-empty class="py-4 text-center font-body text-[13.5px] text-warm-grey">
+      <p data-cart-empty class="py-4 text-center font-body text-[13.5px] text-mute">
         {t.cartEmpty}
       </p>
 
       <ul data-cart-lines hidden></ul>
 
       <div class="mt-4">
-        <p class="font-narrow text-[11.5px] font-bold tracking-[.16em] text-label">{t.modeLabel}</p>
+        <p class="font-narrow text-[11.5px] font-bold tracking-[.16em] text-mute">{t.modeLabel}</p>
         <div class="mt-1.5 flex gap-2">
           <button
             type="button"
             data-mode="in"
             aria-pressed="true"
-            class="flex-1 rounded-lg border border-edge px-2.5 py-[9px] font-body text-[13.5px] text-[#5f5741] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-band"
+            class="flex-1 rounded-lg border border-edge px-2.5 py-[9px] font-body text-[13.5px] text-muted aria-pressed:border-on aria-pressed:bg-on aria-pressed:text-on-ink"
           >
             {t.modeIn}
           </button>
@@ -52,7 +52,7 @@ const fieldClass =
             type="button"
             data-mode="out"
             aria-pressed="false"
-            class="flex-1 rounded-lg border border-edge px-2.5 py-[9px] font-body text-[13.5px] text-[#5f5741] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-band"
+            class="flex-1 rounded-lg border border-edge px-2.5 py-[9px] font-body text-[13.5px] text-muted aria-pressed:border-on aria-pressed:bg-on aria-pressed:text-on-ink"
           >
             {t.modeOut}
           </button>
@@ -62,7 +62,7 @@ const fieldClass =
       <div class="mt-4">
         <label
           for="cart-name"
-          class="font-narrow text-[11.5px] font-bold tracking-[.16em] text-label uppercase"
+          class="font-narrow text-[11.5px] font-bold tracking-[.16em] text-mute uppercase"
         >
           {t.nameLabel}
         </label>
@@ -72,7 +72,7 @@ const fieldClass =
       <div class="mt-4">
         <label
           for="cart-note"
-          class="font-narrow text-[11.5px] font-bold tracking-[.16em] text-label uppercase"
+          class="font-narrow text-[11.5px] font-bold tracking-[.16em] text-mute uppercase"
         >
           {t.noteLabel}
         </label>
@@ -92,9 +92,9 @@ const fieldClass =
         {t.cartClear}
       </button>
 
-      <div class="mt-4 flex items-baseline justify-between border-t-2 border-ink pt-3">
+      <div class="mt-4 flex items-baseline justify-between border-t-2 border-rule pt-3">
         <span class="font-narrow text-[13px] font-bold text-ink">{t.total}</span>
-        <span class="font-body text-[21px] font-extrabold text-ink">
+        <span class="font-body text-[21px] font-extrabold text-on">
           <span data-cart-total>0</span> F
         </span>
       </div>
@@ -102,17 +102,18 @@ const fieldClass =
   </div>
 
   <div
-    class="flex items-stretch gap-2.5 bg-gradient-to-t from-paper/[.99] from-70% to-transparent px-[14px] pt-3 pb-[14px]"
+    class="flex items-stretch gap-2.5 px-[14px] pt-3 pb-[14px]"
+    style="background-image: linear-gradient(to top, rgba(var(--fade), .99) 70%, rgba(var(--fade), 0))"
   >
     <button
       type="button"
       data-sheet-open
-      class="rounded-[10px] border-2 border-ink bg-cream px-[13px] py-[9px] text-left shadow-[4px_4px_0_#141210]"
+      class="rounded-[10px] border-2 border-rule bg-btn px-[13px] py-[9px] text-left shadow-[4px_4px_0_var(--color-rule)]"
     >
       <span class="block font-body text-[15px] font-extrabold text-ink">
         <span data-bar-total>0</span> F
       </span>
-      <span class="block font-narrow text-[10.5px] font-bold tracking-[.1em] text-warm-grey">
+      <span class="block font-narrow text-[10.5px] font-bold tracking-[.1em] text-mute">
         {t.cartButton}
       </span>
     </button>
@@ -122,7 +123,7 @@ const fieldClass =
       href="#"
       target="_blank"
       rel="noopener noreferrer"
-      class="flex flex-1 items-center justify-center gap-2 rounded-[10px] bg-ink px-[14px] py-[13px] font-body text-[14.5px] font-extrabold text-band shadow-[4px_4px_0_#b8452f]"
+      class="flex flex-1 items-center justify-center gap-2 rounded-[10px] bg-on px-[14px] py-[13px] font-body text-[14.5px] font-extrabold text-on-ink shadow-[4px_4px_0_#b8452f]"
     >
       <span class="h-[9px] w-[9px] rounded-full bg-whatsapp" aria-hidden="true"></span>
       {t.sendWhatsApp}

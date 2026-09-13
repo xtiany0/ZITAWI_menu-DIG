@@ -17,11 +17,12 @@ interface Props {
 
 const { lang, title, description } = Astro.props;
 const t = ui[lang];
+const themeCopy = JSON.stringify({ toDark: t.themeToDark, toLight: t.themeToLight });
 const canonical = new URL(withBase(`/${lang}/`), Astro.site);
 ---
 
 <!doctype html>
-<html lang={t.htmlLang}>
+<html lang={t.htmlLang} data-theme-copy={themeCopy}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -38,12 +39,27 @@ const canonical = new URL(withBase(`/${lang}/`), Astro.site);
     <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
     <script is:inline>
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+      // Blocking on purpose. The theme has to be on the element before the
+      // first paint, or a dark reader gets a flash of the cream page.
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem("zitawi-theme");
+        } catch (error) {
+          // Private windows throw on read as well as on write.
+        }
+        if (stored !== "light" && stored !== "dark") {
+          stored = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = stored;
+      })();
     </script>
   </head>
   <body class="bg-paper">
     <a
       href="#carte"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:font-body focus:text-sm focus:text-band"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-black focus:px-4 focus:py-2 focus:font-body focus:text-sm focus:text-band"
     >
       {t.skip}
     </a>

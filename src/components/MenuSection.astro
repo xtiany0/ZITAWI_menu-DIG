@@ -49,11 +49,11 @@ function optionLabels(entry: MenuEntry) {
 
 <section data-section data-cat={category} class="hidden">
   <div class="flex items-center gap-3 bg-paper px-[18px] pt-6 pb-3">
-    <h2 class="mark font-body text-[20px] leading-none font-extrabold tracking-[.16em] text-ink uppercase">
+    <h2 class="mark font-body text-[20px] leading-none font-extrabold tracking-[.16em] text-on uppercase">
       {categoryLabel}
     </h2>
-    <span class="h-[2px] flex-1 bg-ink" aria-hidden="true"></span>
-    <span data-count class="font-mono text-[11px] text-count"></span>
+    <span class="h-[2px] flex-1 bg-rule" aria-hidden="true"></span>
+    <span data-count class="font-mono text-[11px] text-mute"></span>
   </div>
 
   {
@@ -81,11 +81,11 @@ function optionLabels(entry: MenuEntry) {
               height="136"
               loading="lazy"
               decoding="async"
-              class="medallion h-[68px] w-[68px] shrink-0 rounded-full bg-white object-cover shadow-[0_0_0_1px_#e6dcc2]"
+              class="medallion h-[68px] w-[68px] shrink-0 rounded-full bg-white object-cover shadow-[0_0_0_1px_var(--color-ring)]"
             />
           ) : showSlot ? (
             <span
-              class="grid h-[68px] w-[68px] shrink-0 place-items-center rounded-full bg-slot font-mono text-[8px] text-slot-ink shadow-[0_0_0_1px_#e6dcc2]"
+              class="grid h-[68px] w-[68px] shrink-0 place-items-center rounded-full bg-slot font-mono text-[8px] text-slot-ink shadow-[0_0_0_1px_var(--color-ring)]"
               aria-hidden="true"
             >
               {t.photoSlot}
@@ -110,7 +110,7 @@ function optionLabels(entry: MenuEntry) {
                     type="button"
                     data-opt={index}
                     aria-pressed={index === 0 ? "true" : "false"}
-                    class="rounded-full border border-edge bg-white/50 px-2.5 py-1 font-narrow text-[12px] font-bold text-[#5f5741] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-band"
+                    class="rounded-full border border-edge bg-field/50 px-2.5 py-1 font-narrow text-[12px] font-bold text-muted aria-pressed:border-on aria-pressed:bg-on aria-pressed:text-on-ink"
                   >
                     {label}
                   </button>
@@ -126,7 +126,7 @@ function optionLabels(entry: MenuEntry) {
             </p>
 
             <div
-              class="mt-1.5 inline-flex items-center gap-1 rounded-full border border-edge bg-white p-[2px]"
+              class="mt-1.5 inline-flex items-center gap-1 rounded-full border border-edge bg-field p-[2px]"
             >
               <button
                 type="button"
@@ -136,14 +136,14 @@ function optionLabels(entry: MenuEntry) {
               >
                 −
               </button>
-              <span data-qty class="min-w-[14px] text-center font-body text-[14px] font-extrabold text-mute">
+              <span data-qty data-on="false" class="min-w-[14px] text-center font-body text-[14px] font-extrabold">
                 0
               </span>
               <button
                 type="button"
                 data-inc
                 aria-label={`${t.add} ${entry.name}`}
-                class="tap grid h-[26px] w-[26px] place-items-center rounded-full bg-band font-body text-[15px] font-extrabold text-ink transition-colors hover:bg-ink hover:text-band"
+                class="tap grid h-[26px] w-[26px] place-items-center rounded-full bg-band font-body text-[15px] font-extrabold text-black transition-colors hover:bg-black hover:text-band"
               >
                 +
               </button>

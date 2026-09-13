@@ -8,6 +8,8 @@ export const ui = {
     searchPlaceholder: "Chercher un plat, un ingrédient…",
     hours: "Ouvert tous les jours de 9h00 à 00h00",
     allCategories: "Tout",
+    themeToDark: "☾ Sombre",
+    themeToLight: "☀ Clair",
     categories: {
       pizzas: "Pizzas",
       plats: "Plats",
@@ -54,6 +56,8 @@ export const ui = {
     searchPlaceholder: "Search a dish, an ingredient…",
     hours: "Open every day from 9am to midnight",
     allCategories: "All",
+    themeToDark: "☾ Dark",
+    themeToLight: "☀ Light",
     categories: {
       pizzas: "Pizza",
       plats: "Mains",

@@ -86,6 +86,7 @@ const byCategory = Object.fromEntries(
   const sections = [...document.querySelectorAll("[data-section]")];
   const tabs = [...document.querySelectorAll("[data-tab]")];
   const rail = document.querySelector("[data-rail]");
+  const tabRow = document.querySelector("[data-tabs]");
   const noResult = document.querySelector("[data-no-result]");
   const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const sheet = document.querySelector("[data-sheet]");
@@ -200,13 +201,13 @@ const byCategory = Object.fromEntries(
 
   /** Slide the rail sideways so a marked tab never sits off screen. */
   function revealTab(tab) {
-    if (!rail) return;
-    const railBox = rail.getBoundingClientRect();
+    if (!tabRow) return;
+    const rowBox = tabRow.getBoundingClientRect();
     const box = tab.getBoundingClientRect();
     let delta = 0;
-    if (box.left < railBox.left + 12) delta = box.left - railBox.left - 12;
-    else if (box.right > railBox.right - 12) delta = box.right - railBox.right + 12;
-    if (delta) rail.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
+    if (box.left < rowBox.left + 12) delta = box.left - rowBox.left - 12;
+    else if (box.right > rowBox.right - 12) delta = box.right - rowBox.right + 12;
+    if (delta) tabRow.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
   }
 
   // The rail doubles as a position indicator, but only while the whole card is on
@@ -280,7 +281,8 @@ const byCategory = Object.fromEntries(
       const badge = row.querySelector("[data-qty]");
       if (badge) {
         badge.textContent = String(qty);
-        badge.style.color = qty > 0 ? "#141210" : "#a89566";
+        // The colour is a theme token, so hand the decision to CSS.
+        badge.dataset.on = String(qty > 0);
       }
     });
 
@@ -295,15 +297,15 @@ const byCategory = Object.fromEntries(
       lines.hidden = totals.count === 0;
       totals.detail.forEach((line) => {
         const li = document.createElement("li");
-        li.className = "flex items-center gap-3 border-b border-cream-line py-2.5 last:border-0";
+        li.className = "flex items-center gap-3 border-b border-row-line py-2.5 last:border-0";
         li.innerHTML =
           '<span data-line-name class="min-w-0 flex-1 font-narrow text-[14.5px] font-bold text-ink uppercase"></span>' +
-          '<span class="inline-flex shrink-0 items-center gap-1 rounded-full border border-edge bg-white p-[2px]">' +
+          '<span class="inline-flex shrink-0 items-center gap-1 rounded-full border border-edge bg-field p-[2px]">' +
           '<button type="button" data-line-dec class="tap grid h-6 w-6 place-items-center rounded-full font-body text-[14px] font-extrabold text-muted">−</button>' +
           '<span class="min-w-[14px] text-center font-body text-[13px] font-extrabold text-ink">' +
           line.qty +
           "</span>" +
-          '<button type="button" data-line-inc class="tap grid h-6 w-6 place-items-center rounded-full bg-band font-body text-[14px] font-extrabold text-ink">+</button>' +
+          '<button type="button" data-line-inc class="tap grid h-6 w-6 place-items-center rounded-full bg-band font-body text-[14px] font-extrabold text-black">+</button>' +
           "</span>" +
           '<span class="w-20 shrink-0 text-right font-body text-[14px] font-extrabold text-ink">' +
           money(line.sum) +

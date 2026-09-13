@@ -12,15 +12,16 @@ const { lang, categories } = Astro.props;
 const t = ui[lang];
 
 const segment =
-  "relative z-10 w-[26px] rounded-[6px] py-[3px] text-center font-narrow text-[10px] leading-none font-bold text-ink transition-colors duration-200 aria-[current=true]:text-band";
+  "relative z-10 w-[26px] rounded-[6px] py-[3px] text-center font-narrow text-[10px] leading-none font-bold text-seg-off transition-colors duration-200 aria-[current=false]:hover:bg-seg-hover aria-[current=true]:text-on-ink";
 
 const tab =
-  "shrink-0 rounded-full border border-tab-edge px-3 py-1.5 font-tab text-[12.5px] font-extrabold text-muted transition-colors aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-band";
+  "shrink-0 rounded-full border border-tab-edge px-3 py-1.5 font-tab text-[12.5px] font-extrabold text-tab-off transition-colors aria-pressed:border-on aria-pressed:bg-on aria-pressed:text-on-ink";
 ---
 
 <header>
-  <!-- The signage banner is the one place 3a keeps 2a untouched. -->
-  <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
+  <!-- The signage banner is the one place 3a keeps 2a untouched, and the theme
+       does not touch it either: terracotta ground, black wordmark ringed white. -->
+  <div class="relative border-b-[5px] border-black bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
     <!-- Only the wordmark row needs to clear the switch. The tagline sits below
          it, so padding it too is what pushed it onto two lines. -->
     <a
@@ -35,13 +36,13 @@ const tab =
 
     <div
       data-lang-switch
-      class="absolute top-2 right-2 flex flex-col rounded-lg border-2 border-ink bg-cream p-[2px] shadow-[2px_2px_0_#141210]"
+      class="absolute top-2 right-2 flex flex-col rounded-lg border-2 border-switch-edge bg-switch-bg p-[2px] shadow-[2px_2px_0_var(--color-switch-edge)]"
     >
       <span
         data-lang-knob
         aria-hidden="true"
         class:list={[
-          "absolute top-[2px] left-[2px] h-[calc(50%-2px)] w-[calc(100%-4px)] rounded-[6px] bg-ink transition-transform duration-200 ease-out",
+          "absolute top-[2px] left-[2px] h-[calc(50%-2px)] w-[calc(100%-4px)] rounded-[6px] bg-on transition-transform duration-200 ease-out",
           lang === "en" && "translate-y-full",
         ]}
       />
@@ -55,8 +56,8 @@ const tab =
   </div>
 
   <div class="border-b border-hair bg-paper px-5 pt-[11px] pb-3">
-    <label class="flex items-center gap-2 rounded-lg border border-edge bg-white px-3 py-[9px]">
-      <span class="text-[15px] text-muted" aria-hidden="true">⌕</span>
+    <label class="flex items-center gap-2 rounded-lg border border-edge bg-field px-3 py-[9px]">
+      <span class="text-[15px] text-icon" aria-hidden="true">⌕</span>
       <input
         type="search"
         data-search
@@ -68,20 +69,35 @@ const tab =
   </div>
 </header>
 
-<nav
+<!-- The theme button keeps its place while the categories scroll past it, so
+     the row that scrolls is the inner one, not the sticky bar. -->
+<div
   data-rail
-  aria-label={lang === "fr" ? "Catégories" : "Categories"}
-  class="rail sticky top-0 z-30 flex gap-[7px] overflow-x-auto border-b border-hair bg-paper px-5 py-[9px]"
+  class="sticky top-0 z-30 flex items-center gap-[7px] border-b border-hair bg-paper px-5 py-[9px]"
 >
-  <button type="button" data-tab="all" aria-pressed="true" class={tab}>{t.allCategories}</button>
-  {
-    categories.map((category) => (
-      <button type="button" data-tab={category} aria-pressed="false" data-here="false" class={`${tab} data-[here=true]:border-band data-[here=true]:bg-band data-[here=true]:text-ink`}>
-        {t.categories[category]}
-      </button>
-    ))
-  }
-</nav>
+  <button
+    type="button"
+    data-theme-toggle
+    class="shrink-0 rounded-full border border-edge bg-field px-[11px] py-1.5 font-tab text-[12.5px] font-bold text-ink"
+  >
+    <span data-theme-label>{t.themeToDark}</span>
+  </button>
+
+  <nav
+    data-tabs
+    aria-label={lang === "fr" ? "Catégories" : "Categories"}
+    class="rail flex min-w-0 flex-1 gap-[7px] overflow-x-auto"
+  >
+    <button type="button" data-tab="all" aria-pressed="true" class={tab}>{t.allCategories}</button>
+    {
+      categories.map((category) => (
+        <button type="button" data-tab={category} aria-pressed="false" data-here="false" class={`${tab} data-[here=true]:border-band data-[here=true]:text-on`}>
+          {t.categories[category]}
+        </button>
+      ))
+    }
+  </nav>
+</div>
 
 <script>
   // Let the knob finish its slide before the page changes under it.
@@ -105,5 +121,33 @@ const tab =
         window.location.href = segment.href;
       }, 210);
     });
+  });
+
+  // The theme itself is already applied: a blocking script in the document head
+  // set it before the first paint. This only relabels the button and takes over
+  // the choice from here on.
+  const root = document.documentElement;
+  const label = document.querySelector<HTMLElement>("[data-theme-label]");
+  const copy = JSON.parse(root.dataset.themeCopy ?? "{}");
+
+  function paint() {
+    const dark = root.dataset.theme === "dark";
+    if (label) label.textContent = dark ? copy.toLight : copy.toDark;
+    document
+      .querySelector("[data-theme-toggle]")
+      ?.setAttribute("aria-label", dark ? copy.toLight : copy.toDark);
+  }
+
+  paint();
+
+  document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem("zitawi-theme", next);
+    } catch {
+      // Private windows throw. The toggle still works for this page view.
+    }
+    paint();
   });
 </script>

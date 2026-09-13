@@ -66,6 +66,23 @@ object.
 `src/styles/global.css`; there is no `tailwind.config`. Fonts are self-hosted via Fontsource, all
 imported in `MenuLayout.astro`.
 
+**The theme is a variable swap, not a second set of classes.** `@theme` holds the light values and
+`[data-theme="dark"]` overrides the same custom properties, so every utility keeps working unchanged.
+Two consequences bind anything new:
+
+- A raw hex in a component defeats the theme. Colours belong in a token, including inside arbitrary
+  values — write `shadow-[4px_4px_0_var(--color-rule)]`, never the hex.
+- `--color-ink` flips to near-white in the dark. Anything the handoff lists as unchanged by the theme
+  — the banner and its bottom rule, the `+` button, the cart's black header, the skip link — must use
+  `--color-black`, which is a constant. `--color-on` / `--color-on-ink` are the "selected" pair, and
+  they carry the active tab, the active variant pill, the active service button, the WhatsApp button,
+  the language knob, category titles, the cart total and any quantity above zero. They all flip
+  together, by design.
+
+A blocking inline script in the head of `MenuLayout.astro` sets `data-theme` before the first paint,
+from `localStorage["zitawi-theme"]` and falling back to `prefers-color-scheme`. It has to stay
+blocking and it has to stay in the head, or a dark reader gets a flash of the cream page.
+
 ## Design constraints to preserve
 
 The implementation follows direction 3a "Crème & accents jaunes" from the handoff in
@@ -88,6 +105,14 @@ wordmark, and nowhere else. Points that look like bugs but are deliberate:
 - Search strips diacritics on both sides, so "pecheur" finds "Pizza du pêcheur".
 - Only the category rail is sticky. The masthead scrolls away. A folding masthead was built and
   removed: shortening the document as it folded fed back into the scroll position and flickered.
+- The sticky bar is `[data-rail]` and the row that scrolls sideways inside it is `[data-tabs]`; the
+  theme button sits outside that row so it stays put while the categories pass it. `spy()` reads the
+  bar for its edge and scrolls the row.
+- The position marker is outlined, not filled. Filled in the accent, it is the active tab in the
+  dark theme, where `--color-on` is the signage yellow.
+- The language switch is a vertical toggle, against the handoff, which draws a horizontal pill. It
+  was asked for twice, and at 34px wide it is also the only version that clears the wordmark down to
+  320px.
 - Dish names, prices and ingredient lines are transcribed verbatim from `zitawi-menu-structure.pdf`,
   including lowercase ingredient lines and `+` separators.
 - Dish photos come from that same PDF, not from the bundle's `images/` — those still carry uncut
