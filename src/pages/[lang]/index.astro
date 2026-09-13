@@ -85,7 +85,9 @@ const byCategory = Object.fromEntries(
   const rows = [...document.querySelectorAll("[data-row]")];
   const sections = [...document.querySelectorAll("[data-section]")];
   const tabs = [...document.querySelectorAll("[data-tab]")];
+  const rail = document.querySelector("[data-rail]");
   const noResult = document.querySelector("[data-no-result]");
+  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const sheet = document.querySelector("[data-sheet]");
   const lines = document.querySelector("[data-cart-lines]");
   const emptyNote = document.querySelector("[data-cart-empty]");
@@ -196,6 +198,49 @@ const byCategory = Object.fromEntries(
     render();
   }
 
+  /** Slide the rail sideways so a marked tab never sits off screen. */
+  function revealTab(tab) {
+    if (!rail) return;
+    const railBox = rail.getBoundingClientRect();
+    const box = tab.getBoundingClientRect();
+    let delta = 0;
+    if (box.left < railBox.left + 12) delta = box.left - railBox.left - 12;
+    else if (box.right > railBox.right - 12) delta = box.right - railBox.right + 12;
+    if (delta) rail.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
+  }
+
+  // The rail doubles as a position indicator, but only while the whole card is on
+  // screen. Once a category is filtered or a search narrows the list there is no
+  // longer a "where am I" to answer, and the marker would fight the pressed pill.
+  let marked = null;
+
+  function spy() {
+    const live = state.cat === "all" && !state.query.trim();
+    let current = null;
+
+    if (live && rail) {
+      const edge = rail.getBoundingClientRect().bottom + 8;
+      const visible = sections.filter((section) => section.style.display !== "none");
+      visible.forEach((section) => {
+        if (section.getBoundingClientRect().top <= edge) current = section.dataset.cat;
+      });
+      // The last section is too short to ever reach the rail, so the page bottoms
+      // out first. Claim it once there is nothing left to scroll.
+      const doc = document.documentElement;
+      const atEnd = scrollY + innerHeight >= doc.scrollHeight - 2;
+      if (atEnd && visible.length) current = visible[visible.length - 1].dataset.cat;
+    }
+
+    if (current === marked) return;
+    marked = current;
+    tabs.forEach((tab) => {
+      if (tab.dataset.tab === "all") return;
+      const here = tab.dataset.tab === current;
+      tab.dataset.here = String(here);
+      if (here) revealTab(tab);
+    });
+  }
+
   function render() {
     const query = norm(state.query.trim());
 
@@ -281,6 +326,7 @@ const byCategory = Object.fromEntries(
     if (send) send.href = message(totals);
 
     save();
+    spy();
   }
 
   rows.forEach((row) => {
@@ -335,6 +381,19 @@ const byCategory = Object.fromEntries(
     state.cart = {};
     render();
   });
+
+  // Scroll events coalesce, so read the layout once per frame rather than per event.
+  let queued = false;
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      spy();
+    });
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", onScroll, { passive: true });
 
   restore();
   render();
