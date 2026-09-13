@@ -12,7 +12,7 @@ const { lang, categories } = Astro.props;
 const t = ui[lang];
 
 const segment =
-  "rounded-full px-[11px] py-[5px] font-narrow text-[13px] leading-none font-bold text-ink transition-colors aria-[current=true]:bg-ink aria-[current=true]:text-band hover:bg-band aria-[current=true]:hover:bg-ink";
+  "relative z-10 w-[26px] rounded-[6px] py-[3px] text-center font-narrow text-[10px] leading-none font-bold text-ink transition-colors duration-200 aria-[current=true]:text-band";
 
 const tab =
   "shrink-0 rounded-full border border-tab-edge px-3 py-1.5 font-tab text-[12.5px] font-extrabold text-muted transition-colors aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-band";
@@ -20,13 +20,12 @@ const tab =
 
 <header>
   <!-- The signage banner is the one place 3a keeps 2a untouched. -->
-  <!-- The handoff draws this at 430px, where the wordmark clears the switch on
-       its own. Under 375px it no longer does, so the switch keeps its corner and
-       the wordmark drops below it rather than shrinking. -->
-  <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center max-[374px]:pt-[58px]">
+  <div class="relative border-b-[5px] border-ink bg-terracotta px-5 pt-[15px] pb-[13px] text-center">
+    <!-- Only the wordmark row needs to clear the switch. The tagline sits below
+         it, so padding it too is what pushed it onto two lines. -->
     <a
       href={withBase(`/${lang}/`)}
-      class="logo block px-[86px] font-logo text-[34px] leading-none font-black tracking-[.11em] max-[374px]:px-0"
+      class="logo block px-10 font-logo text-[34px] leading-none font-black tracking-[.11em]"
     >
       ZITAWI
     </a>
@@ -35,12 +34,21 @@ const tab =
     </p>
 
     <div
-      class="absolute top-[14px] right-4 flex rounded-full border-2 border-ink bg-cream p-[2px] shadow-[2px_2px_0_#141210]"
+      data-lang-switch
+      class="absolute top-2 right-2 flex flex-col rounded-lg border-2 border-ink bg-cream p-[2px] shadow-[2px_2px_0_#141210]"
     >
-      <a href={withBase("/fr/")} hreflang="fr" aria-current={lang === "fr" ? "true" : "false"} class={segment}>
+      <span
+        data-lang-knob
+        aria-hidden="true"
+        class:list={[
+          "absolute top-[2px] left-[2px] h-[calc(50%-2px)] w-[calc(100%-4px)] rounded-[6px] bg-ink transition-transform duration-200 ease-out",
+          lang === "en" && "translate-y-full",
+        ]}
+      />
+      <a href={withBase("/fr/")} hreflang="fr" data-lang-seg="fr" aria-current={lang === "fr" ? "true" : "false"} class={segment}>
         FR
       </a>
-      <a href={withBase("/en/")} hreflang="en" aria-current={lang === "en" ? "true" : "false"} class={segment}>
+      <a href={withBase("/en/")} hreflang="en" data-lang-seg="en" aria-current={lang === "en" ? "true" : "false"} class={segment}>
         EN
       </a>
     </div>
@@ -74,3 +82,28 @@ const tab =
     ))
   }
 </nav>
+
+<script>
+  // Let the knob finish its slide before the page changes under it.
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const knob = document.querySelector<HTMLElement>("[data-lang-knob]");
+
+  document.querySelectorAll<HTMLAnchorElement>("[data-lang-seg]").forEach((segment) => {
+    segment.addEventListener("click", (event) => {
+      if (segment.getAttribute("aria-current") === "true") {
+        event.preventDefault();
+        return;
+      }
+      if (reduced.matches || !knob) return;
+
+      event.preventDefault();
+      knob.classList.toggle("translate-y-full");
+      document.querySelectorAll<HTMLElement>("[data-lang-seg]").forEach((other) => {
+        other.setAttribute("aria-current", String(other === segment));
+      });
+      window.setTimeout(() => {
+        window.location.href = segment.href;
+      }, 210);
+    });
+  });
+</script>
