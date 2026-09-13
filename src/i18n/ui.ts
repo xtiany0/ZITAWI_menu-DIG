@@ -8,8 +8,8 @@ export const ui = {
     searchPlaceholder: "Chercher un plat, un ingrédient…",
     hours: "Ouvert tous les jours de 9h00 à 00h00",
     allCategories: "Tout",
-    themeDark: { icon: "☾", label: "NUIT", aria: "Passer en mode nuit" },
-    themeLight: { icon: "☀", label: "CLAIR", aria: "Passer en mode clair" },
+    themeDark: { icon: "☾︎", label: "NUIT", aria: "Passer en mode nuit" },
+    themeLight: { icon: "☀︎", label: "CLAIR", aria: "Passer en mode clair" },
     categories: {
       pizzas: "Pizzas",
       plats: "Plats",
@@ -56,8 +56,8 @@ export const ui = {
     searchPlaceholder: "Search a dish, an ingredient…",
     hours: "Open every day from 9am to midnight",
     allCategories: "All",
-    themeDark: { icon: "☾", label: "NIGHT", aria: "Switch to night mode" },
-    themeLight: { icon: "☀", label: "LIGHT", aria: "Switch to light mode" },
+    themeDark: { icon: "☾︎", label: "NIGHT", aria: "Switch to night mode" },
+    themeLight: { icon: "☀︎", label: "LIGHT", aria: "Switch to light mode" },
     categories: {
       pizzas: "Pizza",
       plats: "Mains",
