@@ -5,9 +5,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 A bilingual (FR/EN) static digital menu for the Zitawi restaurant in Cotonou, Benin, opened from a QR
-code on the tables. Astro 5 + Tailwind v4, deployed to Netlify. The restaurant edits dishes through
-Decap CMS at `/admin`; no ordering backend exists — the order is assembled in the browser and handed
-off as a pre-filled WhatsApp message.
+code on the tables. Astro 5 + Tailwind v4, built for GitHub Pages or Netlify. Decap CMS at `/admin`
+is there so the restaurant can edit dishes, but it only works on Netlify and has never been set up;
+no ordering backend exists — the order is assembled in the browser and handed off as a pre-filled
+WhatsApp message.
+
+The restaurant has not seen this yet: it is a speculative build made to pitch to them. Content,
+prices and the photo-to-dish pairing are transcribed from their printed card and are unconfirmed, and
+any design feedback recorded here came from internal review, not from them.
 
 ## Commands
 

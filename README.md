@@ -4,6 +4,11 @@ Bilingual (FR/EN) digital menu for the Zitawi restaurant in Cotonou, Benin, buil
 QR code placed on the tables. There is no ordering backend: the order is assembled in the browser and
 handed off as a pre-filled WhatsApp message.
 
+**Status: not yet shown to the restaurant.** This is a speculative build, made to be pitched to them.
+Dish names, prices and ingredient lines are transcribed from their printed card, and the photos are
+cut from it, so every one of those is unconfirmed until they say otherwise. Feedback recorded below
+comes from internal review, not from the restaurant.
+
 ## Stack
 
 | Concern | Choice |
@@ -21,8 +26,8 @@ Direction **3a "Crème & accents jaunes"** from `Zitawi menu redesign/design_han
 implemented to the handoff. Single scrolling screen, drawn at 430px, fluid to a 480px centred
 maximum. It is a phone page, and it stays a phone page on a desktop.
 
-3a is the earlier 2a specification with one rule applied over it, after the restaurant said the card
-tired the eyes: **yellow is an accent, never a ground.** It survives on the `+` button, the category
+3a is the earlier 2a specification with one rule applied over it, after a reviewer found the card
+tiring to read: **yellow is an accent, never a ground.** It survives on the `+` button, the category
 title highlight, the active language segment, the rail's position marker and the footer wordmark, and
 nowhere else.
 
@@ -164,9 +169,8 @@ ready to print from a browser. Regenerate it whenever the site URL changes.
 
 ## Photography
 
-31 dish photos, extracted from `zitawi-menu-structure.pdf` with `pdfimages`. The client asked for
-these rather than the cut-outs bundled with the handoff, which still carry uncut slabs of the yellow
-sheet.
+31 dish photos, extracted from `zitawi-menu-structure.pdf` with `pdfimages`. These are used rather
+than the cut-outs bundled with the handoff, which still carry uncut slabs of the yellow sheet.
 
 They come off a printed yellow card. The first pass flood-filled that yellow away from the border,
 but it could not reach yellow enclosed by food — a plate rim, a gap between two skewers. On 2a's
@@ -181,6 +185,6 @@ Six dishes carry no photo because the PDF shows none: Plat double, Plat KFC, Pla
 Portion de frites, Sandwich double and Boisson énergétique. Those show the empty "PHOTO" slot. The
 pizzas never get a medallion, which is the handoff's own choice.
 
-Two things still need the restaurant's word: the photo-to-dish pairing is a hypothesis read off the
-printed card, and "Plat poulet / plat viande" shows spaghetti with a whole fish, straight from the
-PDF.
+The photo-to-dish pairing is a hypothesis read off the printed card, and "Plat poulet / plat viande"
+shows spaghetti with a whole fish, straight from the PDF. Both go on the list of things to confirm
+with the restaurant, along with the prices and the opening hours.
