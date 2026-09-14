@@ -50,6 +50,16 @@ order. Changing the key format, the category labels, or those data attributes in
 cart and must be changed in `MenuSection.astro` and the page script together. State persists under
 `localStorage["zitawi-order-2a"]` for 12 hours.
 
+**Per-line notes hang off that same key.** `state.notes` maps a cart key to one free-text note, so a
+note follows its dish *and* its variant, and covers the whole quantity of the line rather than one
+plate of it. It is folded away behind a "+ Préciser" button until there is something to show, written
+into the WhatsApp message as a `   ↳ ` line under its dish, and dropped whenever its line is — by the
+counter reaching zero, by a cleared order, or by the key check on restore. The one thing the note
+field must not do is call `render()`: that rebuilds the list it lives in and takes the caret with it,
+so its `input` handler refreshes the WhatsApp link through `refreshSend()` and saves, nothing more.
+The order-wide note (`state.note`, the textarea at the bottom of the sheet) is unchanged and still
+sent on its own line.
+
 **Two tariffs per dish.** A dish with `price_alt` plus matching `options_fr`/`options_en` renders two
 choice pills; the selected one drives the displayed price, the cart key and the total, so the same
 dish can appear in an order under both variants. `price_alt` without a matching option pair is

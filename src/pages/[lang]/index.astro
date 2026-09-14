@@ -68,6 +68,9 @@ const byCategory = Object.fromEntries(
       service: t.orderService,
       name: t.orderName,
       note: t.orderNote,
+      lineNoteAdd: t.lineNoteAdd,
+      lineNoteLabel: t.lineNoteLabel,
+      lineNotePlaceholder: t.lineNotePlaceholder,
       total: t.orderTotal,
       modeIn: t.modeIn,
       modeOut: t.modeOut,
@@ -80,7 +83,9 @@ const byCategory = Object.fromEntries(
   const STORE = "zitawi-order-2a";
   const MAX_AGE_MS = 12 * 60 * 60 * 1000;
 
-  const state = { query: "", cat: "all", cart: {}, choice: {}, mode: "in", name: "", note: "" };
+  // `notes` is keyed by the cart key, so a note follows its dish and its variant,
+  // and covers the whole quantity of that line rather than one plate of it.
+  const state = { query: "", cat: "all", cart: {}, choice: {}, notes: {}, mode: "in", name: "", note: "" };
 
   const rows = [...document.querySelectorAll("[data-row]")];
   const sections = [...document.querySelectorAll("[data-section]")];
@@ -117,6 +122,7 @@ const byCategory = Object.fromEntries(
           savedAt: Date.now(),
           cart: state.cart,
           choice: state.choice,
+          notes: state.notes,
           mode: state.mode,
           name: state.name,
           note: state.note,
@@ -152,6 +158,10 @@ const byCategory = Object.fromEntries(
     Object.entries(stored.cart ?? {}).forEach(([key, qty]) => {
       if (valid.has(key) && Number.isInteger(qty) && qty > 0) state.cart[key] = qty;
     });
+    // A note on a dropped line has nothing left to describe, so it goes with it.
+    Object.entries(stored.notes ?? {}).forEach(([key, note]) => {
+      if (state.cart[key] && typeof note === "string" && note.trim()) state.notes[key] = note.trim();
+    });
     Object.assign(state.choice, stored.choice ?? {});
     if (stored.mode === "in" || stored.mode === "out") state.mode = stored.mode;
     state.name = typeof stored.name === "string" ? stored.name : "";
@@ -168,7 +178,7 @@ const byCategory = Object.fromEntries(
       const unit = Number(parts[2]);
       count += qty;
       total += unit * qty;
-      return { key, label: parts[1], qty, sum: unit * qty };
+      return { key, label: parts[1], qty, sum: unit * qty, note: state.notes[key] ?? "" };
     });
     return { detail, count, total };
   }
@@ -177,7 +187,10 @@ const byCategory = Object.fromEntries(
     const body = [copy.intro]
       .concat(
         totals.detail.length
-          ? totals.detail.map((line) => line.qty + "× " + line.label + " : " + money(line.sum) + " FCFA")
+          ? totals.detail.flatMap((line) => {
+              const head = line.qty + "× " + line.label + " : " + money(line.sum) + " FCFA";
+              return line.note ? [head, "   ↳ " + line.note] : [head];
+            })
           : [copy.unset],
       )
       .concat([
@@ -192,10 +205,20 @@ const byCategory = Object.fromEntries(
     return "https://wa.me/" + whatsapp + "?text=" + encodeURIComponent(body);
   }
 
+  /** Rewrite the WhatsApp link alone, for the paths that must not rebuild the list. */
+  function refreshSend(totals) {
+    const send = document.querySelector("[data-send]");
+    if (send) send.href = message(totals ?? summary());
+  }
+
   function bump(key, delta) {
     const next = (state.cart[key] ?? 0) + delta;
-    if (next > 0) state.cart[key] = next;
-    else delete state.cart[key];
+    if (next > 0) {
+      state.cart[key] = next;
+    } else {
+      delete state.cart[key];
+      delete state.notes[key];
+    }
     render();
   }
 
@@ -297,8 +320,9 @@ const byCategory = Object.fromEntries(
       lines.hidden = totals.count === 0;
       totals.detail.forEach((line) => {
         const li = document.createElement("li");
-        li.className = "flex items-center gap-3 border-b border-row-line py-2.5 last:border-0";
+        li.className = "border-b border-row-line py-2.5 last:border-0";
         li.innerHTML =
+          '<div class="flex items-center gap-3">' +
           '<span data-line-name class="min-w-0 flex-1 font-narrow text-[14.5px] font-bold text-ink uppercase"></span>' +
           '<span class="inline-flex shrink-0 items-center gap-1 rounded-full border border-edge bg-field p-[2px]">' +
           '<button type="button" data-line-dec class="tap grid h-6 w-6 place-items-center rounded-full font-body text-[14px] font-extrabold text-muted">−</button>' +
@@ -309,10 +333,46 @@ const byCategory = Object.fromEntries(
           "</span>" +
           '<span class="w-20 shrink-0 text-right font-body text-[14px] font-extrabold text-ink">' +
           money(line.sum) +
-          " F</span>";
+          " F</span>" +
+          "</div>" +
+          '<button type="button" data-line-note-open class="mt-0.5 py-[5px] font-narrow text-[11.5px] font-bold tracking-[.1em] text-mute uppercase"></button>' +
+          '<input data-line-note maxlength="80" class="mt-1 w-full rounded-lg border border-edge bg-paper px-[9px] py-[7px] font-body text-[13px] text-ink placeholder:text-mute/70 focus:outline-none" />';
         li.querySelector("[data-line-name]").textContent = line.label;
         li.querySelector("[data-line-dec]").addEventListener("click", () => bump(line.key, -1));
         li.querySelector("[data-line-inc]").addEventListener("click", () => bump(line.key, 1));
+
+        // The note is a second row under the line: a prompt until there is one to
+        // show, the field itself once there is, so an untouched order stays short.
+        const noteOpen = li.querySelector("[data-line-note-open]");
+        const noteInput = li.querySelector("[data-line-note]");
+        noteOpen.textContent = "+ " + copy.lineNoteAdd;
+        noteInput.placeholder = copy.lineNotePlaceholder;
+        noteInput.setAttribute("aria-label", copy.lineNoteLabel + " " + line.label);
+        noteInput.value = line.note;
+
+        const openNote = (open) => {
+          noteInput.hidden = !open;
+          noteOpen.hidden = open;
+        };
+        openNote(Boolean(line.note));
+
+        noteOpen.addEventListener("click", () => {
+          openNote(true);
+          noteInput.focus();
+        });
+        noteInput.addEventListener("input", () => {
+          const value = noteInput.value.trim();
+          if (value) state.notes[line.key] = value;
+          else delete state.notes[line.key];
+          // render() rebuilds this list, which would take the field being typed
+          // into with it, so only what the note actually changes is refreshed.
+          refreshSend();
+          save();
+        });
+        noteInput.addEventListener("blur", () => {
+          if (!noteInput.value.trim()) openNote(false);
+        });
+
         lines.appendChild(li);
       });
     }
@@ -321,8 +381,7 @@ const byCategory = Object.fromEntries(
       button.setAttribute("aria-pressed", String(button.dataset.mode === state.mode));
     });
 
-    const send = document.querySelector("[data-send]");
-    if (send) send.href = message(totals);
+    refreshSend(totals);
 
     save();
     spy();
@@ -375,9 +434,10 @@ const byCategory = Object.fromEntries(
     render();
   });
 
-  // Clearing empties the order only; service, name and note are kept.
+  // Clearing empties the order only; service, name and the order-wide note are kept.
   document.querySelector("[data-cart-clear]")?.addEventListener("click", () => {
     state.cart = {};
+    state.notes = {};
     render();
   });
 
