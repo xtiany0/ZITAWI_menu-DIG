@@ -119,6 +119,8 @@ wordmark, and nowhere else. Points that look like bugs but are deliberate:
 - The language switch is a vertical toggle, against the handoff, which draws a horizontal pill. It
   was asked for twice, and at 34px wide it is also the only version that clears the wordmark down to
   320px.
+- "Vider mon panier" wipes the name and the note along with the dishes, against the handoff, which
+  keeps all three. The service mode survives: it is a choice about the table, not part of the order.
 - Dish names, prices and ingredient lines are transcribed verbatim from `zitawi-menu-structure.pdf`,
   including lowercase ingredient lines and `+` separators.
 - Dish photos come from that same PDF, not from the bundle's `images/` — those still carry uncut

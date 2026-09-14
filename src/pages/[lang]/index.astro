@@ -375,9 +375,14 @@ const byCategory = Object.fromEntries(
     render();
   });
 
-  // Clearing empties the order only; service, name and note are kept.
+  // Clearing wipes what the customer typed as well as the dishes. The service
+  // mode is kept: it is a choice about the table, not part of the order.
   document.querySelector("[data-cart-clear]")?.addEventListener("click", () => {
     state.cart = {};
+    state.name = "";
+    state.note = "";
+    if (nameField) nameField.value = "";
+    if (noteField) noteField.value = "";
     render();
   });
 
