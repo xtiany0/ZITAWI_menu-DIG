@@ -13,7 +13,7 @@ comes from internal review, not from the restaurant.
 
 | Concern | Choice |
 | --- | --- |
-| Site generator | Astro 5, fully static output |
+| Site generator | Astro 7, fully static output (needs Node 22.12 or newer) |
 | Styling | Tailwind CSS v4 (Vite plugin), no config file |
 | Content | Markdown files in `src/content/menu`, one file per dish |
 | Admin | Decap CMS at `/admin`, backed by Netlify Identity plus Git Gateway |
