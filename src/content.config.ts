@@ -1,5 +1,7 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+// Astro 7 deprecates re-exporting zod from astro:content.
+import { z } from "zod";
 
 export const CATEGORIES = ["pizzas", "plats", "sandwichs", "boissons"] as const;
 
