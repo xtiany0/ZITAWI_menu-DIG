@@ -18,11 +18,17 @@ any design feedback recorded here came from internal review, not from them.
 
 ```bash
 npm run dev                      # dev server on http://localhost:4399, host: true
+npx astro sync                   # regenerate .astro/types.d.ts
 npm run build                    # static output to dist/
 npm run preview
 npx astro check                  # type check (no npm script wires it up)
 npm run qr https://zitawi.com    # writes qr/: SVG, 2000px PNG, and chevalet-table.html (A5 table card)
 ```
+
+If the editor starts reporting `Astro.props` as `any` — "Parameter 'entry' implicitly has an 'any'
+type", or `ui[lang]` failing to index — the generated `.astro/types.d.ts` is missing, not the code.
+It is gitignored, and a dependency change can drop it. Run `npx astro sync` and reload the window;
+`npx astro check` will not reproduce the error, because it resolves those types itself.
 
 There is no test suite and no linter. Verification is `npx astro check` plus a build, then a
 browser pass: layout at 320-1440px in both languages and both themes, the theme tokens, search,
